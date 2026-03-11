@@ -19,14 +19,23 @@ body { font-family: Arial; background:#111; color:#fff; text-align:center; margi
 
 <script>
 fetch("weather.txt")
-.then(r=>r.text())
-.then(t=>{
-let el=document.getElementById("weather");
-
-if(t.includes("JP=赤")){el.className="box red";el.innerText=t;}
-else if(t.includes("JP=青")){el.className="box blue";el.innerText=t;}
-else{el.className="box yellow";el.innerText=t;}
-});
+  .then(r => r.text())
+  .then(t => {
+    let el = document.getElementById("weather");
+    if (t.includes("JP=赤")) {
+      el.className = "box red";
+      el.innerText = t;
+    } else if (t.includes("JP=青")) {
+      el.className = "box blue";
+      el.innerText = t;
+    } else {
+      el.className = "box yellow";
+      el.innerText = t;
+    }
+  })
+  .catch(() => {
+    document.getElementById("weather").innerText = "weather.txt を読めません";
+  });
 </script>
 
 </body>
