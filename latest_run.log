@@ -1,0 +1,16 @@
+/Users/Owner/weather_ai/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+CODE 1321 STATUS 200
+CODE 1306 STATUS 200
+CODE 1475 STATUS 200
+prices.csv 保存完了
+行数: 1467
+列名: ['Date', 'Code', 'O', 'H', 'L', 'C', 'UL', 'LL', 'Vo', 'Va', 'AdjFactor', 'AdjO', 'AdjH', 'AdjL', 'AdjC', 'AdjVo']
+            Date   Code      O      H  ...   AdjH   AdjL   AdjC      AdjVo
+1462  2025-12-11  14750  351.7  352.3  ...  352.3  346.3  346.9  8302010.0
+1463  2025-12-12  14750  350.3  354.3  ...  354.3  349.8  354.3  4183280.0
+1464  2025-12-15  14750  351.8  354.8  ...  354.8  351.7  354.8  2775390.0
+1465  2025-12-16  14750  354.4  354.4  ...  354.4  348.6  348.8  5584530.0
+1466  2025-12-17  14750  348.0  348.6  ...  348.6  345.4  348.4  3294290.0
+
+[5 rows x 16 columns]
