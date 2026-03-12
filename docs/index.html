@@ -4,30 +4,36 @@
 <meta charset="UTF-8">
 <title>JP Market Weather</title>
 <style>
-body { font-family: Arial; background:#111; color:#fff; text-align:center; margin-top:80px;}
-.box { font-size:32px; padding:20px; border-radius:10px; display:inline-block;}
+body { font-family: Arial; background:#111; color:#fff; text-align:center; margin-top:80px; }
+.box { font-size:32px; padding:20px; border-radius:10px; display:inline-block; }
 .red { background:#c0392b; }
 .blue { background:#2980b9; }
-.yellow { background:#f1c40f; color:#000;}
+.yellow { background:#f1c40f; color:#000; }
 </style>
 </head>
 <body>
-
 <h1>JP Market Weather</h1>
-
 <div id="weather" class="box yellow">Loading...</div>
-
 <script>
-fetch("weather.txt")
-.then(r=>r.text())
-.then(t=>{
-let el=document.getElementById("weather");
-
-if(t.includes("JP=赤")){el.className="box red";el.innerText=t;}
-else if(t.includes("JP=青")){el.className="box blue";el.innerText=t;}
-else{el.className="box yellow";el.innerText=t;}
-});
+fetch("./weather.txt?ts=" + Date.now())
+  .then(r => r.text())
+  .then(t => {
+    const el = document.getElementById("weather");
+    t = t.trim();
+    if (t.includes("JP=赤")) {
+      el.className = "box red";
+      el.innerText = t;
+    } else if (t.includes("JP=青")) {
+      el.className = "box blue";
+      el.innerText = t;
+    } else {
+      el.className = "box yellow";
+      el.innerText = t;
+    }
+  })
+  .catch(() => {
+    document.getElementById("weather").innerText = "weather.txt を読めません";
+  });
 </script>
-
 </body>
 </html>
