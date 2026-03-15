@@ -48,6 +48,6 @@ body {
 </html>
 HTML
 
-git add index.html latest_weather.txt run_weather.sh
-git commit -m "embed weather into index" || true
+git add index.html latest_weather.txt weather.txt run_weather.sh
+git commit -m "fix generated pages" || true
 git push
