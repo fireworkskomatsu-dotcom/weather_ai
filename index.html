@@ -5,6 +5,7 @@
 <title>JP Market Weather</title>
 
 <style>
+
 body{
 background:#0f1116;
 color:white;
@@ -13,20 +14,25 @@ margin:0;
 padding:20px;
 }
 
-.weather{
-font-size:32px;
+h2{
 margin-bottom:10px;
 }
 
+.weather{
+font-size:30px;
+margin-bottom:6px;
+}
+
 .score{
-font-size:18px;
-margin-bottom:20px;
+font-size:16px;
+margin-bottom:4px;
 }
 
 .cards{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
+margin-top:20px;
 }
 
 .card{
@@ -42,7 +48,7 @@ opacity:.7;
 
 .market-price{
 font-size:22px;
-margin-top:5px;
+margin-top:4px;
 }
 
 .market-change{
@@ -52,6 +58,15 @@ margin-top:4px;
 
 .up{color:#4cd964}
 .down{color:#ff3b30}
+
+.section{
+margin-top:25px;
+background:#1c1f26;
+padding:15px;
+border-radius:10px;
+white-space:pre-wrap;
+}
+
 </style>
 </head>
 
@@ -62,6 +77,10 @@ margin-top:4px;
 <div id="header"></div>
 
 <div class="cards" id="cards"></div>
+
+<div class="section" id="ai"></div>
+<div class="section" id="reasons"></div>
+<div class="section" id="details"></div>
 
 <script>
 
@@ -80,6 +99,14 @@ if(score) header+=`<div class="score">Score ${score[1]}</div>`
 if(risk) header+=`<div class="score">Risk ${risk[1]}</div>`
 
 document.getElementById("header").innerHTML=header
+
+const ai = txt.split("AIコメント")[1]?.split("理由")[0]
+const reasons = txt.split("理由")[1]?.split("詳細")[0]
+const details = txt.split("詳細")[1]
+
+if(ai) document.getElementById("ai").innerText="AIコメント\n"+ai.trim()
+if(reasons) document.getElementById("reasons").innerText="理由\n"+reasons.trim()
+if(details) document.getElementById("details").innerText="詳細\n"+details.trim()
 
 const cards = await fetch("cards.json?"+Date.now()).then(r=>r.json())
 
