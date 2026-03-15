@@ -2,226 +2,129 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JP Market Weather</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
+
+body{
+background:#0f1116;
+color:white;
+font-family:-apple-system,BlinkMacSystemFont;
+margin:0;
+padding:20px;
 }
-.container {
-  max-width: 920px;
-  margin: 0 auto;
+
+h1{
+font-size:28px;
+margin-bottom:10px;
 }
-.hero {
-  border-radius: 18px;
-  padding: 24px 16px;
-  margin-bottom: 18px;
+
+.weather{
+font-size:36px;
+margin-bottom:10px;
 }
-.red { background: #c0392b; }
-.blue { background: #2980b9; }
-.yellow { background: #f1c40f; color: #000; }
-h1 {
-  margin: 0 0 12px 0;
-  font-size: 34px;
+
+.score{
+font-size:18px;
+margin-bottom:20px;
 }
-.emoji {
-  font-size: 54px;
-  margin-bottom: 8px;
+
+.comment{
+background:#1b1f2a;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
 }
-.status {
-  font-size: 28px;
-  font-weight: bold;
+
+.cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 }
-.meta {
-  margin-top: 10px;
-  font-size: 20px;
-  line-height: 1.7;
+
+.card{
+background:#1b1f2a;
+padding:15px;
+border-radius:10px;
 }
-.card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  text-align: left;
-  line-height: 1.8;
+
+.market-name{
+font-size:14px;
+opacity:.7;
 }
-.card h2 {
-  margin-top: 0;
-  font-size: 20px;
+
+.market-price{
+font-size:22px;
+margin-top:4px;
 }
-.chart-card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
+
+.market-change{
+font-size:14px;
+margin-top:4px;
 }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 16px;
-}
-.market-card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: left;
-}
-.market-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.market-price {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-.market-row {
-  font-size: 14px;
-  color: #ccc;
-  margin-bottom: 4px;
-}
-.footer {
-  font-size: 14px;
-  color: #bbb;
-  margin-top: 12px;
-}
-canvas {
-  background: #fff;
-  border-radius: 10px;
-}
-@media (max-width: 600px) {
-  h1 { font-size: 26px; }
-  .status { font-size: 23px; }
-  .meta { font-size: 17px; }
-  .market-price { font-size: 24px; }
-}
+
+.up{color:#4cd964}
+.down{color:#ff3b30}
+
 </style>
 </head>
+
 <body>
-<div class="container">
-  <div class="hero yellow">
-    <div class="emoji">🟡</div>
-    <h1>JP Market Weather</h1>
-    <div class="status">NEUTRAL</div>
-    <div class="meta">
-      <div>スコア：2</div>
-      <div>危険度：HIGH</div>
-    </div>
-  </div>
 
-  <div class="card">
-    <h2>AIコメント</h2>
-    <div></div>
-  </div>
+<h1>JP Market Weather</h1>
 
-  <div class="chart-card">
-    <h2>スコア推移</h2>
-    <canvas id="scoreChart"></canvas>
-  </div>
+<div id="weather"></div>
 
-  <div class="card">
-    <h2>マーケット一覧</h2>
-    <div class="grid" id="marketGrid"></div>
-  </div>
-
-  <div class="card">
-    <h2>理由</h2>
-    <div>日経ETF 5日上昇 +1<br>
-日経ETF 25日線下 -1<br>
-日経ETF 200日線上 +1<br>
-TOPIX 5日上昇 +1<br>
-TOPIX 25日線下 -1<br>
-TOPIX 200日線上 +1<br>
-半導体ETF 5日上昇 +1<br>
-半導体ETF 25日線下 -1<br>
-半導体ETF 200日線上 +1<br>
-VIX 高い -1<br></div>
-  </div>
-
-  <div class="footer">更新 2026-03-16 01:36</div>
-</div>
+<div class="cards" id="cards"></div>
 
 <script>
-const cards = [
-  {
-    "name": "日経ETF",
-    "price": 3809.0,
-    "change": 1.47,
-    "ma25": 3954.12,
-    "ma200": 3381.22,
-    "rsi": 39.1
-  },
-  {
-    "name": "TOPIX",
-    "price": 55850.0,
-    "change": 1.92,
-    "ma25": 58384.4,
-    "ma200": 48559.95,
-    "rsi": 39.0
-  },
-  {
-    "name": "半導体ETF",
-    "price": 372.4,
-    "change": 1.5,
-    "ma25": 386.42,
-    "ma200": 332.52,
-    "rsi": 39.5
-  },
-  {
-    "name": "VIX",
-    "price": 27.19,
-    "change": "-",
-    "ma25": "-",
-    "ma200": "-",
-    "rsi": "-"
-  }
-];
 
-const grid = document.getElementById("marketGrid");
-cards.forEach(c => {
-  const el = document.createElement("div");
-  el.className = "market-card";
-  el.innerHTML = ;
-  grid.appendChild(el);
-});
+async function load(){
 
-const ctx = document.getElementById('scoreChart');
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    datasets: [{
-      label: 'Score',
-      data: [{x:1,y:0},{x:2,y:-2},{x:3,y:-2},{x:4,y:-2},{x:5,y:0},{x:6,y:0},{x:7,y:1},{x:8,y:1},{x:9,y:1},{x:10,y:1},{x:11,y:1},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:1}],
-      borderWidth: 2,
-      tension: 0.25
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: true }
-    },
-    scales: {
-      x: {
-        type: 'linear',
-        ticks: { color: '#333' }
-      },
-      y: {
-        min: -8,
-        max: 8,
-        ticks: { stepSize: 1, color: '#333' }
-      }
-    }
-  }
-});
+let txt=await fetch("latest_weather.txt?"+Date.now()).then(r=>r.text())
+
+let weather=txt.match(/天気：JP=(.)/)
+let score=txt.match(/スコア：([-\d]+)/)
+let risk=txt.match(/危険度：(\w+)/)
+
+let html=""
+
+if(weather) html+=`<div class="weather">天気 ${weather[1]}</div>`
+if(score) html+=`<div class="score">Score ${score[1]}</div>`
+if(risk) html+=`<div class="score">Risk ${risk[1]}</div>`
+
+document.getElementById("weather").innerHTML=html
+
+let cards=await fetch("cards.json?"+Date.now()).then(r=>r.json())
+
+let out=""
+
+cards.forEach(c=>{
+
+let cls=""
+
+if(typeof c.change==="number"){
+if(c.change>0) cls="up"
+if(c.change<0) cls="down"
+}
+
+out+=`
+<div class="card">
+<div class="market-name">${c.name}</div>
+<div class="market-price">${c.price}</div>
+<div class="market-change ${cls}">${c.change}%</div>
+</div>
+`
+
+})
+
+document.getElementById("cards").innerHTML=out
+
+}
+
+load()
+
 </script>
+
 </body>
 </html>
