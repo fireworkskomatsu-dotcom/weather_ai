@@ -26,20 +26,9 @@ body {
 </head>
 <body>
 <h1>JP Market Weather</h1>
-<div id="weather" class="box yellow">Loading...</div>
-<script>
-fetch("weather.txt?v=" + Date.now())
-  .then(r => r.text())
-  .then(t => {
-    const el = document.getElementById("weather");
-    if (t.includes("JP=赤")) el.className = "box red";
-    else if (t.includes("JP=青")) el.className = "box blue";
-    else el.className = "box yellow";
-    el.innerText = t;
-  })
-  .catch(() => {
-    document.getElementById("weather").innerText = "読み込み失敗";
-  });
-</script>
+<div class="box yellow">天気：JP=黄
+詳細:
+1306: 黄, 終値=3537.0, 5日騰落率=-0.42%
+1321: 赤, 終値=51410.0, 5日騰落率=-2.04%</div>
 </body>
 </html>
