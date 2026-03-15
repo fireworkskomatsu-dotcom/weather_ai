@@ -39,6 +39,14 @@ flag && NF {print}
 REASONS_HTML=$(echo "$REASONS" | sed 's/$/<br>/')
 DETAILS_HTML=$(echo "$DETAILS" | sed 's/$/<br>/')
 
+CHART_POINTS=$(tail -20 history.csv | awk -F, '
+BEGIN { first=1 }
+{
+  if (!first) printf ","
+  printf "{x:%d,y:%s}", NR, $3
+  first=0
+}')
+
 cat > index.html <<HTML
 <!DOCTYPE html>
 <html>
@@ -46,6 +54,7 @@ cat > index.html <<HTML
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JP Market Weather</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body {
   margin: 0;
@@ -95,10 +104,20 @@ h1 {
   margin-top: 0;
   font-size: 20px;
 }
+.chart-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
 .footer {
   font-size: 14px;
   color: #bbb;
   margin-top: 12px;
+}
+canvas {
+  background: #fff;
+  border-radius: 10px;
 }
 @media (max-width: 600px) {
   h1 { font-size: 26px; }
@@ -116,6 +135,11 @@ h1 {
     <div class="score">$SCORE_LINE</div>
   </div>
 
+  <div class="chart-card">
+    <h2>スコア推移</h2>
+    <canvas id="scoreChart"></canvas>
+  </div>
+
   <div class="card">
     <h2>理由</h2>
     <div>$REASONS_HTML</div>
@@ -128,10 +152,43 @@ h1 {
 
   <div class="footer">$UPDATE_LINE</div>
 </div>
+
+<script>
+const ctx = document.getElementById('scoreChart');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Score',
+      data: [$CHART_POINTS],
+      borderWidth: 2,
+      tension: 0.25
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: true }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        ticks: { color: '#333' }
+      },
+      y: {
+        min: -6,
+        max: 6,
+        ticks: { stepSize: 1, color: '#333' }
+      }
+    }
+  }
+});
+</script>
 </body>
 </html>
 HTML
 
 git add index.html run_weather.sh latest_weather.txt prices.csv history.csv
-git commit -m "improve mobile dashboard" || true
+git commit -m "add score chart" || true
 git push

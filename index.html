@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JP Market Weather</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body {
   margin: 0;
@@ -53,10 +54,20 @@ h1 {
   margin-top: 0;
   font-size: 20px;
 }
+.chart-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
 .footer {
   font-size: 14px;
   color: #bbb;
   margin-top: 12px;
+}
+canvas {
+  background: #fff;
+  border-radius: 10px;
 }
 @media (max-width: 600px) {
   h1 { font-size: 26px; }
@@ -72,6 +83,11 @@ h1 {
     <h1>JP Market Weather</h1>
     <div class="status">NEUTRAL</div>
     <div class="score">スコア：0</div>
+  </div>
+
+  <div class="chart-card">
+    <h2>スコア推移</h2>
+    <canvas id="scoreChart"></canvas>
   </div>
 
   <div class="card">
@@ -95,7 +111,40 @@ TOPIX: 終値=55850.00, 5日騰落率=1.92%, 25MA=58384.40<br>
 QQQ: 終値=593.72, 5日変化=-2.31%<br></div>
   </div>
 
-  <div class="footer">更新 2026-03-16 00:56</div>
+  <div class="footer">更新 2026-03-16 01:01</div>
 </div>
+
+<script>
+const ctx = document.getElementById('scoreChart');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Score',
+      data: [{x:1,y:0},{x:2,y:-2},{x:3,y:-2},{x:4,y:-2},{x:5,y:0},{x:6,y:0},{x:7,y:1},{x:8,y:1},{x:9,y:1},{x:10,y:1},{x:11,y:1},{x:12,y:0},{x:13,y:0},{x:14,y:0}],
+      borderWidth: 2,
+      tension: 0.25
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: true }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        ticks: { color: '#333' }
+      },
+      y: {
+        min: -6,
+        max: 6,
+        ticks: { stepSize: 1, color: '#333' }
+      }
+    }
+  }
+});
+</script>
 </body>
 </html>
