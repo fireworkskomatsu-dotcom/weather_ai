@@ -3,62 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>JP Market Weather</title>
-
 <style>
-
 body{
 background:#0f1116;
 color:white;
-font-family:-apple-system;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 margin:0;
 padding:20px;
 }
-
-h2{
-margin-bottom:10px;
-}
-
-.weather{
-font-size:30px;
-margin-bottom:6px;
-}
-
-.score{
-font-size:16px;
-margin-bottom:4px;
-}
-
+h2{margin-bottom:10px;}
+.weather{font-size:30px;margin-bottom:6px;}
+.score{font-size:16px;margin-bottom:4px;}
 .cards{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
 margin-top:20px;
 }
-
 .card{
 background:#1c1f26;
 padding:15px;
 border-radius:10px;
 }
-
-.market-name{
-font-size:14px;
-opacity:.7;
-}
-
-.market-price{
-font-size:22px;
-margin-top:4px;
-}
-
-.market-change{
-font-size:14px;
-margin-top:4px;
-}
-
+.market-name{font-size:14px;opacity:.7;}
+.market-price{font-size:22px;margin-top:4px;}
+.market-change{font-size:14px;margin-top:4px;}
 .up{color:#4cd964}
 .down{color:#ff3b30}
-
 .section{
 margin-top:25px;
 background:#1c1f26;
@@ -66,77 +37,135 @@ padding:15px;
 border-radius:10px;
 white-space:pre-wrap;
 }
-
+canvas{
+margin-top:25px;
+background:#1c1f26;
+border-radius:10px;
+padding:10px;
+width:100%;
+max-width:100%;
+box-sizing:border-box;
+}
 </style>
 </head>
-
 <body>
 
 <h2>JP Market Weather</h2>
 
 <div id="header"></div>
-
 <div class="cards" id="cards"></div>
 
 <div class="section" id="ai"></div>
 <div class="section" id="reasons"></div>
 <div class="section" id="details"></div>
 
+<canvas id="scoreChart" height="180"></canvas>
+
 <script>
-
 async function load(){
+  const txt = await fetch("latest_weather.txt?"+Date.now()).then(r=>r.text())
 
-const txt = await fetch("latest_weather.txt?"+Date.now()).then(r=>r.text())
+  const weather = txt.match(/天気：JP=(.)/)
+  const score = txt.match(/スコア：([-\d]+)/)
+  const risk = txt.match(/危険度：(\w+)/)
+  const temp = txt.match(/市場温度：(\w+)/)
+  const judgement = txt.match(/売買判断：(.+)/)
 
-const weather = txt.match(/天気：JP=(.)/)
-const score = txt.match(/スコア：([-\d]+)/)
-const risk = txt.match(/危険度：(\w+)/)
+  let header = ""
+  if(weather) header += `<div class="weather">天気 ${weather[1]}</div>`
+  if(score) header += `<div class="score">Score ${score[1]}</div>`
+  if(risk) header += `<div class="score">Risk ${risk[1]}</div>`
+  if(temp) header += `<div class="score">Market Temp ${temp[1]}</div>`
+  if(judgement) header += `<div class="score">売買判断 ${judgement[1]}</div>`
+  document.getElementById("header").innerHTML = header
 
-let header=""
+  const ai = txt.split("AIコメント")[1]?.split("理由")[0]
+  const reasons = txt.split("理由")[1]?.split("詳細")[0]
+  const details = txt.split("詳細")[1]
 
-if(weather) header+=`<div class="weather">天気 ${weather[1]}</div>`
-if(score) header+=`<div class="score">Score ${score[1]}</div>`
-if(risk) header+=`<div class="score">Risk ${risk[1]}</div>`
+  if(ai) document.getElementById("ai").innerText = "AIコメント\n" + ai.trim()
+  if(reasons) document.getElementById("reasons").innerText = "理由\n" + reasons.trim()
+  if(details) document.getElementById("details").innerText = "詳細\n" + details.trim()
 
-document.getElementById("header").innerHTML=header
+  const cards = await fetch("cards.json?"+Date.now()).then(r=>r.json())
+  let html = ""
 
-const ai = txt.split("AIコメント")[1]?.split("理由")[0]
-const reasons = txt.split("理由")[1]?.split("詳細")[0]
-const details = txt.split("詳細")[1]
+  cards.forEach(c=>{
+    let cls = ""
+    let changeText = c.change
 
-if(ai) document.getElementById("ai").innerText="AIコメント\n"+ai.trim()
-if(reasons) document.getElementById("reasons").innerText="理由\n"+reasons.trim()
-if(details) document.getElementById("details").innerText="詳細\n"+details.trim()
+    if(typeof c.change === "number"){
+      if(c.change > 0) cls = "up"
+      if(c.change < 0) cls = "down"
+      changeText = c.change + "%"
+    }
 
-const cards = await fetch("cards.json?"+Date.now()).then(r=>r.json())
+    html += `
+    <div class="card">
+      <div class="market-name">${c.name}</div>
+      <div class="market-price">${c.price}</div>
+      <div class="market-change ${cls}">${changeText}</div>
+    </div>`
+  })
 
-let html=""
+  document.getElementById("cards").innerHTML = html
 
-cards.forEach(c=>{
-
-let cls=""
-
-if(typeof c.change==="number"){
-if(c.change>0) cls="up"
-if(c.change<0) cls="down"
+  const historyText = await fetch("history.csv?"+Date.now()).then(r=>r.text())
+  drawChart(historyText)
 }
 
-html+=`
-<div class="card">
-<div class="market-name">${c.name}</div>
-<div class="market-price">${c.price}</div>
-<div class="market-change ${cls}">${c.change}</div>
-</div>
-`
+function drawChart(csvText){
+  const lines = csvText.trim().split("\n")
+  if(lines.length <= 1) return
 
-})
+  const rows = lines.slice(1).map(line => line.split(","))
+  const recent = rows.slice(-20)
+  const scores = recent.map(r => Number(r[2]))
 
-document.getElementById("cards").innerHTML=html
+  const canvas = document.getElementById("scoreChart")
+  const ctx = canvas.getContext("2d")
+  const w = canvas.width = canvas.clientWidth * devicePixelRatio
+  const h = canvas.height = 180 * devicePixelRatio
+  ctx.scale(devicePixelRatio, devicePixelRatio)
 
+  const cw = canvas.clientWidth
+  const ch = 180
+
+  ctx.clearRect(0,0,cw,ch)
+  ctx.fillStyle = "#1c1f26"
+  ctx.fillRect(0,0,cw,ch)
+
+  ctx.strokeStyle = "#666"
+  ctx.beginPath()
+  ctx.moveTo(30,20)
+  ctx.lineTo(30,150)
+  ctx.lineTo(cw-10,150)
+  ctx.stroke()
+
+  if(scores.length < 2) return
+
+  const maxVal = Math.max(...scores, 6)
+  const minVal = Math.min(...scores, -6)
+  const range = maxVal - minVal || 1
+
+  ctx.strokeStyle = "#4cd964"
+  ctx.lineWidth = 2
+  ctx.beginPath()
+
+  scores.forEach((v,i)=>{
+    const x = 30 + (i * ((cw-50)/(scores.length-1)))
+    const y = 150 - ((v-minVal)/range)*120
+    if(i===0) ctx.moveTo(x,y)
+    else ctx.lineTo(x,y)
+  })
+  ctx.stroke()
+
+  ctx.fillStyle = "white"
+  ctx.font = "12px sans-serif"
+  ctx.fillText("スコア推移", 30, 14)
 }
 
 load()
-
 </script>
 
 </body>
