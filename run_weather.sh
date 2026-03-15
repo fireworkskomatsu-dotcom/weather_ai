@@ -6,6 +6,7 @@ python fetch_prices_v2.py > latest_run.log 2>&1
 python weather_signal.py > /dev/null 2>&1
 
 WEATHER_TEXT=$(cat latest_weather.txt)
+CARDS_JSON=$(cat cards.json)
 
 COLOR_CLASS="yellow"
 EMOJI="🟡"
@@ -22,6 +23,7 @@ elif echo "$WEATHER_TEXT" | grep -q "JP=青"; then
 fi
 
 SCORE_LINE=$(echo "$WEATHER_TEXT" | grep "スコア")
+RISK_LINE=$(echo "$WEATHER_TEXT" | grep "危険度")
 UPDATE_LINE=$(echo "$WEATHER_TEXT" | grep "更新")
 
 AI_COMMENT=$(awk '
@@ -36,14 +38,7 @@ REASONS=$(awk '
 flag && NF {print}
 ' latest_weather.txt)
 
-DETAILS=$(awk '
-/^詳細$/ {flag=1; next}
-/^更新/ {flag=0}
-flag && NF {print}
-' latest_weather.txt)
-
 REASONS_HTML=$(echo "$REASONS" | sed 's/$/<br>/')
-DETAILS_HTML=$(echo "$DETAILS" | sed 's/$/<br>/')
 
 CHART_POINTS=$(tail -20 history.csv | awk -F, '
 BEGIN { first=1 }
@@ -71,32 +66,33 @@ body {
   padding: 20px;
 }
 .container {
-  max-width: 720px;
+  max-width: 920px;
   margin: 0 auto;
 }
 .hero {
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 24px 16px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .red { background: #c0392b; }
 .blue { background: #2980b9; }
 .yellow { background: #f1c40f; color: #000; }
 h1 {
   margin: 0 0 12px 0;
-  font-size: 32px;
+  font-size: 34px;
 }
 .emoji {
-  font-size: 52px;
-  margin-bottom: 10px;
+  font-size: 54px;
+  margin-bottom: 8px;
 }
 .status {
   font-size: 28px;
   font-weight: bold;
 }
-.score {
-  font-size: 22px;
+.meta {
   margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.7;
 }
 .card {
   background: #1c1c1c;
@@ -116,6 +112,33 @@ h1 {
   padding: 18px;
   margin-bottom: 16px;
 }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.market-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+}
+.market-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.market-price {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.market-row {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
 .footer {
   font-size: 14px;
   color: #bbb;
@@ -127,8 +150,9 @@ canvas {
 }
 @media (max-width: 600px) {
   h1 { font-size: 26px; }
-  .status { font-size: 24px; }
-  .score { font-size: 18px; }
+  .status { font-size: 23px; }
+  .meta { font-size: 17px; }
+  .market-price { font-size: 24px; }
 }
 </style>
 </head>
@@ -138,7 +162,10 @@ canvas {
     <div class="emoji">$EMOJI</div>
     <h1>JP Market Weather</h1>
     <div class="status">$TITLE</div>
-    <div class="score">$SCORE_LINE</div>
+    <div class="meta">
+      <div>$SCORE_LINE</div>
+      <div>$RISK_LINE</div>
+    </div>
   </div>
 
   <div class="card">
@@ -152,21 +179,37 @@ canvas {
   </div>
 
   <div class="card">
-    <h2>理由</h2>
-    <div>$REASONS_HTML</div>
+    <h2>マーケット一覧</h2>
+    <div class="grid" id="marketGrid"></div>
   </div>
 
   <div class="card">
-    <h2>詳細</h2>
-    <div>$DETAILS_HTML</div>
+    <h2>理由</h2>
+    <div>$REASONS_HTML</div>
   </div>
 
   <div class="footer">$UPDATE_LINE</div>
 </div>
 
 <script>
-const ctx = document.getElementById('scoreChart');
+const cards = $CARDS_JSON;
 
+const grid = document.getElementById("marketGrid");
+cards.forEach(c => {
+  const el = document.createElement("div");
+  el.className = "market-card";
+  el.innerHTML = `
+    <div class="market-name">${c.name}</div>
+    <div class="market-price">${c.price}</div>
+    <div class="market-row">5日変化: ${c.change}</div>
+    <div class="market-row">25MA: ${c.ma25}</div>
+    <div class="market-row">200MA: ${c.ma200}</div>
+    <div class="market-row">RSI/判定: ${c.rsi_label === "-" ? c.rsi : c.rsi + " / " + c.rsi_label}</div>
+  `;
+  grid.appendChild(el);
+});
+
+const ctx = document.getElementById('scoreChart');
 new Chart(ctx, {
   type: 'line',
   data: {
@@ -188,8 +231,8 @@ new Chart(ctx, {
         ticks: { color: '#333' }
       },
       y: {
-        min: -6,
-        max: 6,
+        min: -8,
+        max: 8,
         ticks: { stepSize: 1, color: '#333' }
       }
     }
@@ -200,6 +243,6 @@ new Chart(ctx, {
 </html>
 HTML
 
-git add index.html run_weather.sh weather_signal.py latest_weather.txt prices.csv history.csv
-git commit -m "add ai commentary" || true
+git add index.html run_weather.sh weather_signal.py latest_weather.txt prices.csv history.csv cards.json
+git commit -m "add market cards and risk level" || true
 git push

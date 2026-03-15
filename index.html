@@ -15,32 +15,33 @@ body {
   padding: 20px;
 }
 .container {
-  max-width: 720px;
+  max-width: 920px;
   margin: 0 auto;
 }
 .hero {
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 24px 16px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .red { background: #c0392b; }
 .blue { background: #2980b9; }
 .yellow { background: #f1c40f; color: #000; }
 h1 {
   margin: 0 0 12px 0;
-  font-size: 32px;
+  font-size: 34px;
 }
 .emoji {
-  font-size: 52px;
-  margin-bottom: 10px;
+  font-size: 54px;
+  margin-bottom: 8px;
 }
 .status {
   font-size: 28px;
   font-weight: bold;
 }
-.score {
-  font-size: 22px;
+.meta {
   margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.7;
 }
 .card {
   background: #1c1c1c;
@@ -60,6 +61,33 @@ h1 {
   padding: 18px;
   margin-bottom: 16px;
 }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.market-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+}
+.market-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.market-price {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.market-row {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
 .footer {
   font-size: 14px;
   color: #bbb;
@@ -71,8 +99,9 @@ canvas {
 }
 @media (max-width: 600px) {
   h1 { font-size: 26px; }
-  .status { font-size: 24px; }
-  .score { font-size: 18px; }
+  .status { font-size: 23px; }
+  .meta { font-size: 17px; }
+  .market-price { font-size: 24px; }
 }
 </style>
 </head>
@@ -82,12 +111,15 @@ canvas {
     <div class="emoji">🟡</div>
     <h1>JP Market Weather</h1>
     <div class="status">NEUTRAL</div>
-    <div class="score">スコア：1</div>
+    <div class="meta">
+      <div>スコア：2</div>
+      <div>危険度：HIGH</div>
+    </div>
   </div>
 
   <div class="card">
     <h2>AIコメント</h2>
-    <div>短期は反発基調です。 25日線を下回る指数が多く、戻り売りに注意です。 長期トレンドも改善しており、相場の土台は強めです。 円安は日本株の追い風です。 米国ハイテクは弱く、日本株の上値を抑えやすいです。 米国半導体の弱さには注意です。 VIX高止まりでリスクオフ気味です。</div>
+    <div></div>
   </div>
 
   <div class="chart-card">
@@ -96,42 +128,72 @@ canvas {
   </div>
 
   <div class="card">
+    <h2>マーケット一覧</h2>
+    <div class="grid" id="marketGrid"></div>
+  </div>
+
+  <div class="card">
     <h2>理由</h2>
     <div>日経ETF 5日上昇 +1<br>
 日経ETF 25日線下 -1<br>
 日経ETF 200日線上 +1<br>
-日経ETF RSI中立 0<br>
 TOPIX 5日上昇 +1<br>
 TOPIX 25日線下 -1<br>
 TOPIX 200日線上 +1<br>
-TOPIX RSI中立 0<br>
 半導体ETF 5日上昇 +1<br>
 半導体ETF 25日線下 -1<br>
 半導体ETF 200日線上 +1<br>
-半導体ETF RSI中立 0<br>
-ドル円 円安 +1<br>
-QQQ 下降 -1<br>
-SOXX 下降 -1<br>
 VIX 高い -1<br></div>
   </div>
 
-  <div class="card">
-    <h2>詳細</h2>
-    <div>日経ETF: 終値=3809.00, 5日騰落率=1.47%, 25MA=3954.12, 200MA=3381.22, RSI=39.1<br>
-TOPIX: 終値=55850.00, 5日騰落率=1.92%, 25MA=58384.40, 200MA=48559.95, RSI=39.0<br>
-半導体ETF: 終値=372.40, 5日騰落率=1.50%, 25MA=386.42, 200MA=332.52, RSI=39.5<br>
-ドル円: 終値=159.72, 5日変化=1.19%<br>
-QQQ: 終値=593.72, 5日変化=-2.31%<br>
-SOXX: 終値=331.32, 5日変化=-1.50%<br>
-VIX: 終値=27.19<br></div>
-  </div>
-
-  <div class="footer">更新 2026-03-16 01:15</div>
+  <div class="footer">更新 2026-03-16 01:36</div>
 </div>
 
 <script>
-const ctx = document.getElementById('scoreChart');
+const cards = [
+  {
+    "name": "日経ETF",
+    "price": 3809.0,
+    "change": 1.47,
+    "ma25": 3954.12,
+    "ma200": 3381.22,
+    "rsi": 39.1
+  },
+  {
+    "name": "TOPIX",
+    "price": 55850.0,
+    "change": 1.92,
+    "ma25": 58384.4,
+    "ma200": 48559.95,
+    "rsi": 39.0
+  },
+  {
+    "name": "半導体ETF",
+    "price": 372.4,
+    "change": 1.5,
+    "ma25": 386.42,
+    "ma200": 332.52,
+    "rsi": 39.5
+  },
+  {
+    "name": "VIX",
+    "price": 27.19,
+    "change": "-",
+    "ma25": "-",
+    "ma200": "-",
+    "rsi": "-"
+  }
+];
 
+const grid = document.getElementById("marketGrid");
+cards.forEach(c => {
+  const el = document.createElement("div");
+  el.className = "market-card";
+  el.innerHTML = ;
+  grid.appendChild(el);
+});
+
+const ctx = document.getElementById('scoreChart');
 new Chart(ctx, {
   type: 'line',
   data: {
@@ -153,8 +215,8 @@ new Chart(ctx, {
         ticks: { color: '#333' }
       },
       y: {
-        min: -6,
-        max: 6,
+        min: -8,
+        max: 8,
         ticks: { stepSize: 1, color: '#333' }
       }
     }
