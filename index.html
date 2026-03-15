@@ -85,6 +85,11 @@ canvas {
     <div class="score">スコア：0</div>
   </div>
 
+  <div class="card">
+    <h2>AIコメント</h2>
+    <div>短期は反発基調です。 25日線を下回る指数が多く、中期では戻り売りに注意です。 ドル円の円安は日本株に追い風です。 米国ハイテクの弱さは日本市場の上値を抑えやすいです。</div>
+  </div>
+
   <div class="chart-card">
     <h2>スコア推移</h2>
     <canvas id="scoreChart"></canvas>
@@ -111,7 +116,7 @@ TOPIX: 終値=55850.00, 5日騰落率=1.92%, 25MA=58384.40<br>
 QQQ: 終値=593.72, 5日変化=-2.31%<br></div>
   </div>
 
-  <div class="footer">更新 2026-03-16 01:01</div>
+  <div class="footer">更新 2026-03-16 01:07</div>
 </div>
 
 <script>
@@ -122,7 +127,7 @@ new Chart(ctx, {
   data: {
     datasets: [{
       label: 'Score',
-      data: [{x:1,y:0},{x:2,y:-2},{x:3,y:-2},{x:4,y:-2},{x:5,y:0},{x:6,y:0},{x:7,y:1},{x:8,y:1},{x:9,y:1},{x:10,y:1},{x:11,y:1},{x:12,y:0},{x:13,y:0},{x:14,y:0}],
+      data: [{x:1,y:0},{x:2,y:-2},{x:3,y:-2},{x:4,y:-2},{x:5,y:0},{x:6,y:0},{x:7,y:1},{x:8,y:1},{x:9,y:1},{x:10,y:1},{x:11,y:1},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0}],
       borderWidth: 2,
       tension: 0.25
     }]

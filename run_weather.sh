@@ -24,6 +24,12 @@ fi
 SCORE_LINE=$(echo "$WEATHER_TEXT" | grep "スコア")
 UPDATE_LINE=$(echo "$WEATHER_TEXT" | grep "更新")
 
+AI_COMMENT=$(awk '
+/^AIコメント$/ {flag=1; next}
+/^理由$/ {flag=0}
+flag && NF {print}
+' latest_weather.txt)
+
 REASONS=$(awk '
 /^理由$/ {flag=1; next}
 /^詳細$/ {flag=0}
@@ -135,6 +141,11 @@ canvas {
     <div class="score">$SCORE_LINE</div>
   </div>
 
+  <div class="card">
+    <h2>AIコメント</h2>
+    <div>$AI_COMMENT</div>
+  </div>
+
   <div class="chart-card">
     <h2>スコア推移</h2>
     <canvas id="scoreChart"></canvas>
@@ -189,6 +200,6 @@ new Chart(ctx, {
 </html>
 HTML
 
-git add index.html run_weather.sh latest_weather.txt prices.csv history.csv
-git commit -m "add score chart" || true
+git add index.html run_weather.sh weather_signal.py latest_weather.txt prices.csv history.csv
+git commit -m "add ai commentary" || true
 git push
