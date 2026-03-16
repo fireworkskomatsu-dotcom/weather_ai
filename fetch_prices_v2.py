@@ -1,47 +1,69 @@
-from dotenv import load_dotenv
-import os
-import requests
+import yfinance as yf
 import pandas as pd
 
-load_dotenv()
+rows = []
 
-api_key = os.getenv("JQUANTS_API_KEY", "").strip()
-if not api_key:
-    raise RuntimeError("JQUANTS_API_KEY がありません")
+def normalize_columns(df):
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+    return df
 
-headers = {"x-api-key": api_key}
-codes = ["1321", "1306", "1475"]
-dfs = []
+def add_symbol(symbol, code):
+    try:
+        df = yf.download(symbol, period="400d", interval="1d", auto_adjust=False, progress=False)
+        if df is None or len(df) == 0:
+            print("no data:", symbol)
+            return
 
-# Freeプランの取得可能期間に合わせる
-FROM_DATE = "2023-12-17"
-TO_DATE = "2025-12-17"
+        df = df.reset_index()
+        df = normalize_columns(df)
 
-for code in codes:
-    url = "https://api.jquants.com/v2/equities/bars/daily"
-    params = {
-        "code": code,
-        "from": FROM_DATE,
-        "to": TO_DATE,
-    }
-    r = requests.get(url, params=params, headers=headers, timeout=30)
-    print("CODE", code, "STATUS", r.status_code)
-    if r.status_code != 200:
-        print("BODY_HEAD", r.text[:300])
-        continue
+        needed = ["Date", "Open", "High", "Low", "Close", "Volume"]
+        if not all(c in df.columns for c in needed):
+            print("bad columns:", symbol, df.columns.tolist())
+            return
 
-    data = r.json().get("data", [])
-    if data:
-        df = pd.DataFrame(data)
-        dfs.append(df)
+        for _, r in df.iterrows():
+            rows.append([
+                pd.to_datetime(r["Date"]).strftime("%Y-%m-%d"),
+                str(code),
+                float(r["Open"]),
+                float(r["High"]),
+                float(r["Low"]),
+                float(r["Close"]),
+                0,
+                0,
+                float(r["Volume"]) if pd.notna(r["Volume"]) else 0.0,
+                0.0,
+                1.0,
+                float(r["Open"]),
+                float(r["High"]),
+                float(r["Low"]),
+                float(r["Close"]),
+                float(r["Volume"]) if pd.notna(r["Volume"]) else 0.0,
+            ])
+        print("ok:", symbol, len(df))
+    except Exception as e:
+        print("error:", symbol, e)
 
-if not dfs:
-    raise RuntimeError("対象銘柄の価格データが取得できませんでした")
+# 日本ETF
+add_symbol("1306.T", "13060")
+add_symbol("1321.T", "13210")
+add_symbol("1475.T", "14750")
 
-out = pd.concat(dfs, ignore_index=True)
+# 米国・為替・ボラ・BTC
+add_symbol("QQQ", "88880")
+add_symbol("SOXX", "77770")
+add_symbol("^VIX", "66660")
+add_symbol("JPY=X", "55550")
+add_symbol("BTC-USD", "44440")
+
+cols = [
+    "Date","Code","O","H","L","C","UL","LL","Vo","Va",
+    "AdjFactor","AdjO","AdjH","AdjL","AdjC","AdjVo"
+]
+
+out = pd.DataFrame(rows, columns=cols).sort_values(["Code", "Date"])
 out.to_csv("prices.csv", index=False)
-
-print("prices.csv 保存完了")
-print("行数:", len(out))
-print("列名:", out.columns.tolist())
-print(out.tail())
+print("saved prices.csv rows =", len(out))
+print(out.groupby("Code").size())
