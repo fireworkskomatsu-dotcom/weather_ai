@@ -1,0 +1,35 @@
+name: daily market update
+
+on:
+  schedule:
+    - cron: "30 21 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: install packages
+        run: |
+          pip install pandas yfinance
+
+      - name: run scripts
+        run: |
+          python fetch_prices_v2.py
+          python weather_signal.py
+
+      - name: commit update
+        run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+          git add prices.csv latest_weather.txt cards.json history.csv
+          git commit -m "auto update" || echo "no changes"
+          git push
