@@ -1,10 +1,12 @@
 name: daily market update
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "30 21 * * *"
   workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest
