@@ -13,7 +13,7 @@ def add(symbol, code):
 
     for _, r in df.iterrows():
         rows.append([
-            r["Date"].strftime("%Y-%m-%d"),
+            pd.to_datetime(r["Date"]).strftime("%Y-%m-%d"),
             str(code),
             r["Open"],
             r["High"],
