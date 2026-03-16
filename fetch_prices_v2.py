@@ -1,47 +1,37 @@
-from dotenv import load_dotenv
-import os
-import requests
+import yfinance as yf
 import pandas as pd
 
-load_dotenv()
+rows = []
+def add(symbol, code):
+    df = yf.download(symbol, period="400d", interval="1d", progress=False)
+    if df is None or len(df) == 0:
+        print("no data:", symbol)
+        return
 
-api_key = os.getenv("JQUANTS_API_KEY", "").strip()
-if not api_key:
-    raise RuntimeError("JQUANTS_API_KEY がありません")
+    df = df.reset_index()
 
-headers = {"x-api-key": api_key}
-codes = ["1321", "1306", "1475"]
-dfs = []
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
 
-# Freeプランの取得可能期間に合わせる
-FROM_DATE = "2023-12-17"
-TO_DATE = "2025-12-17"
+    for _, r in df.iterrows():
+        date_value = pd.to_datetime(r["Date"])
+        if hasattr(date_value, "iloc"):
+            date_value = date_value.iloc[0]
 
-for code in codes:
-    url = "https://api.jquants.com/v2/equities/bars/daily"
-    params = {
-        "code": code,
-        "from": FROM_DATE,
-        "to": TO_DATE,
-    }
-    r = requests.get(url, params=params, headers=headers, timeout=30)
-    print("CODE", code, "STATUS", r.status_code)
-    if r.status_code != 200:
-        print("BODY_HEAD", r.text[:300])
-        continue
-
-    data = r.json().get("data", [])
-    if data:
-        df = pd.DataFrame(data)
-        dfs.append(df)
-
-if not dfs:
-    raise RuntimeError("対象銘柄の価格データが取得できませんでした")
-
-out = pd.concat(dfs, ignore_index=True)
-out.to_csv("prices.csv", index=False)
-
-print("prices.csv 保存完了")
-print("行数:", len(out))
-print("列名:", out.columns.tolist())
-print(out.tail())
+        rows.append([
+            date_value.strftime("%Y-%m-%d"),
+            str(code),
+            float(r["Open"]),
+            float(r["High"]),
+            float(r["Low"]),
+            float(r["Close"]),
+            0, 0,
+            float(r["Volume"]) if pd.notna(r["Volume"]) else 0.0,
+            0,
+            1,
+            float(r["Open"]),
+            float(r["High"]),
+            float(r["Low"]),
+            float(r["Close"]),
+            float(r["Volume"]) if pd.notna(r["Volume"]) else 0.0
+        ])
