@@ -2,171 +2,265 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JP Market Weather</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{
-background:#0f1116;
-color:white;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-margin:0;
-padding:20px;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
 }
-h2{margin-bottom:10px;}
-.weather{font-size:30px;margin-bottom:6px;}
-.score{font-size:16px;margin-bottom:4px;}
-.cards{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin-top:20px;
+.container {
+  max-width: 920px;
+  margin: 0 auto;
 }
-.card{
-background:#1c1f26;
-padding:15px;
-border-radius:10px;
+.hero {
+  border-radius: 18px;
+  padding: 24px 16px;
+  margin-bottom: 18px;
 }
-.market-name{font-size:14px;opacity:.7;}
-.market-price{font-size:22px;margin-top:4px;}
-.market-change{font-size:14px;margin-top:4px;}
-.up{color:#4cd964}
-.down{color:#ff3b30}
-.section{
-margin-top:25px;
-background:#1c1f26;
-padding:15px;
-border-radius:10px;
-white-space:pre-wrap;
+.red { background: #c0392b; }
+.blue { background: #2980b9; }
+.yellow { background: #f1c40f; color: #000; }
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 34px;
 }
-canvas{
-margin-top:25px;
-background:#1c1f26;
-border-radius:10px;
-padding:10px;
-width:100%;
-max-width:100%;
-box-sizing:border-box;
+.emoji {
+  font-size: 54px;
+  margin-bottom: 8px;
+}
+.status {
+  font-size: 28px;
+  font-weight: bold;
+}
+.meta {
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.7;
+}
+.card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+  text-align: left;
+  line-height: 1.8;
+}
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+.chart-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.market-card {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+}
+.market-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.market-price {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.market-row {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+.footer {
+  font-size: 14px;
+  color: #bbb;
+  margin-top: 12px;
+}
+canvas {
+  background: #fff;
+  border-radius: 10px;
+}
+@media (max-width: 600px) {
+  h1 { font-size: 26px; }
+  .status { font-size: 23px; }
+  .meta { font-size: 17px; }
+  .market-price { font-size: 24px; }
 }
 </style>
 </head>
 <body>
+<div class="container">
+  <div class="hero yellow">
+    <div class="emoji">🟡</div>
+    <h1>JP Market Weather</h1>
+    <div class="status">NEUTRAL</div>
+    <div class="meta">
+      <div>スコア：-5</div>
+      <div>危険度：HIGH</div>
+    </div>
+  </div>
 
-<h2>JP Market Weather</h2>
+  <div class="card">
+    <h2>AIコメント</h2>
+    <div>短期は弱含みです。 25日線を下回る指数が多く、戻り売りに注意です。 長期トレンドは維持されています。 VIXが高く、リスク管理が必要な地合いです。</div>
+  </div>
 
-<div id="header"></div>
-<div class="cards" id="cards"></div>
+  <div class="chart-card">
+    <h2>スコア推移</h2>
+    <canvas id="scoreChart"></canvas>
+  </div>
 
-<div class="section" id="ai"></div>
-<div class="section" id="reasons"></div>
-<div class="section" id="details"></div>
+  <div class="card">
+    <h2>マーケット一覧</h2>
+    <div class="grid" id="marketGrid"></div>
+  </div>
 
-<canvas id="scoreChart" height="180"></canvas>
+  <div class="card">
+    <h2>理由</h2>
+    <div>日経ETF 5日下降 -1<br>
+日経ETF 25日線下 -1<br>
+日経ETF 200日線上 +1<br>
+TOPIX 5日下降 -1<br>
+TOPIX 25日線下 -1<br>
+TOPIX 200日線上 +1<br>
+半導体ETF 5日下降 -1<br>
+半導体ETF 25日線下 -1<br>
+半導体ETF 200日線上 +1<br>
+QQQ 5日下降 -1<br>
+QQQ 25日線下 -1<br>
+QQQ 200日線上 +1<br>
+SOXX 5日下降 -1<br>
+SOXX 25日線下 -1<br>
+SOXX 200日線上 +1<br>
+VIX 高い -1<br>
+USDJPY 円安 +1<br></div>
+  </div>
+
+  <div class="footer">更新 2026-03-16 14:55</div>
+</div>
 
 <script>
-async function load(){
-  const txt = await fetch("latest_weather.txt?"+Date.now()).then(r=>r.text())
+const cards = [
+  {
+    "name": "日経ETF",
+    "price": 3778.0,
+    "change": -1.79,
+    "ma25": 3951.8,
+    "ma200": 3385.59,
+    "rsi": 37.1
+  },
+  {
+    "name": "TOPIX",
+    "price": 55550.0,
+    "change": -1.42,
+    "ma25": 58364.8,
+    "ma200": 48641.3,
+    "rsi": 36.3
+  },
+  {
+    "name": "半導体ETF",
+    "price": 369.0,
+    "change": -1.86,
+    "ma25": 386.04,
+    "ma200": 332.95,
+    "rsi": 37.7
+  },
+  {
+    "name": "QQQ",
+    "price": 593.72,
+    "change": -2.31,
+    "ma25": 606.25,
+    "ma200": 591.0,
+    "rsi": 44.8
+  },
+  {
+    "name": "SOXX",
+    "price": 331.32,
+    "change": -1.5,
+    "ma25": 348.43,
+    "ma200": 283.96,
+    "rsi": 37.4
+  },
+  {
+    "name": "VIX",
+    "price": 27.19,
+    "change": "-",
+    "ma25": "-",
+    "ma200": "-",
+    "rsi": "-"
+  },
+  {
+    "name": "USDJPY",
+    "price": 159.32,
+    "change": 0.94,
+    "ma25": "-",
+    "ma200": "-",
+    "rsi": "-"
+  },
+  {
+    "name": "BTC",
+    "price": 74031.95,
+    "change": 5.45,
+    "ma25": "-",
+    "ma200": "-",
+    "rsi": "-"
+  }
+];
 
-  const weather = txt.match(/天気：JP=(.)/)
-  const score = txt.match(/スコア：([-\d]+)/)
-  const risk = txt.match(/危険度：(\w+)/)
-  const temp = txt.match(/市場温度：(\w+)/)
-  const judgement = txt.match(/売買判断：(.+)/)
+const grid = document.getElementById("marketGrid");
+cards.forEach(c => {
+  const el = document.createElement("div");
+  el.className = "market-card";
+  el.innerHTML = ;
+  grid.appendChild(el);
+});
 
-  let header = ""
-  if(weather) header += `<div class="weather">天気 ${weather[1]}</div>`
-  if(score) header += `<div class="score">Score ${score[1]}</div>`
-  if(risk) header += `<div class="score">Risk ${risk[1]}</div>`
-  if(temp) header += `<div class="score">Market Temp ${temp[1]}</div>`
-  if(judgement) header += `<div class="score">売買判断 ${judgement[1]}</div>`
-  document.getElementById("header").innerHTML = header
-
-  const ai = txt.split("AIコメント")[1]?.split("理由")[0]
-  const reasons = txt.split("理由")[1]?.split("詳細")[0]
-  const details = txt.split("詳細")[1]
-
-  if(ai) document.getElementById("ai").innerText = "AIコメント\n" + ai.trim()
-  if(reasons) document.getElementById("reasons").innerText = "理由\n" + reasons.trim()
-  if(details) document.getElementById("details").innerText = "詳細\n" + details.trim()
-
-  const cards = await fetch("cards.json?"+Date.now()).then(r=>r.json())
-  let html = ""
-
-  cards.forEach(c=>{
-    let cls = ""
-    let changeText = c.change
-
-    if(typeof c.change === "number"){
-      if(c.change > 0) cls = "up"
-      if(c.change < 0) cls = "down"
-      changeText = c.change + "%"
+const ctx = document.getElementById('scoreChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Score',
+      data: [{x:1,y:0},{x:2,y:0},{x:3,y:1},{x:4,y:1},{x:5,y:1},{x:6,y:1},{x:7,y:1},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:1},{x:13,y:2},{x:14,y:2},{x:15,y:-2},{x:16,y:1},{x:17,y:1},{x:18,y:2},{x:19,y:1},{x:20,y:-5}],
+      borderWidth: 2,
+      tension: 0.25
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: true }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        ticks: { color: '#333' }
+      },
+      y: {
+        min: -8,
+        max: 8,
+        ticks: { stepSize: 1, color: '#333' }
+      }
     }
-
-    html += `
-    <div class="card">
-      <div class="market-name">${c.name}</div>
-      <div class="market-price">${c.price}</div>
-      <div class="market-change ${cls}">${changeText}</div>
-    </div>`
-  })
-
-  document.getElementById("cards").innerHTML = html
-
-  const historyText = await fetch("history.csv?"+Date.now()).then(r=>r.text())
-  drawChart(historyText)
-}
-
-function drawChart(csvText){
-  const lines = csvText.trim().split("\n")
-  if(lines.length <= 1) return
-
-  const rows = lines.slice(1).map(line => line.split(","))
-  const recent = rows.slice(-20)
-  const scores = recent.map(r => Number(r[2]))
-
-  const canvas = document.getElementById("scoreChart")
-  const ctx = canvas.getContext("2d")
-  const w = canvas.width = canvas.clientWidth * devicePixelRatio
-  const h = canvas.height = 180 * devicePixelRatio
-  ctx.scale(devicePixelRatio, devicePixelRatio)
-
-  const cw = canvas.clientWidth
-  const ch = 180
-
-  ctx.clearRect(0,0,cw,ch)
-  ctx.fillStyle = "#1c1f26"
-  ctx.fillRect(0,0,cw,ch)
-
-  ctx.strokeStyle = "#666"
-  ctx.beginPath()
-  ctx.moveTo(30,20)
-  ctx.lineTo(30,150)
-  ctx.lineTo(cw-10,150)
-  ctx.stroke()
-
-  if(scores.length < 2) return
-
-  const maxVal = Math.max(...scores, 6)
-  const minVal = Math.min(...scores, -6)
-  const range = maxVal - minVal || 1
-
-  ctx.strokeStyle = "#4cd964"
-  ctx.lineWidth = 2
-  ctx.beginPath()
-
-  scores.forEach((v,i)=>{
-    const x = 30 + (i * ((cw-50)/(scores.length-1)))
-    const y = 150 - ((v-minVal)/range)*120
-    if(i===0) ctx.moveTo(x,y)
-    else ctx.lineTo(x,y)
-  })
-  ctx.stroke()
-
-  ctx.fillStyle = "white"
-  ctx.font = "12px sans-serif"
-  ctx.fillText("スコア推移", 30, 14)
-}
-
-load()
+  }
+});
 </script>
-
 </body>
 </html>
