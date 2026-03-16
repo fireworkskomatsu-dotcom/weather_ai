@@ -13,6 +13,25 @@ def calc_rsi(series, period=14):
     rsi = 100 - (100 / (1 + rs))
     return rsi
 
+def get_close_stats(df, code):
+    sub = df[df["Code"] == code].copy()
+    if len(sub) < 25:
+        return None
+    sub = sub.sort_values("Date")
+    close = sub["C"].astype(float)
+    last = close.iloc[-1]
+    change5 = (close.iloc[-1] - close.iloc[-5]) / close.iloc[-5] * 100
+    ma25 = close.tail(25).mean()
+    ma200 = close.tail(200).mean() if len(close) >= 200 else None
+    rsi14 = calc_rsi(close, 14).iloc[-1] if len(close) >= 14 else None
+    return {
+        "last": last,
+        "change5": change5,
+        "ma25": ma25,
+        "ma200": ma200,
+        "rsi14": rsi14,
+    }
+
 df = pd.read_csv("prices.csv")
 df["Code"] = df["Code"].astype(str)
 
@@ -20,6 +39,8 @@ targets = {
     "13060": "日経ETF",
     "13210": "TOPIX",
     "14750": "半導体ETF",
+    "88880": "QQQ",
+    "77770": "SOXX",
 }
 
 score = 0
@@ -35,52 +56,57 @@ above_200 = 0
 below_200 = 0
 
 for code, name in targets.items():
-    sub = df[df["Code"] == code].copy()
+    stats = get_close_stats(df, code)
 
-    if len(sub) < 200:
+    if stats is None:
         reasons.append(f"{name} データ不足 0")
         continue
 
-    sub = sub.sort_values("Date")
-    close = sub["C"].astype(float)
+    last_close = stats["last"]
+    change5 = stats["change5"]
+    ma25 = stats["ma25"]
+    ma200 = stats["ma200"]
+    rsi14 = stats["rsi14"]
 
-    last_close = close.iloc[-1]
-    change5 = (close.iloc[-1] - close.iloc[-5]) / close.iloc[-5] * 100
-    ma25 = close.tail(25).mean()
-    ma200 = close.tail(200).mean()
-    rsi14 = calc_rsi(close, 14).iloc[-1]
+    local_score = 0
 
     if change5 > 1:
-        score += 1
+        local_score += 1
         reasons.append(f"{name} 5日上昇 +1")
         up_5d += 1
     elif change5 < -1:
-        score -= 1
+        local_score -= 1
         reasons.append(f"{name} 5日下降 -1")
         down_5d += 1
     else:
         reasons.append(f"{name} 5日横ばい 0")
 
     if last_close > ma25:
-        score += 1
+        local_score += 1
         reasons.append(f"{name} 25日線上 +1")
         above_25 += 1
     else:
-        score -= 1
+        local_score -= 1
         reasons.append(f"{name} 25日線下 -1")
         below_25 += 1
 
-    if last_close > ma200:
-        score += 1
-        reasons.append(f"{name} 200日線上 +1")
-        above_200 += 1
-    else:
-        score -= 1
-        reasons.append(f"{name} 200日線下 -1")
-        below_200 += 1
+    if ma200 is not None:
+        if last_close > ma200:
+            local_score += 1
+            reasons.append(f"{name} 200日線上 +1")
+            above_200 += 1
+        else:
+            local_score -= 1
+            reasons.append(f"{name} 200日線下 -1")
+            below_200 += 1
+
+    score += local_score
+
+    ma200_text = f"{ma200:.2f}" if ma200 is not None else "-"
+    rsi_text = f"{rsi14:.1f}" if rsi14 is not None and pd.notna(rsi14) else "-"
 
     details.append(
-        f"{name}: 終値={last_close:.2f}, 5日騰落率={change5:.2f}%, 25MA={ma25:.2f}, 200MA={ma200:.2f}, RSI={rsi14:.1f}"
+        f"{name}: 終値={last_close:.2f}, 5日騰落率={change5:.2f}%, 25MA={ma25:.2f}, 200MA={ma200_text}, RSI={rsi_text}"
     )
 
     cards.append({
@@ -88,16 +114,16 @@ for code, name in targets.items():
         "price": round(last_close, 2),
         "change": round(change5, 2),
         "ma25": round(ma25, 2),
-        "ma200": round(ma200, 2),
-        "rsi": round(rsi14, 1),
+        "ma200": round(ma200, 2) if ma200 is not None else "-",
+        "rsi": round(rsi14, 1) if rsi14 is not None and pd.notna(rsi14) else "-",
     })
 
 risk_level = "MEDIUM"
 
-vix = df[df["Code"] == "66660"].copy()
-if len(vix) >= 1:
-    vix = vix.sort_values("Date")
-    vix_last = float(vix["C"].iloc[-1])
+# VIX
+vix_stats = get_close_stats(df, "66660")
+if vix_stats is not None:
+    vix_last = vix_stats["last"]
 
     if vix_last >= 25:
         score -= 1
@@ -122,6 +148,50 @@ if len(vix) >= 1:
     })
 else:
     reasons.append("VIX データ不足 0")
+
+# USDJPY
+fx_stats = get_close_stats(df, "55550")
+if fx_stats is not None:
+    fx_last = fx_stats["last"]
+    fx_change5 = fx_stats["change5"]
+
+    if fx_change5 > 0.5:
+        score += 1
+        reasons.append("USDJPY 円安 +1")
+    elif fx_change5 < -0.5:
+        score -= 1
+        reasons.append("USDJPY 円高 -1")
+    else:
+        reasons.append("USDJPY 中立 0")
+
+    details.append(f"USDJPY: 終値={fx_last:.2f}, 5日変化={fx_change5:.2f}%")
+
+    cards.append({
+        "name": "USDJPY",
+        "price": round(fx_last, 2),
+        "change": round(fx_change5, 2),
+        "ma25": "-",
+        "ma200": "-",
+        "rsi": "-",
+    })
+
+# BTC
+btc_change5 = None
+btc_stats = get_close_stats(df, "44440")
+if btc_stats is not None:
+    btc_last = btc_stats["last"]
+    btc_change5 = btc_stats["change5"]
+
+    details.append(f"BTC: 終値={btc_last:.2f}, 5日変化={btc_change5:.2f}%")
+
+    cards.append({
+        "name": "BTC",
+        "price": round(btc_last, 2),
+        "change": round(btc_change5, 2),
+        "ma25": "-",
+        "ma200": "-",
+        "rsi": "-",
+    })
 
 if score >= 6:
     weather = "赤"
@@ -172,6 +242,32 @@ elif score <= -2:
 else:
     trade_judgement = "様子見・ノーポジ寄り"
 
+# 上昇確率AI
+prob_up = 50 + score * 5
+
+if risk_level == "HIGH":
+    prob_up -= 5
+elif risk_level == "LOW":
+    prob_up += 5
+
+reason_text = " ".join(reasons)
+
+if "USDJPY 円安 +1" in reason_text:
+    prob_up += 3
+if "QQQ 5日下降 -1" in reason_text:
+    prob_up -= 3
+if "SOXX 5日下降 -1" in reason_text:
+    prob_up -= 3
+
+if btc_change5 is not None:
+    if btc_change5 > 1:
+        prob_up += 2
+    elif btc_change5 < -1:
+        prob_up -= 2
+
+prob_up = max(5, min(95, int(round(prob_up))))
+prob_down = 100 - prob_up
+
 ai_comment = " ".join(comment_lines)
 
 now = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -181,6 +277,8 @@ text = f"""天気：JP={weather}
 危険度：{risk_level}
 市場温度：{market_temp}
 売買判断：{trade_judgement}
+上昇確率：{prob_up}%
+下落確率：{prob_down}%
 
 AIコメント
 {ai_comment}
@@ -206,9 +304,9 @@ with open("cards.json", "w") as f:
 history_path = Path("history.csv")
 if not history_path.exists():
     with open("history.csv", "w") as f:
-        f.write("datetime,weather,score,risk,temp,judgement\n")
+        f.write("datetime,weather,score,risk,temp,judgement,prob_up,prob_down\n")
 
 with open("history.csv", "a") as f:
-    f.write(f"{now},{weather},{score},{risk_level},{market_temp},{trade_judgement}\n")
+    f.write(f"{now},{weather},{score},{risk_level},{market_temp},{trade_judgement},{prob_up},{prob_down}\n")
 
 print(text)
