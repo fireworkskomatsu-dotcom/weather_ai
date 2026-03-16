@@ -17,9 +17,9 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: install packages
-        run: |
-          pip install pandas yfinance
+- name: install packages
+  run: |
+    pip install pandas yfinance python-dotenv
 
       - name: run scripts
         run: |
