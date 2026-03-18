@@ -1,0 +1,13 @@
+{
+  "weather": "黄",
+  "score": -5.0,
+  "danger": "HIGH",
+  "up_prob": 19.0,
+  "down_prob": 81.0,
+  "total_position": -0.43,
+  "allocations": {
+    "nikkei_etf": -0.3,
+    "semi_etf": -0.13,
+    "cash": 0.57
+  }
+}

@@ -1,27 +1,5 @@
 {
   "weather": "黄",
-  "score": -5.0,
-  "danger": "HIGH",
-  "up_prob": 19.0,
-  "down_prob": 81.0,
-  "total_position": -0.43,
-  "allocations": {
-    "nikkei_etf": -0.3,
-    "semi_etf": -0.13,
-    "cash": 0.57
-  }
-}
-{
-  "open_up_prob": 9.0,
-  "open_down_prob": 91.0,
-  "gap_bias": "DOWN"
-}
-{
-  "confidence": 93.6,
-  "level": "HIGH"
-}
-{
-  "weather": "黄",
   "score": "-5",
   "danger": "HIGH",
   "market_temp": "COLD",
@@ -51,4 +29,3 @@
     "level": "HIGH"
   }
 }
-DONE

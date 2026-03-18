@@ -310,3 +310,18 @@ with open("history.csv", "a") as f:
     f.write(f"{now},{weather},{score},{risk_level},{market_temp},{trade_judgement},{prob_up},{prob_down}\n")
 
 print(text)
+import datetime
+import os
+
+score = -5
+
+history_file = "history.csv"
+
+line = f"{datetime.date.today()},{score}\n"
+
+if not os.path.exists(history_file):
+    with open(history_file,"w") as f:
+        f.write("date,score\n")
+
+with open(history_file,"a") as f:
+    f.write(line)
