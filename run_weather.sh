@@ -10,6 +10,7 @@ python position_ai.py
 python open_ai.py
 python confidence_ai.py
 python event_ai.py
+python news_ai.py
 python filter_ai.py
 python dashboard_builder.py
 python logger.py

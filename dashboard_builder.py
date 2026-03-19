@@ -12,6 +12,7 @@ OPEN_FILE = BASE / "open.json"
 CONF_FILE = BASE / "confidence.json"
 FILTER_FILE = BASE / "filter.json"
 EVENT_FILE = BASE / "event.json"
+NEWS_FILE = BASE / "news.json"
 LOG_FILE = BASE / "trade_log.csv"
 OUT_FILE = WEB / "dashboard.json"
 
@@ -71,15 +72,24 @@ def load_pnl_stats():
         "win_rate": win_rate
     }
 
+def safe_json(path, default):
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except:
+            return default
+    return default
+
 def main():
-    weather_text = WEATHER_FILE.read_text(encoding="utf-8")
+    weather_text = WEATHER_FILE.read_text(encoding="utf-8") if WEATHER_FILE.exists() else ""
     lines = [x.strip() for x in weather_text.splitlines() if x.strip()]
 
-    position = json.loads(POSITION_FILE.read_text(encoding="utf-8"))
-    open_data = json.loads(OPEN_FILE.read_text(encoding="utf-8"))
-    conf = json.loads(CONF_FILE.read_text(encoding="utf-8"))
-    filt = json.loads(FILTER_FILE.read_text(encoding="utf-8"))
-    event_data = json.loads(EVENT_FILE.read_text(encoding="utf-8"))
+    position = safe_json(POSITION_FILE, {})
+    open_data = safe_json(OPEN_FILE, {})
+    conf = safe_json(CONF_FILE, {})
+    filt = safe_json(FILTER_FILE, {})
+    event_data = safe_json(EVENT_FILE, {})
+    news_data = safe_json(NEWS_FILE, {})
     pnl_stats = load_pnl_stats()
 
     out = {
@@ -97,7 +107,8 @@ def main():
         "open": open_data,
         "confidence": conf,
         "filter": filt,
-        "event": event_data
+        "event": event_data,
+        "news": news_data
     }
 
     OUT_FILE.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

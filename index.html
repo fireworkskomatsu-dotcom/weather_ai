@@ -82,6 +82,11 @@ h2{
 .event-high{ color:#f87171; font-weight:900; }
 .event-mid{ color:#facc15; font-weight:900; }
 .event-low{ color:#4ade80; font-weight:900; }
+.news-line{
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:8px;
+}
 
 .chartWrap{
     height:340px;
@@ -131,6 +136,11 @@ h2{
             <h2>イベント</h2>
             <div id="eventBlock" class="metric">読み込み中...</div>
         </div>
+    </div>
+
+    <div class="card">
+        <h2>ニュース</h2>
+        <div id="newsBlock" class="metric">読み込み中...</div>
     </div>
 
     <div class="grid">
@@ -183,6 +193,7 @@ async function loadDashboard() {
     const pnlStats = data.pnl_stats || {};
     const filt = data.filter || {};
     const eventData = data.event || {};
+    const newsData = data.news || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -231,6 +242,25 @@ async function loadDashboard() {
         "イベント強度: " + eventHtml + "<br>" +
         "内容: <b>" + eventReason + "</b>";
 
+    const newsLevel = newsData.news_level || "LOW";
+    const newsReason = newsData.news_reason || "通常ニュースフロー";
+    const newsScore = newsData.news_score ?? 0;
+    const headlines = newsData.headlines || [];
+
+    let newsHeader = "ニュース強度: <b>" + newsLevel + "</b><br>" +
+                     "理由: <b>" + newsReason + "</b><br>" +
+                     "ニューススコア: <b>" + newsScore + "</b><br><br>";
+
+    let newsLines = "";
+    headlines.slice(0, 5).forEach(h => {
+        newsLines += '<div class="news-line">・' + h.title + '</div>';
+    });
+    if (newsLines === "") {
+        newsLines = '<div class="news-line">ニュース取得なし</div>';
+    }
+
+    document.getElementById("newsBlock").innerHTML = newsHeader + newsLines;
+
     document.getElementById("positionBlock").innerHTML =
         "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
         "半導体ETF: <b>" + (alloc.semi_etf ?? "-") + "</b><br>" +
@@ -239,7 +269,6 @@ async function loadDashboard() {
 
     const nikkei = Number(alloc.nikkei_etf ?? 0);
     const semi = Number(alloc.semi_etf ?? 0);
-    const cash = Number(alloc.cash ?? 0);
     const sizeFactor = Number(filt.size ?? 0);
 
     let orderLines = [];
