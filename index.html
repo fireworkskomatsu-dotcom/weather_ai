@@ -1,266 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JP Market Weather</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-}
-.container {
-  max-width: 920px;
-  margin: 0 auto;
-}
-.hero {
-  border-radius: 18px;
-  padding: 24px 16px;
-  margin-bottom: 18px;
-}
-.red { background: #c0392b; }
-.blue { background: #2980b9; }
-.yellow { background: #f1c40f; color: #000; }
-h1 {
-  margin: 0 0 12px 0;
-  font-size: 34px;
-}
-.emoji {
-  font-size: 54px;
-  margin-bottom: 8px;
-}
-.status {
-  font-size: 28px;
-  font-weight: bold;
-}
-.meta {
-  margin-top: 10px;
-  font-size: 20px;
-  line-height: 1.7;
-}
-.card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  text-align: left;
-  line-height: 1.8;
-}
-.card h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-.chart-card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 16px;
-}
-.market-card {
-  background: #1c1c1c;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: left;
-}
-.market-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.market-price {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-.market-row {
-  font-size: 14px;
-  color: #ccc;
-  margin-bottom: 4px;
-}
-.footer {
-  font-size: 14px;
-  color: #bbb;
-  margin-top: 12px;
-}
-canvas {
-  background: #fff;
-  border-radius: 10px;
-}
-@media (max-width: 600px) {
-  h1 { font-size: 26px; }
-  .status { font-size: 23px; }
-  .meta { font-size: 17px; }
-  .market-price { font-size: 24px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Market AI Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{
+      margin:0;
+      background:#081225;
+      color:#fff;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:20px;
+    }
+    .card{
+      background:#0d1830;
+      border-radius:20px;
+      padding:20px;
+      margin-bottom:18px;
+      box-shadow:0 4px 20px rgba(0,0,0,.25);
+    }
+    .hero{
+      background:#f0cb00;
+      color:#111;
+      text-align:center;
+    }
+    h1,h2,h3{margin:0 0 12px 0}
+    .status{font-size:2rem;font-weight:700;margin:8px 0}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px;
+    }
+    .metric{
+      font-size:1.2rem;
+      line-height:1.8;
+    }
+    .small{
+      opacity:.9;
+      font-size:.95rem;
+    }
+    #chartBox{
+      height:320px;
+    }
+    .alloc{
+      font-size:1.15rem;
+      line-height:1.9;
+    }
+    .good{color:#4ade80}
+    .bad{color:#f87171}
+    .mid{color:#facc15}
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="hero yellow">
-    <div class="emoji">🟡</div>
-    <h1>JP Market Weather</h1>
-    <div class="status">NEUTRAL</div>
-    <div class="meta">
-      <div>スコア：-5</div>
-      <div>危険度：HIGH</div>
+  <div class="wrap">
+    <div class="card hero">
+      <h1>JP Market AI Dashboard</h1>
+      <div id="status" class="status">LOADING</div>
+      <div id="action" class="metric">読み込み中...</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>市場判定</h2>
+        <div id="marketBlock" class="metric">読み込み中...</div>
+      </div>
+
+      <div class="card">
+        <h2>寄り付きAI</h2>
+        <div id="openBlock" class="metric">読み込み中...</div>
+      </div>
+
+      <div class="card">
+        <h2>信頼度</h2>
+        <div id="confidenceBlock" class="metric">読み込み中...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ポジション配分</h2>
+      <div id="positionBlock" class="alloc">読み込み中...</div>
+    </div>
+
+    <div class="card">
+      <h2>スコア推移</h2>
+      <div id="chartBox">
+        <canvas id="scoreChart"></canvas>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>AIコメント</h2>
-    <div>短期は弱含みです。 25日線を下回る指数が多く、戻り売りに注意です。 長期トレンドは維持されています。 VIXが高く、リスク管理が必要な地合いです。</div>
-  </div>
+  <script>
+    async function loadDashboard(){
+      const res = await fetch("dashboard.json?v=" + Date.now());
+      const data = await res.json();
 
-  <div class="chart-card">
-    <h2>スコア推移</h2>
-    <canvas id="scoreChart"></canvas>
-  </div>
+      const weather = data.weather || "-";
+      const score = data.score || "-";
+      const danger = data.danger || "-";
+      const temp = data.market_temp || "-";
+      const action = data.action || "-";
+      const up = data.up_prob || "-";
+      const down = data.down_prob || "-";
 
-  <div class="card">
-    <h2>マーケット一覧</h2>
-    <div class="grid" id="marketGrid"></div>
-  </div>
+      const pos = data.position || {};
+      const alloc = pos.allocations || {};
 
-  <div class="card">
-    <h2>理由</h2>
-    <div>日経ETF 5日下降 -1<br>
-日経ETF 25日線下 -1<br>
-日経ETF 200日線上 +1<br>
-TOPIX 5日下降 -1<br>
-TOPIX 25日線下 -1<br>
-TOPIX 200日線上 +1<br>
-半導体ETF 5日下降 -1<br>
-半導体ETF 25日線下 -1<br>
-半導体ETF 200日線上 +1<br>
-QQQ 5日下降 -1<br>
-QQQ 25日線下 -1<br>
-QQQ 200日線上 +1<br>
-SOXX 5日下降 -1<br>
-SOXX 25日線下 -1<br>
-SOXX 200日線上 +1<br>
-VIX 高い -1<br>
-USDJPY 円安 +1<br></div>
-  </div>
+      const open = data.open || {};
+      const conf = data.confidence || {};
 
-  <div class="footer">更新 2026-03-16 17:01</div>
-</div>
+      document.getElementById("status").textContent =
+        weather === "青" ? "RISK ON" : (weather === "赤" ? "RISK OFF" : "NEUTRAL");
 
-<script>
-const cards = [
-  {
-    "name": "日経ETF",
-    "price": 3778.0,
-    "change": -1.79,
-    "ma25": 3951.8,
-    "ma200": 3385.59,
-    "rsi": 37.1
-  },
-  {
-    "name": "TOPIX",
-    "price": 55550.0,
-    "change": -1.42,
-    "ma25": 58364.8,
-    "ma200": 48641.3,
-    "rsi": 36.3
-  },
-  {
-    "name": "半導体ETF",
-    "price": 369.0,
-    "change": -1.86,
-    "ma25": 386.04,
-    "ma200": 332.95,
-    "rsi": 37.7
-  },
-  {
-    "name": "QQQ",
-    "price": 593.72,
-    "change": -2.31,
-    "ma25": 606.25,
-    "ma200": 591.0,
-    "rsi": 44.8
-  },
-  {
-    "name": "SOXX",
-    "price": 331.32,
-    "change": -1.5,
-    "ma25": 348.43,
-    "ma200": 283.96,
-    "rsi": 37.4
-  },
-  {
-    "name": "VIX",
-    "price": 27.19,
-    "change": "-",
-    "ma25": "-",
-    "ma200": "-",
-    "rsi": "-"
-  },
-  {
-    "name": "USDJPY",
-    "price": 159.32,
-    "change": 0.94,
-    "ma25": "-",
-    "ma200": "-",
-    "rsi": "-"
-  },
-  {
-    "name": "BTC",
-    "price": 74031.95,
-    "change": 5.45,
-    "ma25": "-",
-    "ma200": "-",
-    "rsi": "-"
-  }
-];
+      document.getElementById("action").textContent =
+        `売買判断: ${action}`;
 
-const grid = document.getElementById("marketGrid");
-cards.forEach(c => {
-  const el = document.createElement("div");
-  el.className = "market-card";
-  el.innerHTML = ;
-  grid.appendChild(el);
-});
+      document.getElementById("marketBlock").innerHTML = `
+        スコア: <b>${score}</b><br>
+        危険度: <b>${danger}</b><br>
+        市場温度: <b>${temp}</b><br>
+        上昇確率: <b>${up}</b><br>
+        下落確率: <b>${down}</b>
+      `;
 
-const ctx = document.getElementById('scoreChart');
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    datasets: [{
-      label: 'Score',
-      data: [{x:1,y:0},{x:2,y:1},{x:3,y:1},{x:4,y:1},{x:5,y:1},{x:6,y:1},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:1},{x:12,y:2},{x:13,y:2},{x:14,y:-2},{x:15,y:1},{x:16,y:1},{x:17,y:2},{x:18,y:1},{x:19,y:-5},{x:20,y:-5}],
-      borderWidth: 2,
-      tension: 0.25
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: true }
-    },
-    scales: {
-      x: {
-        type: 'linear',
-        ticks: { color: '#333' }
-      },
-      y: {
-        min: -8,
-        max: 8,
-        ticks: { stepSize: 1, color: '#333' }
-      }
+      document.getElementById("openBlock").innerHTML = `
+        寄り上昇: <b>${open.open_up_prob ?? "-"}</b>%<br>
+        寄り下落: <b>${open.open_down_prob ?? "-"}</b>%<br>
+        バイアス: <b>${open.gap_bias ?? "-"}</b>
+      `;
+
+      document.getElementById("confidenceBlock").innerHTML = `
+        信頼度: <b>${conf.confidence ?? "-"}</b><br>
+        レベル: <b>${conf.level ?? "-"}</b>
+      `;
+
+      document.getElementById("positionBlock").innerHTML = `
+        日経ETF: <b>${alloc.nikkei_etf ?? "-"}</b><br>
+        半導体ETF: <b>${alloc.semi_etf ?? "-"}</b><br>
+        現金: <b>${alloc.cash ?? "-"}</b><br>
+        総ポジション: <b>${pos.total_position ?? "-"}</b>
+      `;
     }
-  }
-});
-</script>
+
+    async function drawChart(){
+      const res = await fetch("chart_history.csv?v=" + Date.now());
+      const text = await res.text();
+      const rows = text.trim().split("\n").slice(1);
+
+      const labels = [];
+      const data = [];
+
+      rows.forEach(row => {
+        const [d, s] = row.split(",");
+        if (d && s !== undefined) {
+          labels.push(d);
+          data.push(Number(s));
+        }
+      });
+
+      new Chart(document.getElementById("scoreChart"), {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "AI Score",
+            data,
+            borderColor: "#00e0b8",
+            backgroundColor: "rgba(0,224,184,0.15)",
+            tension: 0.25,
+            pointRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: "#fff" } }
+          },
+          scales: {
+            x: {
+              ticks: { color: "#d6dbe5", maxRotation: 45, minRotation: 45 },
+              grid: { color: "rgba(255,255,255,0.08)" }
+            },
+            y: {
+              ticks: { color: "#d6dbe5" },
+              grid: { color: "rgba(255,255,255,0.08)" }
+            }
+          }
+        }
+      });
+    }
+
+    loadDashboard();
+    drawChart();
+  </script>
 </body>
 </html>
