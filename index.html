@@ -128,13 +128,13 @@ async function loadDashboard() {
     const up = data.up_prob || "-";
     const down = data.down_prob || "-";
     const updated = data.updated_at || "-";
+    const capital = Number(data.capital || 0);
 
     const pos = data.position || {};
     const alloc = pos.allocations || {};
     const open = data.open || {};
     const conf = data.confidence || {};
 
-    // 上部ステータス
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
     if (weather === "赤") statusText = "RISK OFF";
@@ -142,7 +142,6 @@ async function loadDashboard() {
     document.getElementById("status").textContent = statusText;
     document.getElementById("action").textContent = "売買判断: " + action;
 
-    // 市場判定
     document.getElementById("marketBlock").innerHTML =
         "スコア: <b>" + score + "</b><br>" +
         "危険度: <b>" + danger + "</b><br>" +
@@ -150,25 +149,21 @@ async function loadDashboard() {
         "上昇確率: <b>" + up + "</b><br>" +
         "下落確率: <b>" + down + "</b>";
 
-    // 寄り付きAI
     document.getElementById("openBlock").innerHTML =
         "寄り上昇: <b>" + (open.open_up_prob ?? "-") + "%</b><br>" +
         "寄り下落: <b>" + (open.open_down_prob ?? "-") + "%</b><br>" +
         "バイアス: <b>" + (open.gap_bias ?? "-") + "</b>";
 
-    // 信頼度
     document.getElementById("confidenceBlock").innerHTML =
         "信頼度: <b>" + (conf.confidence ?? "-") + "</b><br>" +
         "レベル: <b>" + (conf.level ?? "-") + "</b>";
 
-    // ポジション
     document.getElementById("positionBlock").innerHTML =
         "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
         "半導体ETF: <b>" + (alloc.semi_etf ?? "-") + "</b><br>" +
         "現金: <b>" + (alloc.cash ?? "-") + "</b><br>" +
         "総ポジション: <b>" + (pos.total_position ?? "-") + "</b>";
 
-    // 注文指示（最重要）
     const nikkei = Number(alloc.nikkei_etf ?? 0);
     const semi = Number(alloc.semi_etf ?? 0);
     const cash = Number(alloc.cash ?? 0);
@@ -176,30 +171,30 @@ async function loadDashboard() {
     let orderLines = [];
 
     if (nikkei < 0) {
-        orderLines.push('<span class="sell">1357 買い（' + Math.round(Math.abs(nikkei) * 100) + '%）</span>');
+        const amount = Math.round(capital * Math.abs(nikkei));
+        orderLines.push('<span class="sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
     } else if (nikkei > 0) {
-        orderLines.push('<span class="buy">1321 買い（' + Math.round(Math.abs(nikkei) * 100) + '%）</span>');
+        const amount = Math.round(capital * Math.abs(nikkei));
+        orderLines.push('<span class="buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
     }
 
     if (semi < 0) {
-        orderLines.push('<span class="sell">2244 空売り（' + Math.round(Math.abs(semi) * 100) + '%）</span>');
+        const amount = Math.round(capital * Math.abs(semi));
+        orderLines.push('<span class="sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
     } else if (semi > 0) {
-        orderLines.push('<span class="buy">2244 買い（' + Math.round(Math.abs(semi) * 100) + '%）</span>');
+        const amount = Math.round(capital * Math.abs(semi));
+        orderLines.push('<span class="buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
     }
 
     if (orderLines.length === 0) {
         orderLines.push('<span class="wait">何もしない</span>');
     }
 
-    orderLines.push("現金 " + Math.round(cash * 100) + "%");
+    orderLines.push("現金 → " + Math.round(capital * cash).toLocaleString() + "円");
 
     document.getElementById("orderBlock").innerHTML = orderLines.join("<br>");
-
-    // 更新時刻
     document.getElementById("updated").textContent = "更新 " + updated;
-}
 
-async function drawChart() {
     const csv = await fetch("chart_history.csv?v=" + Date.now());
     const text = await csv.text();
 
@@ -242,7 +237,7 @@ async function drawChart() {
 }
 
 loadDashboard();
-drawChart();
 </script>
+
 </body>
 </html>

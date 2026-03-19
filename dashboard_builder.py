@@ -11,6 +11,8 @@ OPEN_FILE = BASE / "open.json"
 CONF_FILE = BASE / "confidence.json"
 OUT_FILE = WEB / "dashboard.json"
 
+CAPITAL = 500000
+
 def extract_value(lines, prefix):
     for line in lines:
         if line.startswith(prefix):
@@ -34,6 +36,7 @@ def main():
         "up_prob": extract_value(lines, "上昇確率："),
         "down_prob": extract_value(lines, "下落確率："),
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "capital": CAPITAL,
         "position": position,
         "open": open_data,
         "confidence": conf
