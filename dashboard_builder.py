@@ -10,6 +10,7 @@ WEATHER_FILE = BASE / "latest_weather.txt"
 POSITION_FILE = BASE / "position.json"
 OPEN_FILE = BASE / "open.json"
 CONF_FILE = BASE / "confidence.json"
+FILTER_FILE = BASE / "filter.json"
 LOG_FILE = BASE / "trade_log.csv"
 OUT_FILE = WEB / "dashboard.json"
 
@@ -76,6 +77,7 @@ def main():
     position = json.loads(POSITION_FILE.read_text(encoding="utf-8"))
     open_data = json.loads(OPEN_FILE.read_text(encoding="utf-8"))
     conf = json.loads(CONF_FILE.read_text(encoding="utf-8"))
+    filt = json.loads(FILTER_FILE.read_text(encoding="utf-8"))
     pnl_stats = load_pnl_stats()
 
     out = {
@@ -91,7 +93,8 @@ def main():
         "pnl_stats": pnl_stats,
         "position": position,
         "open": open_data,
-        "confidence": conf
+        "confidence": conf,
+        "filter": filt
     }
 
     OUT_FILE.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

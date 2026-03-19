@@ -9,7 +9,10 @@ python weather_signal.py > latest_weather.txt 2>&1
 python position_ai.py
 python open_ai.py
 python confidence_ai.py
+python filter_ai.py
 python dashboard_builder.py
+python logger.py
+python paper_pnl.py
 
 python3 <<'INNERPY'
 from pathlib import Path
@@ -37,5 +40,6 @@ with dst.open("w", encoding="utf-8") as f:
 INNERPY
 
 cp latest_weather.txt web/weather.txt
+cp web/dashboard.json dashboard.json
 
 echo "DONE"

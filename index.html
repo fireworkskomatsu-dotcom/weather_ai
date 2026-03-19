@@ -76,6 +76,9 @@ h2{
 .pnl-plus{ color:#4ade80; font-weight:800; }
 .pnl-minus{ color:#f87171; font-weight:800; }
 .pnl-flat{ color:#facc15; font-weight:800; }
+.exec{ color:#4ade80; font-weight:900; }
+.light{ color:#facc15; font-weight:900; }
+.skip{ color:#f87171; font-weight:900; }
 
 .chartWrap{
     height:340px;
@@ -115,9 +118,16 @@ h2{
         </div>
     </div>
 
-    <div class="card">
-        <h2>ポジション配分</h2>
-        <div id="positionBlock" class="metric">読み込み中...</div>
+    <div class="grid">
+        <div class="card">
+            <h2>フィルター</h2>
+            <div id="filterBlock" class="metric">読み込み中...</div>
+        </div>
+
+        <div class="card">
+            <h2>ポジション配分</h2>
+            <div id="positionBlock" class="metric">読み込み中...</div>
+        </div>
     </div>
 
     <div class="grid">
@@ -163,6 +173,7 @@ async function loadDashboard() {
     const open = data.open || {};
     const conf = data.confidence || {};
     const pnlStats = data.pnl_stats || {};
+    const filt = data.filter || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -187,6 +198,21 @@ async function loadDashboard() {
         "信頼度: <b>" + (conf.confidence ?? "-") + "</b><br>" +
         "レベル: <b>" + (conf.level ?? "-") + "</b>";
 
+    // フィルター
+    const decision = filt.decision || "-";
+    const size = filt.size ?? "-";
+    const filterReason = filt.reason || "";
+
+    let decisionHtml = '<span>' + decision + '</span>';
+    if (decision === "EXECUTE") decisionHtml = '<span class="exec">EXECUTE</span>';
+    if (decision === "LIGHT") decisionHtml = '<span class="light">LIGHT</span>';
+    if (decision === "SKIP") decisionHtml = '<span class="skip">SKIP</span>';
+
+    document.getElementById("filterBlock").innerHTML =
+        "判定: " + decisionHtml + "<br>" +
+        "サイズ倍率: <b>" + size + "</b><br>" +
+        "理由: <b>" + filterReason + "</b>";
+
     document.getElementById("positionBlock").innerHTML =
         "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
         "半導体ETF: <b>" + (alloc.semi_etf ?? "-") + "</b><br>" +
@@ -196,30 +222,35 @@ async function loadDashboard() {
     const nikkei = Number(alloc.nikkei_etf ?? 0);
     const semi = Number(alloc.semi_etf ?? 0);
     const cash = Number(alloc.cash ?? 0);
+    const sizeFactor = Number(filt.size ?? 0);
 
     let orderLines = [];
 
-    if (nikkei < 0) {
-        const amount = Math.round(capital * Math.abs(nikkei));
-        orderLines.push('<span class="order-line sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
-    } else if (nikkei > 0) {
-        const amount = Math.round(capital * Math.abs(nikkei));
-        orderLines.push('<span class="order-line buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
-    }
-
-    if (semi < 0) {
-        const amount = Math.round(capital * Math.abs(semi));
-        orderLines.push('<span class="order-line sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
-    } else if (semi > 0) {
-        const amount = Math.round(capital * Math.abs(semi));
-        orderLines.push('<span class="order-line buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
-    }
-
-    if (orderLines.length === 0) {
+    if (decision === "SKIP" || sizeFactor === 0) {
         orderLines.push('<span class="order-line wait">何もしない</span>');
+        orderLines.push('<span class="order-line">現金 → ' + capital.toLocaleString() + '円</span>');
+    } else {
+        if (nikkei < 0) {
+            const amount = Math.round(capital * Math.abs(nikkei) * sizeFactor);
+            orderLines.push('<span class="order-line sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
+        } else if (nikkei > 0) {
+            const amount = Math.round(capital * Math.abs(nikkei) * sizeFactor);
+            orderLines.push('<span class="order-line buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
+        }
+
+        if (semi < 0) {
+            const amount = Math.round(capital * Math.abs(semi) * sizeFactor);
+            orderLines.push('<span class="order-line sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
+        } else if (semi > 0) {
+            const amount = Math.round(capital * Math.abs(semi) * sizeFactor);
+            orderLines.push('<span class="order-line buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
+        }
+
+        const usedCapital = Math.round(capital * ((Math.abs(nikkei) + Math.abs(semi)) * sizeFactor));
+        const cashAmount = capital - usedCapital;
+        orderLines.push('<span class="order-line">現金 → ' + cashAmount.toLocaleString() + '円</span>');
     }
 
-    orderLines.push('<span class="order-line">現金 → ' + Math.round(capital * cash).toLocaleString() + '円</span>');
     document.getElementById("orderBlock").innerHTML = orderLines.join("");
 
     // 前回損益
