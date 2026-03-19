@@ -79,6 +79,9 @@ h2{
 .exec{ color:#4ade80; font-weight:900; }
 .light{ color:#facc15; font-weight:900; }
 .skip{ color:#f87171; font-weight:900; }
+.event-high{ color:#f87171; font-weight:900; }
+.event-mid{ color:#facc15; font-weight:900; }
+.event-low{ color:#4ade80; font-weight:900; }
 
 .chartWrap{
     height:340px;
@@ -125,12 +128,17 @@ h2{
         </div>
 
         <div class="card">
-            <h2>ポジション配分</h2>
-            <div id="positionBlock" class="metric">読み込み中...</div>
+            <h2>イベント</h2>
+            <div id="eventBlock" class="metric">読み込み中...</div>
         </div>
     </div>
 
     <div class="grid">
+        <div class="card">
+            <h2>ポジション配分</h2>
+            <div id="positionBlock" class="metric">読み込み中...</div>
+        </div>
+
         <div class="card">
             <h2>前回損益</h2>
             <div id="pnlBlock" class="metric">計算待ち...</div>
@@ -174,6 +182,7 @@ async function loadDashboard() {
     const conf = data.confidence || {};
     const pnlStats = data.pnl_stats || {};
     const filt = data.filter || {};
+    const eventData = data.event || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -198,7 +207,6 @@ async function loadDashboard() {
         "信頼度: <b>" + (conf.confidence ?? "-") + "</b><br>" +
         "レベル: <b>" + (conf.level ?? "-") + "</b>";
 
-    // フィルター
     const decision = filt.decision || "-";
     const size = filt.size ?? "-";
     const filterReason = filt.reason || "";
@@ -212,6 +220,16 @@ async function loadDashboard() {
         "判定: " + decisionHtml + "<br>" +
         "サイズ倍率: <b>" + size + "</b><br>" +
         "理由: <b>" + filterReason + "</b>";
+
+    const eventLevel = eventData.event_level || "LOW";
+    const eventReason = eventData.event_reason || "通常日";
+    let eventHtml = '<span class="event-low">LOW</span>';
+    if (eventLevel === "MID") eventHtml = '<span class="event-mid">MID</span>';
+    if (eventLevel === "HIGH") eventHtml = '<span class="event-high">HIGH</span>';
+
+    document.getElementById("eventBlock").innerHTML =
+        "イベント強度: " + eventHtml + "<br>" +
+        "内容: <b>" + eventReason + "</b>";
 
     document.getElementById("positionBlock").innerHTML =
         "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
@@ -253,7 +271,6 @@ async function loadDashboard() {
 
     document.getElementById("orderBlock").innerHTML = orderLines.join("");
 
-    // 前回損益
     let pnlHtml = "まだデータ不足";
     const lastPnlRaw = pnlStats.last_pnl ?? "";
     if (String(lastPnlRaw).trim() !== "") {
@@ -268,7 +285,6 @@ async function loadDashboard() {
     }
     document.getElementById("pnlBlock").innerHTML = pnlHtml;
 
-    // 成績
     let statsHtml = "まだデータ不足";
     const tradeCount = Number(pnlStats.trade_count ?? 0);
     if (tradeCount > 0) {

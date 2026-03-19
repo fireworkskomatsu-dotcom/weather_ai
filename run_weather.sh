@@ -9,6 +9,7 @@ python weather_signal.py > latest_weather.txt 2>&1
 python position_ai.py
 python open_ai.py
 python confidence_ai.py
+python event_ai.py
 python filter_ai.py
 python dashboard_builder.py
 python logger.py
