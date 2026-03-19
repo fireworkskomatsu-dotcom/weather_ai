@@ -120,9 +120,16 @@ h2{
         <div id="positionBlock" class="metric">読み込み中...</div>
     </div>
 
-    <div class="card">
-        <h2>前回損益</h2>
-        <div id="pnlBlock" class="metric">計算待ち...</div>
+    <div class="grid">
+        <div class="card">
+            <h2>前回損益</h2>
+            <div id="pnlBlock" class="metric">計算待ち...</div>
+        </div>
+
+        <div class="card">
+            <h2>成績</h2>
+            <div id="statsBlock" class="metric">集計待ち...</div>
+        </div>
     </div>
 
     <div class="card">
@@ -150,12 +157,12 @@ async function loadDashboard() {
     const down = data.down_prob || "-";
     const updated = data.updated_at || "-";
     const capital = Number(data.capital || 0);
-    const lastPnlRaw = data.last_pnl ?? "";
 
     const pos = data.position || {};
     const alloc = pos.allocations || {};
     const open = data.open || {};
     const conf = data.confidence || {};
+    const pnlStats = data.pnl_stats || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -217,6 +224,7 @@ async function loadDashboard() {
 
     // 前回損益
     let pnlHtml = "まだデータ不足";
+    const lastPnlRaw = pnlStats.last_pnl ?? "";
     if (String(lastPnlRaw).trim() !== "") {
         const pnl = Number(lastPnlRaw);
         if (pnl > 0) {
@@ -228,6 +236,31 @@ async function loadDashboard() {
         }
     }
     document.getElementById("pnlBlock").innerHTML = pnlHtml;
+
+    // 成績
+    let statsHtml = "まだデータ不足";
+    const tradeCount = Number(pnlStats.trade_count ?? 0);
+    if (tradeCount > 0) {
+        const cumulative = Number(pnlStats.cumulative_pnl ?? 0);
+        const winCount = Number(pnlStats.win_count ?? 0);
+        const lossCount = Number(pnlStats.loss_count ?? 0);
+        const winRate = pnlStats.win_rate ?? "";
+
+        let cumulativeText = '<span class="pnl-flat">0円</span>';
+        if (cumulative > 0) {
+            cumulativeText = '<span class="pnl-plus">+' + cumulative.toLocaleString() + '円</span>';
+        } else if (cumulative < 0) {
+            cumulativeText = '<span class="pnl-minus">' + cumulative.toLocaleString() + '円</span>';
+        }
+
+        statsHtml =
+            "累積損益: " + cumulativeText + "<br>" +
+            "勝率: <b>" + winRate + "%</b><br>" +
+            "勝ち: <b>" + winCount + "</b><br>" +
+            "負け: <b>" + lossCount + "</b><br>" +
+            "件数: <b>" + tradeCount + "</b>";
+    }
+    document.getElementById("statsBlock").innerHTML = statsHtml;
 
     document.getElementById("updated").textContent = "更新 " + updated;
 }

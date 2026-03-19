@@ -6,9 +6,16 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-03-19 14:03",
+  "updated_at": "2026-03-19 14:12",
   "capital": 500000,
-  "last_pnl": "",
+  "pnl_stats": {
+    "last_pnl": "-0.0",
+    "cumulative_pnl": 0.0,
+    "win_count": 0,
+    "loss_count": 0,
+    "trade_count": 1,
+    "win_rate": 0.0
+  },
   "position": {
     "weather": "黄",
     "score": -5.0,
