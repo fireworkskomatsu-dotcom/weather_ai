@@ -44,10 +44,15 @@ body{
     border-radius:16px;
     background:#111;
     color:#fff;
-    font-size:22px;   /* ←ここ変更 */
-    font-weight:700;
-    line-height:1.6;  /* ←行間調整 */
     text-align:left;
+}
+.order-line{
+    display:block;
+    white-space:nowrap;
+    font-size:18px;
+    font-weight:800;
+    line-height:1.8;
+    margin-bottom:6px;
 }
 .grid{
     display:grid;
@@ -72,7 +77,6 @@ h2{
 .chartWrap{
     height:340px;
 }
-
 #chart{
     width:100%;
     height:100%;
@@ -141,6 +145,8 @@ async function loadDashboard() {
 
     const pos = data.position || {};
     const alloc = pos.allocations || {};
+    const open = data.open || {};
+    const conf = data.confidence || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -148,6 +154,28 @@ async function loadDashboard() {
 
     document.getElementById("status").textContent = statusText;
     document.getElementById("action").textContent = "売買判断: " + action;
+
+    document.getElementById("marketBlock").innerHTML =
+        "スコア: <b>" + score + "</b><br>" +
+        "危険度: <b>" + danger + "</b><br>" +
+        "市場温度: <b>" + temp + "</b><br>" +
+        "上昇確率: <b>" + up + "</b><br>" +
+        "下落確率: <b>" + down + "</b>";
+
+    document.getElementById("openBlock").innerHTML =
+        "寄り上昇: <b>" + (open.open_up_prob ?? "-") + "%</b><br>" +
+        "寄り下落: <b>" + (open.open_down_prob ?? "-") + "%</b><br>" +
+        "バイアス: <b>" + (open.gap_bias ?? "-") + "</b>";
+
+    document.getElementById("confidenceBlock").innerHTML =
+        "信頼度: <b>" + (conf.confidence ?? "-") + "</b><br>" +
+        "レベル: <b>" + (conf.level ?? "-") + "</b>";
+
+    document.getElementById("positionBlock").innerHTML =
+        "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
+        "半導体ETF: <b>" + (alloc.semi_etf ?? "-") + "</b><br>" +
+        "現金: <b>" + (alloc.cash ?? "-") + "</b><br>" +
+        "総ポジション: <b>" + (pos.total_position ?? "-") + "</b>";
 
     const nikkei = Number(alloc.nikkei_etf ?? 0);
     const semi = Number(alloc.semi_etf ?? 0);
@@ -157,27 +185,87 @@ async function loadDashboard() {
 
     if (nikkei < 0) {
         const amount = Math.round(capital * Math.abs(nikkei));
-        orderLines.push('<span class="sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
+        orderLines.push('<span class="order-line sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
     } else if (nikkei > 0) {
         const amount = Math.round(capital * Math.abs(nikkei));
-        orderLines.push('<span class="buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
+        orderLines.push('<span class="order-line buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
     }
 
     if (semi < 0) {
         const amount = Math.round(capital * Math.abs(semi));
-        orderLines.push('<span class="sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
+        orderLines.push('<span class="order-line sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
     } else if (semi > 0) {
         const amount = Math.round(capital * Math.abs(semi));
-        orderLines.push('<span class="buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
+        orderLines.push('<span class="order-line buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
     }
 
-    orderLines.push('現金 → ' + Math.round(capital * cash).toLocaleString() + '円');
+    if (orderLines.length === 0) {
+        orderLines.push('<span class="order-line wait">何もしない</span>');
+    }
 
-    document.getElementById("orderBlock").innerHTML = orderLines.join("<br>");
+    orderLines.push('<span class="order-line">現金 → ' + Math.round(capital * cash).toLocaleString() + '円</span>');
+
+    document.getElementById("orderBlock").innerHTML = orderLines.join("");
     document.getElementById("updated").textContent = "更新 " + updated;
 }
 
+async function drawChart() {
+    const csv = await fetch("chart_history.csv?v=" + Date.now());
+    const text = await csv.text();
+
+    const lines = text.trim().split("\n").slice(1);
+    const labels = [];
+    const values = [];
+
+    lines.forEach(line => {
+        const parts = line.split(",");
+        if (parts.length >= 2) {
+            labels.push(parts[0]);
+            values.push(parseFloat(parts[1]));
+        }
+    });
+
+    new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "AI Score",
+                data: values,
+                borderColor: "#2563eb",
+                backgroundColor: "rgba(37,99,235,0.15)",
+                tension: 0.25,
+                pointRadius: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: "#ffffff" }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: "#ffffff",
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: { color: "rgba(255,255,255,0.12)" }
+                },
+                y: {
+                    ticks: { color: "#ffffff" },
+                    grid: { color: "rgba(255,255,255,0.12)" }
+                }
+            }
+        }
+    });
+}
+
 loadDashboard();
+drawChart();
 </script>
 
 </body>
