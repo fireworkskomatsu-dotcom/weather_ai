@@ -1,4 +1,5 @@
 import json
+import csv
 from pathlib import Path
 from datetime import datetime
 
@@ -9,6 +10,7 @@ WEATHER_FILE = BASE / "latest_weather.txt"
 POSITION_FILE = BASE / "position.json"
 OPEN_FILE = BASE / "open.json"
 CONF_FILE = BASE / "confidence.json"
+LOG_FILE = BASE / "trade_log.csv"
 OUT_FILE = WEB / "dashboard.json"
 
 CAPITAL = 500000
@@ -17,6 +19,19 @@ def extract_value(lines, prefix):
     for line in lines:
         if line.startswith(prefix):
             return line.replace(prefix, "").strip()
+    return ""
+
+def get_last_pnl():
+    if not LOG_FILE.exists():
+        return ""
+    rows = list(csv.DictReader(LOG_FILE.open(encoding="utf-8")))
+    if not rows:
+        return ""
+    # 直近で paper_pnl が入っている行を後ろから探す
+    for row in reversed(rows):
+        pnl = str(row.get("paper_pnl", "")).strip()
+        if pnl != "":
+            return pnl
     return ""
 
 def main():
@@ -37,6 +52,7 @@ def main():
         "down_prob": extract_value(lines, "下落確率："),
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "capital": CAPITAL,
+        "last_pnl": get_last_pnl(),
         "position": position,
         "open": open_data,
         "confidence": conf

@@ -68,11 +68,14 @@ h2{
 }
 .small{
     font-size:14px;
-    opacity:0.8;
+    opacity:0.85;
 }
 .buy{ color:#4ade80; }
 .sell{ color:#f87171; }
 .wait{ color:#facc15; }
+.pnl-plus{ color:#4ade80; font-weight:800; }
+.pnl-minus{ color:#f87171; font-weight:800; }
+.pnl-flat{ color:#facc15; font-weight:800; }
 
 .chartWrap{
     height:340px;
@@ -118,6 +121,11 @@ h2{
     </div>
 
     <div class="card">
+        <h2>前回損益</h2>
+        <div id="pnlBlock" class="metric">計算待ち...</div>
+    </div>
+
+    <div class="card">
         <h2>スコア推移</h2>
         <div class="chartWrap">
             <canvas id="chart"></canvas>
@@ -142,6 +150,7 @@ async function loadDashboard() {
     const down = data.down_prob || "-";
     const updated = data.updated_at || "-";
     const capital = Number(data.capital || 0);
+    const lastPnlRaw = data.last_pnl ?? "";
 
     const pos = data.position || {};
     const alloc = pos.allocations || {};
@@ -204,8 +213,22 @@ async function loadDashboard() {
     }
 
     orderLines.push('<span class="order-line">現金 → ' + Math.round(capital * cash).toLocaleString() + '円</span>');
-
     document.getElementById("orderBlock").innerHTML = orderLines.join("");
+
+    // 前回損益
+    let pnlHtml = "まだデータ不足";
+    if (String(lastPnlRaw).trim() !== "") {
+        const pnl = Number(lastPnlRaw);
+        if (pnl > 0) {
+            pnlHtml = '前回損益: <span class="pnl-plus">+' + pnl.toLocaleString() + '円</span>';
+        } else if (pnl < 0) {
+            pnlHtml = '前回損益: <span class="pnl-minus">' + pnl.toLocaleString() + '円</span>';
+        } else {
+            pnlHtml = '前回損益: <span class="pnl-flat">0円</span>';
+        }
+    }
+    document.getElementById("pnlBlock").innerHTML = pnlHtml;
+
     document.getElementById("updated").textContent = "更新 " + updated;
 }
 
