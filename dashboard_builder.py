@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from datetime import datetime
 
 BASE = Path("/Users/Owner/weather_ai")
 WEB = BASE / "web"
@@ -32,6 +33,7 @@ def main():
         "action": extract_value(lines, "売買判断："),
         "up_prob": extract_value(lines, "上昇確率："),
         "down_prob": extract_value(lines, "下落確率："),
+        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "position": position,
         "open": open_data,
         "confidence": conf
