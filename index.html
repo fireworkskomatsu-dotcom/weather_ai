@@ -82,6 +82,9 @@ h2{
 .event-high{ color:#f87171; font-weight:900; }
 .event-mid{ color:#facc15; font-weight:900; }
 .event-low{ color:#4ade80; font-weight:900; }
+.streak-stop{ color:#f87171; font-weight:900; }
+.streak-reduce{ color:#facc15; font-weight:900; }
+.streak-normal{ color:#4ade80; font-weight:900; }
 .news-line{
     font-size:15px;
     line-height:1.6;
@@ -135,6 +138,11 @@ h2{
         <div class="card">
             <h2>イベント</h2>
             <div id="eventBlock" class="metric">読み込み中...</div>
+        </div>
+
+        <div class="card">
+            <h2>連敗ガード</h2>
+            <div id="streakBlock" class="metric">読み込み中...</div>
         </div>
     </div>
 
@@ -194,6 +202,7 @@ async function loadDashboard() {
     const filt = data.filter || {};
     const eventData = data.event || {};
     const newsData = data.news || {};
+    const streakData = data.streak || {};
 
     let statusText = "NEUTRAL";
     if (weather === "青") statusText = "RISK ON";
@@ -241,6 +250,19 @@ async function loadDashboard() {
     document.getElementById("eventBlock").innerHTML =
         "イベント強度: " + eventHtml + "<br>" +
         "内容: <b>" + eventReason + "</b>";
+
+    const streakDecision = streakData.decision || "NORMAL";
+    const streakReason = streakData.reason || "通常運転";
+    const consecutiveLosses = streakData.consecutive_losses ?? 0;
+
+    let streakHtml = '<span class="streak-normal">NORMAL</span>';
+    if (streakDecision === "REDUCE") streakHtml = '<span class="streak-reduce">REDUCE</span>';
+    if (streakDecision === "STOP") streakHtml = '<span class="streak-stop">STOP</span>';
+
+    document.getElementById("streakBlock").innerHTML =
+        "状態: " + streakHtml + "<br>" +
+        "連敗数: <b>" + consecutiveLosses + "</b><br>" +
+        "理由: <b>" + streakReason + "</b>";
 
     const newsLevel = newsData.news_level || "LOW";
     const newsReason = newsData.news_reason || "通常ニュースフロー";

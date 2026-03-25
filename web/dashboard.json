@@ -6,14 +6,14 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-03-19 14:51",
+  "updated_at": "2026-03-25 15:14",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
     "cumulative_pnl": 0.0,
     "win_count": 0,
     "loss_count": 0,
-    "trade_count": 5,
+    "trade_count": 12,
     "win_rate": 0.0
   },
   "position": {
@@ -40,64 +40,49 @@
   },
   "filter": {
     "decision": "LIGHT",
-    "size": 0.38,
+    "size": 0.5,
     "confidence": 93.6,
     "event_level": "LOW",
     "event_reason": "通常日",
-    "news_level": "MID",
-    "news_reason": "やや警戒ニュースあり",
-    "reason": "高信頼・高スコア / 危険度HIGHで半減 / ニュースMIDで縮小: やや警戒ニュースあり"
+    "news_level": "LOW",
+    "news_reason": "通常ニュースフロー",
+    "streak_decision": "NORMAL",
+    "streak_reason": "通常運転",
+    "consecutive_losses": 0,
+    "reason": "高信頼・高スコア / 危険度HIGHで半減"
   },
   "event": {
     "event_level": "LOW",
     "event_reason": "通常日"
   },
   "news": {
-    "news_level": "MID",
-    "news_reason": "やや警戒ニュースあり",
-    "news_score": -5,
-    "headlines": [
-      {
-        "title": "日経平均株価反落、午前終値は1363円安の5万3875円 - 日本経済新聞",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFB4ZjZlQkFHZ0k3X1l4aEZuWXgwR3lUdHpvMlNiaXZ0UHAyaHFLNlVBeVVreGVSZjQ2TnRhdXFiTmdHQlhOT3lJd3dvWVg4c0hWZkd0R2ZSTzBzdEN0dm1zQXNPNUF2QXlnME9LSg?oc=5"
-      },
-      {
-        "title": "日経平均、一時1800円超安の5万3400円台 米利下げ観測後退 - 朝日新聞",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9wQWhyU0trbDdaQ2VDeTFGZUxQZkd4WW1fUHhoUlU0a0pDWm5tcVdJemE2TGJ6anhRLXYyRFlNVlRlQzd2UHZaUVk0bWtEWFk5R3h6SDJ1bG5PUndLblZ4XzMxQzFmVzA?oc=5"
-      },
-      {
-        "title": "午前の日経平均は大幅反落、ＦＯＭＣ後の米株安や原油上昇で 下げ幅一時1600円超 - Reuters",
-        "score": 1,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQRnJnWGFXRFUzb0c5U1F3YzI3NU1qMnpIeU5kaVIwc2c5MEpoMWRJeWxpWTliWm1mdmF2WmhYWHYwbzJ6ZElQVWdrOFJ1b1FCazJPWU1FVEJtS1hNSGdYV01TWjNqMTYxNkZvWlRsMHhyTUFtYjJrQWJjaEtFVUtoVw?oc=5"
-      },
-      {
-        "title": "【市況】 日経平均は1782安、3連休前に警戒感 - かぶたん",
-        "score": -1,
-        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBSQVJEZXFoaEpVRGVsWkFFQ3VUTHRSWmNDa2xLTFUzQTd1YV9nQ3ZFWGYwakFBdnp5dXVzOXdEOFM3MGh3dDR4MWlWM24waUllc3cyeklTa0t2ejVVV2w4OQ?oc=5"
-      },
-      {
-        "title": "日経平均19日前引け＝反落、1363円安の5万3875円(株探ニュース) - Yahoo!ファイナンス",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxORzNScEtWU2xxUkZKUEtjRkx6bWtzTjFSOXNOS0dEME9Rb3hpVThwMWNpSDIyWlVrSTlyN241THRkSkZRRWo3UGFacURJNXZjUWNnbTVQU3pjMGtBLW1NTHBiWjZHSnh6UnFCbzRkYm1qMUw5c2RwRktmempxa1I0RzIxMnI4V1U?oc=5"
-      },
-      {
-        "title": "NVIDIA と世界の産業用ソフトウェア大手企業が、設計、エンジニアリング、製造を AI 時代へと導く - NVIDIA | Japan Blog",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPSU1wMHhpbzhNUDhzV1Q0cFVScHFJbWZfU1haU2xpR29CUDJ0N3ZSRk52SVZXWi1zZk9KV2drNjFJdGY0dWtlT2Rad1UyMkYtNEh4THdIOGdncFpvaW8zdUVIME5QbS1pZTl0Umlfbkhid3hVdzZxRHpTYXFqQVFlUURNcENNTl9hbVM4bFZPcUtwYVdZS1dLMFVOekQ3YmJsWE5xSGlIc0UtTl9RZngwWWtpbjZPc01rcEVDRWdpVHp2bnIxeTEtNU9wTXZNS3FvSWc?oc=5"
-      },
-      {
-        "title": "経産省、「半導体・デジタル産業戦略」改訂へ 急速に進むフィジカルAI市場を視野に - 一般社団法人 日本自動車会議所",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE51dGZ2MEd0RTBfZGs1X1FGS0JFSk5JNHliYzRFWjBOWDRISjRXdm1fOUYyaUtFZndrWnpQdzNqUW0xV3I0blRiS1JFS3JmNTNabm53czRaWQ?oc=5"
-      },
-      {
-        "title": "NVIDIA、米軍事テックに接近 AI半導体供与が招く中国リスク - 日本経済新聞",
-        "score": -1,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9RYzhFMU05bE9ycnhxamhJZXdSM3RxZEZHWkVKSlV5MXc4NkFzbTcyT2ozZEp0QmJEd0hDNE5EMTRVVlpFWmsySzR3TWxRYUt4Mzh0SlVCVUdKVUJEd2FVT0hBU0dSMVVGZzVLSQ?oc=5"
-      }
-    ],
-    "errors": []
+    "news_level": "LOW",
+    "news_reason": "通常ニュースフロー",
+    "news_score": 0,
+    "headlines": [],
+    "errors": [
+      "<urlopen error _ssl.c:1112: The handshake operation timed out>",
+      "The read operation timed out",
+      "The read operation timed out"
+    ]
+  },
+  "streak": {
+    "consecutive_losses": 0,
+    "consecutive_wins": 0,
+    "penalty": 1.0,
+    "decision": "NORMAL",
+    "reason": "通常運転",
+    "last_results": [
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0
+    ]
   }
 }

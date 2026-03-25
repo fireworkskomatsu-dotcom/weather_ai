@@ -1,0 +1,19 @@
+{
+  "consecutive_losses": 0,
+  "consecutive_wins": 0,
+  "penalty": 1.0,
+  "decision": "NORMAL",
+  "reason": "通常運転",
+  "last_results": [
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0
+  ]
+}

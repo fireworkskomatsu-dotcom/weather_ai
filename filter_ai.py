@@ -8,6 +8,7 @@ OPEN_FILE = BASE / "open.json"
 WEATHER_FILE = BASE / "latest_weather.txt"
 EVENT_FILE = BASE / "event.json"
 NEWS_FILE = BASE / "news.json"
+STREAK_FILE = BASE / "streak.json"
 OUT_FILE = BASE / "filter.json"
 
 def extract_value(lines, prefix):
@@ -35,6 +36,7 @@ def main():
     open_data = safe_json(OPEN_FILE, {"gap_bias": "NEUTRAL"})
     event_data = safe_json(EVENT_FILE, {"event_level": "LOW", "event_reason": "通常日"})
     news_data = safe_json(NEWS_FILE, {"news_level": "LOW", "news_reason": "通常ニュースフロー", "news_score": 0})
+    streak_data = safe_json(STREAK_FILE, {"penalty": 1.0, "decision": "NORMAL", "reason": "通常運転", "consecutive_losses": 0})
 
     lines = []
     if WEATHER_FILE.exists():
@@ -48,6 +50,10 @@ def main():
     event_reason = event_data.get("event_reason", "通常日")
     news_level = news_data.get("news_level", "LOW")
     news_reason = news_data.get("news_reason", "通常ニュースフロー")
+    streak_penalty = to_float(streak_data.get("penalty", 1.0), 1.0)
+    streak_decision = streak_data.get("decision", "NORMAL")
+    streak_reason = streak_data.get("reason", "通常運転")
+    consecutive_losses = streak_data.get("consecutive_losses", 0)
 
     decision = "SKIP"
     size = 0.0
@@ -89,9 +95,17 @@ def main():
         size *= 0.75
         reasons.append(f"ニュースMIDで縮小: {news_reason}")
 
+    if streak_penalty < 1.0:
+        size *= streak_penalty
+        reasons.append(f"連敗ガード適用: {streak_reason}")
+
     size = round(size, 2)
 
-    if size >= 0.75:
+    if streak_decision == "STOP":
+        decision = "SKIP"
+        size = 0.0
+        reasons.append("連敗ストッパーで停止")
+    elif size >= 0.75:
         decision = "EXECUTE"
     elif size >= 0.25:
         decision = "LIGHT"
@@ -108,6 +122,9 @@ def main():
         "event_reason": event_reason,
         "news_level": news_level,
         "news_reason": news_reason,
+        "streak_decision": streak_decision,
+        "streak_reason": streak_reason,
+        "consecutive_losses": consecutive_losses,
         "reason": " / ".join(reasons)
     }
 

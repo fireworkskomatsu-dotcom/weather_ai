@@ -13,6 +13,7 @@ CONF_FILE = BASE / "confidence.json"
 FILTER_FILE = BASE / "filter.json"
 EVENT_FILE = BASE / "event.json"
 NEWS_FILE = BASE / "news.json"
+STREAK_FILE = BASE / "streak.json"
 LOG_FILE = BASE / "trade_log.csv"
 OUT_FILE = WEB / "dashboard.json"
 
@@ -90,6 +91,7 @@ def main():
     filt = safe_json(FILTER_FILE, {})
     event_data = safe_json(EVENT_FILE, {})
     news_data = safe_json(NEWS_FILE, {})
+    streak_data = safe_json(STREAK_FILE, {})
     pnl_stats = load_pnl_stats()
 
     out = {
@@ -108,7 +110,8 @@ def main():
         "confidence": conf,
         "filter": filt,
         "event": event_data,
-        "news": news_data
+        "news": news_data,
+        "streak": streak_data
     }
 
     OUT_FILE.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
