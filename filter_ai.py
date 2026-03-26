@@ -1,135 +1,136 @@
 import json
 from pathlib import Path
+from datetime import datetime
 
 BASE = Path("/Users/Owner/weather_ai")
 
 CONF_FILE = BASE / "confidence.json"
-OPEN_FILE = BASE / "open.json"
-WEATHER_FILE = BASE / "latest_weather.txt"
-EVENT_FILE = BASE / "event.json"
-NEWS_FILE = BASE / "news.json"
 STREAK_FILE = BASE / "streak.json"
+OPEN_FILTER_FILE = BASE / "open_filter.json"
+CAPITAL_FILE = BASE / "capital.json"
+POSITION_FILE = BASE / "position.json"
 OUT_FILE = BASE / "filter.json"
 
-def extract_value(lines, prefix):
-    for line in lines:
-        if line.startswith(prefix):
-            return line.replace(prefix, "").strip()
-    return ""
-
-def to_float(x, default=0.0):
+def read_json(path, default):
     try:
-        return float(str(x).replace("%", "").strip())
+        return json.loads(path.read_text())
     except:
         return default
 
-def safe_json(path, default):
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except:
-            return default
-    return default
-
 def main():
-    conf = safe_json(CONF_FILE, {"confidence": 50})
-    open_data = safe_json(OPEN_FILE, {"gap_bias": "NEUTRAL"})
-    event_data = safe_json(EVENT_FILE, {"event_level": "LOW", "event_reason": "通常日"})
-    news_data = safe_json(NEWS_FILE, {"news_level": "LOW", "news_reason": "通常ニュースフロー", "news_score": 0})
-    streak_data = safe_json(STREAK_FILE, {"penalty": 1.0, "decision": "NORMAL", "reason": "通常運転", "consecutive_losses": 0})
+    conf = read_json(CONF_FILE, {"confidence": 0})
+    streak = read_json(STREAK_FILE, {"consecutive_losses": 0})
+    open_filter = read_json(OPEN_FILTER_FILE, {"open_filter": "GO", "reason": "通常"})
+    capital = read_json(CAPITAL_FILE, {"boost": 1.0})
+    pos = read_json(POSITION_FILE, {"total_position": 0})
 
-    lines = []
-    if WEATHER_FILE.exists():
-        lines = [x.strip() for x in WEATHER_FILE.read_text(encoding="utf-8").splitlines() if x.strip()]
+    confidence = float(conf.get("confidence", 0))
+    losses = int(streak.get("consecutive_losses", 0))
+    boost = float(capital.get("boost", 1.0))
+    total = float(pos.get("total_position", 0))
+    current_time = datetime.now().strftime("%H:%M")
+    reason = str(open_filter.get("reason", ""))
 
-    score = to_float(extract_value(lines, "スコア："), 0)
-    danger = extract_value(lines, "危険度：")
-    confidence = to_float(conf.get("confidence", 50), 50)
-    bias = open_data.get("gap_bias", "NEUTRAL")
-    event_level = event_data.get("event_level", "LOW")
-    event_reason = event_data.get("event_reason", "通常日")
-    news_level = news_data.get("news_level", "LOW")
-    news_reason = news_data.get("news_reason", "通常ニュースフロー")
-    streak_penalty = to_float(streak_data.get("penalty", 1.0), 1.0)
-    streak_decision = streak_data.get("decision", "NORMAL")
-    streak_reason = streak_data.get("reason", "通常運転")
-    consecutive_losses = streak_data.get("consecutive_losses", 0)
+    # 方向制御
+    short_block = "ショート危険" in reason
+    long_block = "ロング危険" in reason
 
-    decision = "SKIP"
-    size = 0.0
-    reasons = []
+    allowed_direction = "BOTH"
+    if short_block:
+        allowed_direction = "LONG_ONLY"
+    if long_block:
+        allowed_direction = "SHORT_ONLY"
 
-    if confidence >= 80 and abs(score) >= 4:
-        decision = "EXECUTE"
-        size = 1.0
-        reasons.append("高信頼・高スコア")
-    elif confidence >= 65 and abs(score) >= 2:
-        decision = "LIGHT"
-        size = 0.5
-        reasons.append("中信頼・中スコア")
-    else:
-        decision = "SKIP"
-        size = 0.0
-        reasons.append("信頼度またはスコア不足")
+    # 寄り危険
+    if open_filter.get("open_filter") == "SKIP" and current_time < "09:15":
+        out = {
+            "decision": "SKIP",
+            "size": 0,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": "寄り危険（09:15まで待機）"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    if danger == "HIGH" and size > 0:
-        size *= 0.5
-        reasons.append("危険度HIGHで半減")
+    # 方向禁止
+    if short_block and total < 0:
+        out = {
+            "decision": "SKIP",
+            "size": 0,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": "ショート禁止"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    if (score > 0 and bias != "UP") or (score < 0 and bias != "DOWN"):
-        if size > 0:
-            size *= 0.5
-            reasons.append("寄り付きバイアス不一致で半減")
+    if long_block and total > 0:
+        out = {
+            "decision": "SKIP",
+            "size": 0,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": "ロング禁止"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    if event_level == "HIGH":
-        size *= 0.5
-        reasons.append(f"イベントHIGHで半減: {event_reason}")
-    elif event_level == "MID":
-        size *= 0.75
-        reasons.append(f"イベントMIDで縮小: {event_reason}")
+    # 連敗停止
+    if losses >= 3:
+        out = {
+            "decision": "SKIP",
+            "size": 0,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": "連敗停止"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    if news_level == "HIGH":
-        size *= 0.5
-        reasons.append(f"ニュースHIGHで半減: {news_reason}")
-    elif news_level == "MID":
-        size *= 0.75
-        reasons.append(f"ニュースMIDで縮小: {news_reason}")
+    # 弱い
+    if confidence < 60:
+        out = {
+            "decision": "SKIP",
+            "size": 0,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": "信頼度低い"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    if streak_penalty < 1.0:
-        size *= streak_penalty
-        reasons.append(f"連敗ガード適用: {streak_reason}")
+    # 強い
+    if confidence > 90:
+        size = round(1.0 * boost, 2)
+        out = {
+            "decision": "BOOST",
+            "size": size,
+            "confidence": confidence,
+            "allowed_direction": allowed_direction,
+            "reason": f"高信頼 + 資金({boost})"
+        }
+        OUT_FILE.write_text(json.dumps(out, indent=2))
+        print(out)
+        return
 
-    size = round(size, 2)
-
-    if streak_decision == "STOP":
-        decision = "SKIP"
-        size = 0.0
-        reasons.append("連敗ストッパーで停止")
-    elif size >= 0.75:
-        decision = "EXECUTE"
-    elif size >= 0.25:
-        decision = "LIGHT"
-    else:
-        decision = "SKIP"
-        size = 0.0
-        reasons.append("最終サイズが小さすぎるため見送り")
-
+    # 通常
+    size = round(0.5 * boost, 2)
     out = {
-        "decision": decision,
+        "decision": "LIGHT",
         "size": size,
         "confidence": confidence,
-        "event_level": event_level,
-        "event_reason": event_reason,
-        "news_level": news_level,
-        "news_reason": news_reason,
-        "streak_decision": streak_decision,
-        "streak_reason": streak_reason,
-        "consecutive_losses": consecutive_losses,
-        "reason": " / ".join(reasons)
+        "allowed_direction": allowed_direction,
+        "reason": f"通常 + 資金({boost})"
     }
 
-    OUT_FILE.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(out, ensure_ascii=False, indent=2))
+    OUT_FILE.write_text(json.dumps(out, indent=2))
+    print(out)
 
 if __name__ == "__main__":
     main()

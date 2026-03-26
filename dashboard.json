@@ -6,14 +6,14 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-03-25 15:14",
+  "updated_at": "2026-03-25 17:48",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
     "cumulative_pnl": 0.0,
     "win_count": 0,
     "loss_count": 0,
-    "trade_count": 12,
+    "trade_count": 23,
     "win_rate": 0.0
   },
   "position": {
@@ -39,17 +39,10 @@
     "level": "HIGH"
   },
   "filter": {
-    "decision": "LIGHT",
-    "size": 0.5,
+    "decision": "SKIP",
+    "size": 0,
     "confidence": 93.6,
-    "event_level": "LOW",
-    "event_reason": "通常日",
-    "news_level": "LOW",
-    "news_reason": "通常ニュースフロー",
-    "streak_decision": "NORMAL",
-    "streak_reason": "通常運転",
-    "consecutive_losses": 0,
-    "reason": "高信頼・高スコア / 危険度HIGHで半減"
+    "reason": "構造的危険（終日停止）"
   },
   "event": {
     "event_level": "LOW",
@@ -58,13 +51,50 @@
   "news": {
     "news_level": "LOW",
     "news_reason": "通常ニュースフロー",
-    "news_score": 0,
-    "headlines": [],
-    "errors": [
-      "<urlopen error _ssl.c:1112: The handshake operation timed out>",
-      "The read operation timed out",
-      "The read operation timed out"
-    ]
+    "news_score": -2,
+    "headlines": [
+      {
+        "title": "日経平均株価の指数情報・推移 - Yahoo!ファイナンス",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5SRDk1ZENIQUIzSUZyMHZRNHpCR2xlcTI5UTJRYXVoMDBrM3BmNndBT29vV0dDZWdQazZHb2tURGZNYy1OMU93R0kyUUZUT3VmU2VhbA?oc=5"
+      },
+      {
+        "title": "日経平均株価が続伸、終値は1497円高の5万3749円 - 日本経済新聞",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9jczZUbk1HRDlhSUFvZW9RT2FOdUwzX0pFQ2xEc3d3b3pUNDdVVHdBdlVILUM2WndKVENiYVIzM3JzclZBY20wekJiTll3d0U1TG1IUktFTmFHcEd1N0RaOUVtaFpidWhSb0IwQQ?oc=5"
+      },
+      {
+        "title": "日経平均は大幅続伸、一時5万4000円回復 中東懸念やや後退 - Reuters",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxORHM4dF9uY0hwVDVsVzVoVkU0SlVFd1B1ekdHanZUeXhTN0NseUxpRVBJYmVxREZSVkFGeXFqR0xfZ0ZhWGpwT3FreGg4YXNwcE5ISDFXTFVGNUg3ZF9rRTdrcV9GZmJuZTJyR3pmNElIdS15QjJYbjVYdk9wek8zTg?oc=5"
+      },
+      {
+        "title": "25日の日本株は1カ月ぶりの大幅高､停戦協議へ期待 - 四季報オンライン",
+        "score": 1,
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE0tNTVtcVA2WXFESFE3aC12VkJPUG1YSzF5SkxDSFZxMngtTXpTQzhfcGtOTU5xRUd3TEM2blNrRGE5VjBGaldYS21lM1I3cEc5bEtuSnRRWQ?oc=5"
+      },
+      {
+        "title": "日経平均VIは大幅に上昇、中東情勢や原油価格への警戒感は継続 - かぶたん",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9YTTJRcmJVZHNtUlQ4aWhyTEF1Yy1HU2dycXVqZDA3VEQ4RFdYMFZCZmNjREVZZ2RaZTF2UTZGQmZCT0RRYkdDQV91SHdqLW44TFE?oc=5"
+      },
+      {
+        "title": "AlmaLinux における NVIDIA CUDA ドライバーの公式サポート：エンタープライズ AI 基盤の新たな選択肢 - サイバートラスト",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOU3A1Ukc4eDN1NXdHTDQzMjF5ejB2cGpXU3U1dUlzQ0E1anhodE1lUmV5SHhON0dMS05xTjFuaFFyb3VRb1NPWi1YRnNKWmk4UVRGVDduVHU3VXRTR1ktRV9oUFVtUzd3aUpOZnRzT2Y3YWd6Nlp2cHFsb1JwWXdEWQ?oc=5"
+      },
+      {
+        "title": "英アームが初の自社製半導体、エージェントＡＩに対応 - Reuters",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBYekRkYi1jVmVBVDBXZ0Eybnh2cGNtcHFvQjZ1dTF3MXk5YVQySl9VWTRSaXota2xwYmk3dndCcTI0cEVjSHFUT0lIb3FvN1NybEdaajlENnRpT0pNdGNHelNWQ0t3TVEyWXNEUTRKY2NGaHdOSF9JNlFB?oc=5"
+      },
+      {
+        "title": "東京エレクトロンの株価が大幅続伸 米半導体指数上昇で - 日本経済新聞",
+        "score": 1,
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5OaUFZbHE0NVdjZTNUd3hQVzZfWHhJb3JoZndneXdrTmt2S3RyTlhTb3QwYjVjeDJPZjFaTEpNS3loZUxaTWF2R0FaQ2ZBSjBMZWt2TzJmUXVIZDhhNGtQckM2M3YyTXhDUEg3TQ?oc=5"
+      }
+    ],
+    "errors": []
   },
   "streak": {
     "consecutive_losses": 0,

@@ -3,46 +3,24 @@ cd /Users/Owner/weather_ai
 
 source venv/bin/activate
 
-python fetch_prices_v2.py > latest_run.log 2>&1
-python weather_signal.py > latest_weather.txt 2>&1
-
-python position_ai.py
-python open_ai.py
-python confidence_ai.py
-python event_ai.py
-python news_ai.py
-python streak_ai.py
-python filter_ai.py
-python dashboard_builder.py
-python logger.py
-python paper_pnl.py
-
-python3 <<'INNERPY'
-from pathlib import Path
-
-src = Path("/Users/Owner/weather_ai/history.csv")
-dst = Path("/Users/Owner/weather_ai/web/chart_history.csv")
-
-rows = []
-for line in src.read_text(encoding="utf-8").splitlines():
-    parts = [p.strip() for p in line.split(",")]
-    if len(parts) < 3:
-        continue
-    dt = parts[0]
-    score = parts[2]
-    try:
-        float(score)
-    except:
-        continue
-    rows.append((dt, score))
-
-with dst.open("w", encoding="utf-8") as f:
-    f.write("date,score\n")
-    for dt, score in rows:
-        f.write(f"{dt},{score}\n")
-INNERPY
-
-cp latest_weather.txt web/weather.txt
-cp web/dashboard.json dashboard.json
+python3 fetch_prices_v2.py
+python3 weather_signal.py
+python3 position_ai.py
+python3 open_ai.py
+python3 open_filter_ai.py
+python3 confidence_ai.py
+python3 event_ai.py
+python3 news_ai.py
+python3 streak_ai.py
+python3 capital_boost_ai.py
+python3 filter_ai.py
+python3 entry_ai.py
+python3 risk_manager.py
+python3 take_profit_ai.py
+python3 stop_loss_ai.py
+python3 execution_ai.py
+python3 dashboard_builder.py
+python3 logger.py
+python3 paper_pnl.py
 
 echo "DONE"

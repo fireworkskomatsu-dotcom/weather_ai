@@ -7,420 +7,280 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body{
-    margin:0;
-    background:#08142b;
-    color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#03163f;
+  color:#fff;
 }
 .wrap{
-    max-width:980px;
-    margin:0 auto;
-    padding:18px;
+  max-width:900px;
+  margin:0 auto;
+  padding:18px;
 }
 .card{
-    background:#0d1b3d;
-    border-radius:20px;
-    padding:20px;
-    margin-bottom:18px;
-    box-shadow:0 4px 20px rgba(0,0,0,.25);
+  background:#0b1f57;
+  border-radius:26px;
+  padding:26px;
+  margin-bottom:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
 }
-.header{
-    background:#f5c400;
-    color:#111;
-    text-align:center;
+.hero{
+  background:#f2c400;
+  color:#111;
 }
-.header h1{
-    margin:0 0 10px 0;
-    font-size:28px;
+.hero h1{
+  margin:0 0 18px 0;
+  font-size:34px;
+  font-weight:800;
 }
-.status{
-    font-size:34px;
-    font-weight:800;
-    margin:8px 0 10px 0;
+.hero .weather{
+  font-size:64px;
+  font-weight:900;
+  text-align:center;
+  margin:8px 0 18px 0;
 }
-.order{
-    margin-top:14px;
-    padding:16px;
-    border-radius:16px;
-    background:#111;
-    color:#fff;
-    text-align:left;
+.hero .action{
+  text-align:center;
+  font-size:28px;
+  margin-bottom:18px;
 }
-.order-line{
-    display:block;
-    white-space:nowrap;
-    font-size:18px;
-    font-weight:800;
-    line-height:1.8;
-    margin-bottom:6px;
+.signal-box{
+  background:#0a0a0f;
+  color:#fff;
+  border-radius:24px;
+  padding:22px;
+  line-height:1.7;
 }
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:16px;
+.signal-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:#f2c400;
 }
-h2{
-    margin:0 0 12px 0;
+.signal-line{
+  font-size:24px;
+  font-weight:800;
 }
-.metric{
-    font-size:20px;
-    line-height:1.8;
+.wait{ color:#fff; }
+.buy{ color:#59d98e; }
+.sell{ color:#ff7b7b; }
+.exit{ color:#ffd65a; }
+.section-title{
+  font-size:34px;
+  font-weight:900;
+  margin:0 0 18px 0;
+}
+.row{
+  font-size:26px;
+  margin:14px 0;
+}
+.big{
+  font-size:52px;
+  font-weight:900;
 }
 .small{
-    font-size:14px;
-    opacity:0.85;
+  font-size:20px;
+  opacity:.9;
 }
-.buy{ color:#4ade80; }
-.sell{ color:#f87171; }
-.wait{ color:#facc15; }
-.pnl-plus{ color:#4ade80; font-weight:800; }
-.pnl-minus{ color:#f87171; font-weight:800; }
-.pnl-flat{ color:#facc15; font-weight:800; }
-.exec{ color:#4ade80; font-weight:900; }
-.light{ color:#facc15; font-weight:900; }
-.skip{ color:#f87171; font-weight:900; }
-.event-high{ color:#f87171; font-weight:900; }
-.event-mid{ color:#facc15; font-weight:900; }
-.event-low{ color:#4ade80; font-weight:900; }
-.streak-stop{ color:#f87171; font-weight:900; }
-.streak-reduce{ color:#facc15; font-weight:900; }
-.streak-normal{ color:#4ade80; font-weight:900; }
-.news-line{
-    font-size:15px;
-    line-height:1.6;
-    margin-bottom:8px;
+#chartWrap{
+  height:360px;
 }
-
-.chartWrap{
-    height:340px;
-}
-#chart{
-    width:100%;
-    height:100%;
-    background:#0b1733;
-    border-radius:12px;
+canvas{
+  background:#071744;
+  border-radius:18px;
+  padding:8px;
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-    <div class="card header">
-        <h1>JP Market AI Dashboard</h1>
-        <div id="status" class="status">LOADING...</div>
-        <div id="action" class="metric">読み込み中...</div>
-        <div id="orderBlock" class="order">注文計算中...</div>
+  <div class="card hero">
+    <h1>JP Market AI Dashboard</h1>
+    <div class="weather" id="weather">--</div>
+    <div class="action" id="marketAction">読み込み中...</div>
+
+    <div class="signal-box">
+      <div class="signal-title">AI最終指示</div>
+      <div id="signalBlock">読み込み中...</div>
     </div>
+  </div>
 
-    <div class="grid">
-        <div class="card">
-            <h2>市場判定</h2>
-            <div id="marketBlock" class="metric">読み込み中...</div>
-        </div>
+  <div class="card">
+    <div class="section-title">市場判定</div>
+    <div class="row">スコア: <b id="score">-</b></div>
+    <div class="row">危険度: <b id="danger">-</b></div>
+    <div class="row">市場温度: <b id="marketTemp">-</b></div>
+    <div class="row">上昇確率: <b id="upProb">-</b></div>
+    <div class="row">下落確率: <b id="downProb">-</b></div>
+  </div>
 
-        <div class="card">
-            <h2>寄り付きAI</h2>
-            <div id="openBlock" class="metric">読み込み中...</div>
-        </div>
+  <div class="card">
+    <div class="section-title">フィルター</div>
+    <div class="row">判定: <b id="filterDecision">-</b></div>
+    <div class="row">サイズ倍率: <b id="filterSize">-</b></div>
+    <div class="row">方向: <b id="filterDirection">-</b></div>
+    <div class="row">理由: <b id="filterReason">-</b></div>
+  </div>
 
-        <div class="card">
-            <h2>信頼度</h2>
-            <div id="confidenceBlock" class="metric">読み込み中...</div>
-        </div>
-    </div>
+  <div class="card">
+    <div class="section-title">ポジション配分</div>
+    <div class="row">日経ETF: <b id="nikkeiPos">-</b></div>
+    <div class="row">半導体ETF: <b id="semiPos">-</b></div>
+    <div class="row">現金: <b id="cashPos">-</b></div>
+    <div class="row">総ポジション: <b id="totalPos">-</b></div>
+  </div>
 
-    <div class="grid">
-        <div class="card">
-            <h2>フィルター</h2>
-            <div id="filterBlock" class="metric">読み込み中...</div>
-        </div>
+  <div class="card">
+    <div class="section-title">成績</div>
+    <div class="row">前回損益: <b id="lastPnl">-</b></div>
+    <div class="row">累積損益: <b id="cumPnl">-</b></div>
+    <div class="row">勝率: <b id="winRate">-</b></div>
+    <div class="row">件数: <b id="tradeCount">-</b></div>
+  </div>
 
-        <div class="card">
-            <h2>イベント</h2>
-            <div id="eventBlock" class="metric">読み込み中...</div>
-        </div>
+  <div class="card">
+    <div class="section-title">スコア推移</div>
+    <div id="chartWrap"><canvas id="chart"></canvas></div>
+  </div>
 
-        <div class="card">
-            <h2>連敗ガード</h2>
-            <div id="streakBlock" class="metric">読み込み中...</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>ニュース</h2>
-        <div id="newsBlock" class="metric">読み込み中...</div>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <h2>ポジション配分</h2>
-            <div id="positionBlock" class="metric">読み込み中...</div>
-        </div>
-
-        <div class="card">
-            <h2>前回損益</h2>
-            <div id="pnlBlock" class="metric">計算待ち...</div>
-        </div>
-
-        <div class="card">
-            <h2>成績</h2>
-            <div id="statsBlock" class="metric">集計待ち...</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>スコア推移</h2>
-        <div class="chartWrap">
-            <canvas id="chart"></canvas>
-        </div>
-    </div>
-
-    <div class="card small" id="updated">更新時刻読み込み中...</div>
-
+  <div class="card small" id="updated">更新 -</div>
 </div>
 
 <script>
-async function loadDashboard() {
-    const res = await fetch("dashboard.json?v=" + Date.now());
-    const data = await res.json();
-
-    const weather = data.weather || "-";
-    const action = data.action || "-";
-    const score = data.score || "-";
-    const danger = data.danger || "-";
-    const temp = data.market_temp || "-";
-    const up = data.up_prob || "-";
-    const down = data.down_prob || "-";
-    const updated = data.updated_at || "-";
-    const capital = Number(data.capital || 0);
-
-    const pos = data.position || {};
-    const alloc = pos.allocations || {};
-    const open = data.open || {};
-    const conf = data.confidence || {};
-    const pnlStats = data.pnl_stats || {};
-    const filt = data.filter || {};
-    const eventData = data.event || {};
-    const newsData = data.news || {};
-    const streakData = data.streak || {};
-
-    let statusText = "NEUTRAL";
-    if (weather === "青") statusText = "RISK ON";
-    if (weather === "赤") statusText = "RISK OFF";
-
-    document.getElementById("status").textContent = statusText;
-    document.getElementById("action").textContent = "売買判断: " + action;
-
-    document.getElementById("marketBlock").innerHTML =
-        "スコア: <b>" + score + "</b><br>" +
-        "危険度: <b>" + danger + "</b><br>" +
-        "市場温度: <b>" + temp + "</b><br>" +
-        "上昇確率: <b>" + up + "</b><br>" +
-        "下落確率: <b>" + down + "</b>";
-
-    document.getElementById("openBlock").innerHTML =
-        "寄り上昇: <b>" + (open.open_up_prob ?? "-") + "%</b><br>" +
-        "寄り下落: <b>" + (open.open_down_prob ?? "-") + "%</b><br>" +
-        "バイアス: <b>" + (open.gap_bias ?? "-") + "</b>";
-
-    document.getElementById("confidenceBlock").innerHTML =
-        "信頼度: <b>" + (conf.confidence ?? "-") + "</b><br>" +
-        "レベル: <b>" + (conf.level ?? "-") + "</b>";
-
-    const decision = filt.decision || "-";
-    const size = filt.size ?? "-";
-    const filterReason = filt.reason || "";
-
-    let decisionHtml = '<span>' + decision + '</span>';
-    if (decision === "EXECUTE") decisionHtml = '<span class="exec">EXECUTE</span>';
-    if (decision === "LIGHT") decisionHtml = '<span class="light">LIGHT</span>';
-    if (decision === "SKIP") decisionHtml = '<span class="skip">SKIP</span>';
-
-    document.getElementById("filterBlock").innerHTML =
-        "判定: " + decisionHtml + "<br>" +
-        "サイズ倍率: <b>" + size + "</b><br>" +
-        "理由: <b>" + filterReason + "</b>";
-
-    const eventLevel = eventData.event_level || "LOW";
-    const eventReason = eventData.event_reason || "通常日";
-    let eventHtml = '<span class="event-low">LOW</span>';
-    if (eventLevel === "MID") eventHtml = '<span class="event-mid">MID</span>';
-    if (eventLevel === "HIGH") eventHtml = '<span class="event-high">HIGH</span>';
-
-    document.getElementById("eventBlock").innerHTML =
-        "イベント強度: " + eventHtml + "<br>" +
-        "内容: <b>" + eventReason + "</b>";
-
-    const streakDecision = streakData.decision || "NORMAL";
-    const streakReason = streakData.reason || "通常運転";
-    const consecutiveLosses = streakData.consecutive_losses ?? 0;
-
-    let streakHtml = '<span class="streak-normal">NORMAL</span>';
-    if (streakDecision === "REDUCE") streakHtml = '<span class="streak-reduce">REDUCE</span>';
-    if (streakDecision === "STOP") streakHtml = '<span class="streak-stop">STOP</span>';
-
-    document.getElementById("streakBlock").innerHTML =
-        "状態: " + streakHtml + "<br>" +
-        "連敗数: <b>" + consecutiveLosses + "</b><br>" +
-        "理由: <b>" + streakReason + "</b>";
-
-    const newsLevel = newsData.news_level || "LOW";
-    const newsReason = newsData.news_reason || "通常ニュースフロー";
-    const newsScore = newsData.news_score ?? 0;
-    const headlines = newsData.headlines || [];
-
-    let newsHeader = "ニュース強度: <b>" + newsLevel + "</b><br>" +
-                     "理由: <b>" + newsReason + "</b><br>" +
-                     "ニューススコア: <b>" + newsScore + "</b><br><br>";
-
-    let newsLines = "";
-    headlines.slice(0, 5).forEach(h => {
-        newsLines += '<div class="news-line">・' + h.title + '</div>';
-    });
-    if (newsLines === "") {
-        newsLines = '<div class="news-line">ニュース取得なし</div>';
-    }
-
-    document.getElementById("newsBlock").innerHTML = newsHeader + newsLines;
-
-    document.getElementById("positionBlock").innerHTML =
-        "日経ETF: <b>" + (alloc.nikkei_etf ?? "-") + "</b><br>" +
-        "半導体ETF: <b>" + (alloc.semi_etf ?? "-") + "</b><br>" +
-        "現金: <b>" + (alloc.cash ?? "-") + "</b><br>" +
-        "総ポジション: <b>" + (pos.total_position ?? "-") + "</b>";
-
-    const nikkei = Number(alloc.nikkei_etf ?? 0);
-    const semi = Number(alloc.semi_etf ?? 0);
-    const sizeFactor = Number(filt.size ?? 0);
-
-    let orderLines = [];
-
-    if (decision === "SKIP" || sizeFactor === 0) {
-        orderLines.push('<span class="order-line wait">何もしない</span>');
-        orderLines.push('<span class="order-line">現金 → ' + capital.toLocaleString() + '円</span>');
-    } else {
-        if (nikkei < 0) {
-            const amount = Math.round(capital * Math.abs(nikkei) * sizeFactor);
-            orderLines.push('<span class="order-line sell">1357 買い → ' + amount.toLocaleString() + '円</span>');
-        } else if (nikkei > 0) {
-            const amount = Math.round(capital * Math.abs(nikkei) * sizeFactor);
-            orderLines.push('<span class="order-line buy">1321 買い → ' + amount.toLocaleString() + '円</span>');
-        }
-
-        if (semi < 0) {
-            const amount = Math.round(capital * Math.abs(semi) * sizeFactor);
-            orderLines.push('<span class="order-line sell">2244 空売り → ' + amount.toLocaleString() + '円</span>');
-        } else if (semi > 0) {
-            const amount = Math.round(capital * Math.abs(semi) * sizeFactor);
-            orderLines.push('<span class="order-line buy">2244 買い → ' + amount.toLocaleString() + '円</span>');
-        }
-
-        const usedCapital = Math.round(capital * ((Math.abs(nikkei) + Math.abs(semi)) * sizeFactor));
-        const cashAmount = capital - usedCapital;
-        orderLines.push('<span class="order-line">現金 → ' + cashAmount.toLocaleString() + '円</span>');
-    }
-
-    document.getElementById("orderBlock").innerHTML = orderLines.join("");
-
-    let pnlHtml = "まだデータ不足";
-    const lastPnlRaw = pnlStats.last_pnl ?? "";
-    if (String(lastPnlRaw).trim() !== "") {
-        const pnl = Number(lastPnlRaw);
-        if (pnl > 0) {
-            pnlHtml = '前回損益: <span class="pnl-plus">+' + pnl.toLocaleString() + '円</span>';
-        } else if (pnl < 0) {
-            pnlHtml = '前回損益: <span class="pnl-minus">' + pnl.toLocaleString() + '円</span>';
-        } else {
-            pnlHtml = '前回損益: <span class="pnl-flat">0円</span>';
-        }
-    }
-    document.getElementById("pnlBlock").innerHTML = pnlHtml;
-
-    let statsHtml = "まだデータ不足";
-    const tradeCount = Number(pnlStats.trade_count ?? 0);
-    if (tradeCount > 0) {
-        const cumulative = Number(pnlStats.cumulative_pnl ?? 0);
-        const winCount = Number(pnlStats.win_count ?? 0);
-        const lossCount = Number(pnlStats.loss_count ?? 0);
-        const winRate = pnlStats.win_rate ?? "";
-
-        let cumulativeText = '<span class="pnl-flat">0円</span>';
-        if (cumulative > 0) {
-            cumulativeText = '<span class="pnl-plus">+' + cumulative.toLocaleString() + '円</span>';
-        } else if (cumulative < 0) {
-            cumulativeText = '<span class="pnl-minus">' + cumulative.toLocaleString() + '円</span>';
-        }
-
-        statsHtml =
-            "累積損益: " + cumulativeText + "<br>" +
-            "勝率: <b>" + winRate + "%</b><br>" +
-            "勝ち: <b>" + winCount + "</b><br>" +
-            "負け: <b>" + lossCount + "</b><br>" +
-            "件数: <b>" + tradeCount + "</b>";
-    }
-    document.getElementById("statsBlock").innerHTML = statsHtml;
-
-    document.getElementById("updated").textContent = "更新 " + updated;
+function yen(v){
+  return Number(v).toLocaleString() + "円";
 }
 
-async function drawChart() {
+function setSignal(execData){
+  const box = document.getElementById("signalBlock");
+  const action = execData.action || "HOLD";
+  const side = execData.side || "";
+  const size = Number(execData.size || 0);
+  const reason = execData.reason || "";
+
+  let html = "";
+
+  if(action === "ENTER"){
+    const amount = Math.round(size * 100000);
+    if(side === "LONG"){
+      html += '<div class="signal-line buy">▶ ロング → ' + yen(amount) + '</div>';
+    } else if(side === "SHORT"){
+      html += '<div class="signal-line sell">▶ ショート → ' + yen(amount) + '</div>';
+    } else {
+      html += '<div class="signal-line buy">▶ エントリー → ' + yen(amount) + '</div>';
+    }
+    html += '<div class="small">理由: ' + reason + '</div>';
+  } else if(action === "EXIT"){
+    html += '<div class="signal-line exit">▶ 全決済</div>';
+    html += '<div class="small">理由: ' + reason + '</div>';
+  } else {
+    html += '<div class="signal-line wait">▶ 何もしない</div>';
+    html += '<div class="small">理由: ' + reason + '</div>';
+  }
+
+  box.innerHTML = html;
+}
+
+async function loadDashboard(){
+  const res = await fetch("dashboard.json?v=" + Date.now());
+  const data = await res.json();
+
+  document.getElementById("weather").textContent = data.weather || "-";
+  document.getElementById("marketAction").textContent = "売買判断: " + (data.action || "-");
+  document.getElementById("score").textContent = data.score || "-";
+  document.getElementById("danger").textContent = data.danger || "-";
+  document.getElementById("marketTemp").textContent = data.market_temp || "-";
+  document.getElementById("upProb").textContent = data.up_prob || "-";
+  document.getElementById("downProb").textContent = data.down_prob || "-";
+
+  const filter = data.filter || {};
+  document.getElementById("filterDecision").textContent = filter.decision || "-";
+  document.getElementById("filterSize").textContent = filter.size ?? "-";
+  document.getElementById("filterDirection").textContent = filter.allowed_direction || "BOTH";
+  document.getElementById("filterReason").textContent = filter.reason || "-";
+
+  const pos = (data.position && data.position.allocations) ? data.position.allocations : {};
+  document.getElementById("nikkeiPos").textContent = pos.nikkei_etf ?? "-";
+  document.getElementById("semiPos").textContent = pos.semi_etf ?? "-";
+  document.getElementById("cashPos").textContent = pos.cash ?? "-";
+  document.getElementById("totalPos").textContent = data.position ? data.position.total_position : "-";
+
+  const pnl = data.pnl_stats || {};
+  document.getElementById("lastPnl").textContent = pnl.last_pnl === undefined ? "-" : yen(Number(pnl.last_pnl || 0));
+  document.getElementById("cumPnl").textContent = pnl.cumulative_pnl === undefined ? "-" : yen(Number(pnl.cumulative_pnl || 0));
+  document.getElementById("winRate").textContent = (pnl.win_rate ?? "-") + (pnl.win_rate === undefined ? "" : "%");
+  document.getElementById("tradeCount").textContent = pnl.trade_count ?? "-";
+
+  document.getElementById("updated").textContent = "更新 " + (data.updated_at || "-");
+}
+
+async function loadExecution(){
+  try{
+    const res = await fetch("execution.json?v=" + Date.now());
+    const execData = await res.json();
+    setSignal(execData);
+  }catch(e){
+    document.getElementById("signalBlock").innerHTML =
+      '<div class="signal-line wait">▶ 読み込み失敗</div>';
+  }
+}
+
+async function drawChart(){
+  try{
     const csv = await fetch("chart_history.csv?v=" + Date.now());
     const text = await csv.text();
-
     const lines = text.trim().split("\n").slice(1);
     const labels = [];
     const values = [];
 
     lines.forEach(line => {
-        const parts = line.split(",");
-        if (parts.length >= 2) {
-            labels.push(parts[0]);
-            values.push(parseFloat(parts[1]));
-        }
+      const parts = line.split(",");
+      if(parts.length >= 2){
+        labels.push(parts[0]);
+        values.push(parseFloat(parts[1]));
+      }
     });
 
     new Chart(document.getElementById("chart"), {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "AI Score",
-                data: values,
-                borderColor: "#2563eb",
-                backgroundColor: "rgba(37,99,235,0.15)",
-                tension: 0.25,
-                pointRadius: 3
-            }]
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "AI Score",
+          data: values,
+          borderColor: "#2f6cff",
+          backgroundColor: "rgba(47,108,255,0.15)",
+          tension: 0.25,
+          pointRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: "#ffffff" }
+          }
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: { color: "#ffffff" }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: "#ffffff",
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
-                    grid: { color: "rgba(255,255,255,0.12)" }
-                },
-                y: {
-                    ticks: { color: "#ffffff" },
-                    grid: { color: "rgba(255,255,255,0.12)" }
-                }
-            }
+        scales: {
+          x: {
+            ticks: { color: "#ffffff", maxRotation: 45, minRotation: 45 },
+            grid: { color: "rgba(255,255,255,0.12)" }
+          },
+          y: {
+            ticks: { color: "#ffffff" },
+            grid: { color: "rgba(255,255,255,0.12)" }
+          }
         }
+      }
     });
+  }catch(e){}
 }
 
 loadDashboard();
+loadExecution();
 drawChart();
 </script>
-
 </body>
 </html>
