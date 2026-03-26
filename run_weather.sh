@@ -22,5 +22,6 @@ python3 execution_ai.py
 python3 dashboard_builder.py
 python3 logger.py
 python3 paper_pnl.py
+python3 result_logger.py
 
 echo "DONE"
