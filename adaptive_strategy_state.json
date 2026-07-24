@@ -1,0 +1,824 @@
+{
+  "version": 1,
+  "strategies": {
+    "REPLAY_05": {
+      "name": "key_exact_match",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_01": {
+      "name": "expectancy_positive",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_04": {
+      "name": "expectancy_boost",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_03": {
+      "name": "policy_boost",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_09": {
+      "name": "priority_replay",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_02": {
+      "name": "sample_over_30",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_05": {
+      "name": "trend_up_long_memory",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_03": {
+      "name": "shadow_win_memory",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_08": {
+      "name": "exit_engine_hold",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_01": {
+      "name": "trend_follow",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_02": {
+      "name": "trend_pullback",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_03": {
+      "name": "trend_breakout",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_04": {
+      "name": "trend_reversal_up",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_05": {
+      "name": "trend_memory",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_06": {
+      "name": "trend_confidence",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_07": {
+      "name": "trend_vol_adjust",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_08": {
+      "name": "trend_vol_danger_small",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_09": {
+      "name": "trend_hold",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "TREND_10": {
+      "name": "trend_skip_if_no_edge",
+      "family": "TREND",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_06": {
+      "name": "size_boost",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_07": {
+      "name": "low_pnl_warning",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_08": {
+      "name": "winrate_warning",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_09": {
+      "name": "shadow_profit_override",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "REPLAY_10": {
+      "name": "replay_conflict_guard",
+      "family": "REPLAY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_01": {
+      "name": "temp_block",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_02": {
+      "name": "vol_danger_guard",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_03": {
+      "name": "vol_danger_but_replay",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_04": {
+      "name": "confidence_low",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_05": {
+      "name": "confidence_high",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_06": {
+      "name": "position_exists",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_07": {
+      "name": "exit_now",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_08": {
+      "name": "small_sample",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_09": {
+      "name": "shadow_profit_safe",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "RISK_10": {
+      "name": "capital_protect",
+      "family": "RISK",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_01": {
+      "name": "take_profit_check",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_02": {
+      "name": "stop_loss_check",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_03": {
+      "name": "hold_flat_pnl",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_04": {
+      "name": "hold_winner",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_05": {
+      "name": "cut_loser",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_06": {
+      "name": "no_position_entry",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_07": {
+      "name": "vol_tight_exit",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_09": {
+      "name": "exit_engine_signal",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "EXIT_10": {
+      "name": "lifecycle_sync",
+      "family": "EXIT",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_01": {
+      "name": "experience_under_50",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_02": {
+      "name": "experience_growth",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_04": {
+      "name": "real_loss_memory",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_06": {
+      "name": "mistake_avoid",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_07": {
+      "name": "success_pattern",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_08": {
+      "name": "sample_growth",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    },
+    "MEMORY_10": {
+      "name": "beginner_limit",
+      "family": "MEMORY",
+      "samples": 0,
+      "ema_score": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "flats": 0
+    }
+  },
+  "last_snapshot": {
+    "source_time": "2026-07-24 13:40:08",
+    "captured_at": "2026-07-24T17:00:32",
+    "price": null,
+    "price_source": null,
+    "strategies": [
+      {
+        "id": "REPLAY_05",
+        "name": "key_exact_match",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_01",
+        "name": "expectancy_positive",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_04",
+        "name": "expectancy_boost",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_03",
+        "name": "policy_boost",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_09",
+        "name": "priority_replay",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_02",
+        "name": "sample_over_30",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_05",
+        "name": "trend_up_long_memory",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_03",
+        "name": "shadow_win_memory",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "EXIT_08",
+        "name": "exit_engine_hold",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "TREND_01",
+        "name": "trend_follow",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_01",
+        "name": "trend_follow",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_02",
+        "name": "trend_pullback",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_03",
+        "name": "trend_breakout",
+        "family": "TREND",
+        "decision": "SKIP"
+      },
+      {
+        "id": "TREND_04",
+        "name": "trend_reversal_up",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_05",
+        "name": "trend_memory",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_06",
+        "name": "trend_confidence",
+        "family": "TREND",
+        "decision": "SKIP"
+      },
+      {
+        "id": "TREND_07",
+        "name": "trend_vol_adjust",
+        "family": "TREND",
+        "decision": "SKIP"
+      },
+      {
+        "id": "TREND_08",
+        "name": "trend_vol_danger_small",
+        "family": "TREND",
+        "decision": "LONG"
+      },
+      {
+        "id": "TREND_09",
+        "name": "trend_hold",
+        "family": "TREND",
+        "decision": "SKIP"
+      },
+      {
+        "id": "TREND_10",
+        "name": "trend_skip_if_no_edge",
+        "family": "TREND",
+        "decision": "SKIP"
+      },
+      {
+        "id": "REPLAY_01",
+        "name": "expectancy_positive",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_02",
+        "name": "sample_over_30",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_03",
+        "name": "policy_boost",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_04",
+        "name": "expectancy_boost",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_05",
+        "name": "key_exact_match",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "REPLAY_06",
+        "name": "size_boost",
+        "family": "REPLAY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "REPLAY_07",
+        "name": "low_pnl_warning",
+        "family": "REPLAY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "REPLAY_08",
+        "name": "winrate_warning",
+        "family": "REPLAY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "REPLAY_09",
+        "name": "shadow_profit_override",
+        "family": "REPLAY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "REPLAY_10",
+        "name": "replay_conflict_guard",
+        "family": "REPLAY",
+        "decision": "LONG"
+      },
+      {
+        "id": "RISK_01",
+        "name": "temp_block",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_02",
+        "name": "vol_danger_guard",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_03",
+        "name": "vol_danger_but_replay",
+        "family": "RISK",
+        "decision": "LONG"
+      },
+      {
+        "id": "RISK_04",
+        "name": "confidence_low",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_05",
+        "name": "confidence_high",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_06",
+        "name": "position_exists",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_07",
+        "name": "exit_now",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_08",
+        "name": "small_sample",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_09",
+        "name": "shadow_profit_safe",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "RISK_10",
+        "name": "capital_protect",
+        "family": "RISK",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_01",
+        "name": "take_profit_check",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_02",
+        "name": "stop_loss_check",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_03",
+        "name": "hold_flat_pnl",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_04",
+        "name": "hold_winner",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_05",
+        "name": "cut_loser",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_06",
+        "name": "no_position_entry",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_07",
+        "name": "vol_tight_exit",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_08",
+        "name": "exit_engine_hold",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_09",
+        "name": "exit_engine_signal",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "EXIT_10",
+        "name": "lifecycle_sync",
+        "family": "EXIT",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_01",
+        "name": "experience_under_50",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_02",
+        "name": "experience_growth",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_03",
+        "name": "shadow_win_memory",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_04",
+        "name": "real_loss_memory",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_05",
+        "name": "trend_up_long_memory",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_06",
+        "name": "mistake_avoid",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_07",
+        "name": "success_pattern",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_08",
+        "name": "sample_growth",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      },
+      {
+        "id": "MEMORY_09",
+        "name": "priority_replay",
+        "family": "MEMORY",
+        "decision": "LONG"
+      },
+      {
+        "id": "MEMORY_10",
+        "name": "beginner_limit",
+        "family": "MEMORY",
+        "decision": "SKIP"
+      }
+    ]
+  },
+  "updated_at": "2026-07-24T17:00:32"
+}

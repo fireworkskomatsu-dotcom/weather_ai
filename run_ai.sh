@@ -18,6 +18,7 @@ run market_temperature_ai.py
 
 # === canonical fresh decision pipeline ===
 run strategy_5x10_ai.py
+run adaptive_strategy_engine_ai.py
 run recovery_mode_ai.py
 run winrate_filter_ai.py
 run emergency_stop_ai.py
@@ -48,6 +49,8 @@ copy production_lock.json
 copy market_temperature.json
 copy filter.json
 copy weighted_multi_agent.json
+copy adaptive_strategy_state.json
+copy adaptive_strategy_weights.json
 copy replay_expectancy.json
 copy replay_policy.json
 

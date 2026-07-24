@@ -1,0 +1,31 @@
+{
+  "time": "2026-07-24 17:00:32",
+  "final_decision": "SKIP",
+  "weighted_votes": {
+    "LONG": 1.236655,
+    "SHORT": 0.0,
+    "SKIP": 3.263345
+  },
+  "strategy_parliament": {
+    "raw_votes": {
+      "LONG": 18.07,
+      "SHORT": 0.0,
+      "SKIP": 18.46
+    },
+    "strategy_count": {
+      "LONG": 24,
+      "SHORT": 0,
+      "SKIP": 36
+    },
+    "influence_cap": 2.5,
+    "adaptive_status": "ACTIVE",
+    "adaptive_strategy_count": 60
+  },
+  "hard_veto": false,
+  "reasons": [
+    "ADAPTIVE_STRATEGY_PARLIAMENT",
+    "FILTER_SKIP"
+  ],
+  "source": "weighted_multi_agent_ai.py",
+  "mode": "ADAPTIVE_PARLIAMENT_V1"
+}
