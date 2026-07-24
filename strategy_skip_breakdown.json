@@ -1,0 +1,441 @@
+{
+  "status": "OK",
+  "generated_at": "2026-07-24T13:45:24",
+  "source_time": "2026-07-24 13:40:08",
+  "final_decision": "SKIP",
+  "published_votes": {
+    "LONG": 10.98,
+    "SHORT": 0.0,
+    "SKIP": 17.73,
+    "HOLD": 0.0
+  },
+  "individual_records_found": 51,
+  "skip_records_found": 36,
+  "calculated_decision_totals": {
+    "SKIP": 18.73,
+    "LONG": 10.979999999999999
+  },
+  "skip_reason_breakdown": {
+    "CONDITION_FALSE": 9.399999999999997,
+    "UNSPECIFIED_SKIP": 1.0,
+    "EXIT_ENGINE_HOLD": 0.73,
+    "VOL_DANGER": 0.72,
+    "CAPITAL_PROTECT": 0.7,
+    "SIZE_CHECK": 0.66,
+    "LIFECYCLE_SYNC": 0.66,
+    "REAL_LOSS_MEMORY": 0.65,
+    "REAL_WINRATE_LOW": 0.64,
+    "LOSS_AVOID": 0.64,
+    "REAL_PNL_NEGATIVE": 0.62,
+    "VOL_TIGHT_EXIT": 0.62,
+    "BEGINNER_SMALL_LOT": 0.58,
+    "LOW_EXPERIENCE": 0.56,
+    "LOW_SAMPLE_CAUTION": 0.55
+  },
+  "skip_strategy_breakdown": {
+    "root": 1.0,
+    "exit_engine_hold": 0.73,
+    "vol_danger_guard": 0.72,
+    "capital_protect": 0.7,
+    "size_boost": 0.66,
+    "lifecycle_sync": 0.66,
+    "real_loss_memory": 0.65,
+    "winrate_warning": 0.64,
+    "mistake_avoid": 0.64,
+    "low_pnl_warning": 0.62,
+    "vol_tight_exit": 0.62,
+    "beginner_limit": 0.58,
+    "experience_under_50": 0.56,
+    "small_sample": 0.55,
+    "trend_breakout": 0.45,
+    "trend_confidence": 0.45,
+    "trend_vol_adjust": 0.45,
+    "trend_hold": 0.45,
+    "trend_skip_if_no_edge": 0.45,
+    "experience_growth": 0.44,
+    "success_pattern": 0.44,
+    "sample_growth": 0.44,
+    "take_profit_check": 0.43,
+    "stop_loss_check": 0.43,
+    "hold_flat_pnl": 0.43,
+    "hold_winner": 0.43,
+    "cut_loser": 0.43,
+    "no_position_entry": 0.43,
+    "exit_engine_signal": 0.43,
+    "shadow_profit_override": 0.42,
+    "temp_block": 0.4,
+    "confidence_low": 0.4,
+    "confidence_high": 0.4,
+    "position_exists": 0.4,
+    "exit_now": 0.4,
+    "shadow_profit_safe": 0.4
+  },
+  "skip_family_breakdown": {
+    "EXIT": 5.0200000000000005,
+    "RISK": 4.369999999999999,
+    "MEMORY": 3.75,
+    "REPLAY": 2.34,
+    "TREND": 2.25
+  },
+  "individual_decisions": [
+    {
+      "name": "root",
+      "decision": "SKIP",
+      "weight": 1.0,
+      "reason": "UNSPECIFIED_SKIP",
+      "location": "root"
+    },
+    {
+      "name": "key_exact_match",
+      "decision": "LONG",
+      "weight": 0.84,
+      "reason": "TREND_UP_LONG_EXACT",
+      "location": "root.top10[0]"
+    },
+    {
+      "name": "expectancy_positive",
+      "decision": "LONG",
+      "weight": 0.82,
+      "reason": "EXPECTANCY_POSITIVE",
+      "location": "root.top10[1]"
+    },
+    {
+      "name": "expectancy_boost",
+      "decision": "LONG",
+      "weight": 0.81,
+      "reason": "EXPECTANCY_BOOST",
+      "location": "root.top10[2]"
+    },
+    {
+      "name": "policy_boost",
+      "decision": "LONG",
+      "weight": 0.8,
+      "reason": "POLICY_BOOST",
+      "location": "root.top10[3]"
+    },
+    {
+      "name": "priority_replay",
+      "decision": "LONG",
+      "weight": 0.8,
+      "reason": "REPLAY_PRIORITY_MEMORY",
+      "location": "root.top10[4]"
+    },
+    {
+      "name": "sample_over_30",
+      "decision": "LONG",
+      "weight": 0.78,
+      "reason": "REPLAY_SAMPLE_30_PLUS",
+      "location": "root.top10[5]"
+    },
+    {
+      "name": "trend_up_long_memory",
+      "decision": "LONG",
+      "weight": 0.78,
+      "reason": "DNA_MEMORY_MATCH",
+      "location": "root.top10[6]"
+    },
+    {
+      "name": "shadow_win_memory",
+      "decision": "LONG",
+      "weight": 0.74,
+      "reason": "SHADOW_WIN_MEMORY",
+      "location": "root.top10[7]"
+    },
+    {
+      "name": "exit_engine_hold",
+      "decision": "SKIP",
+      "weight": 0.73,
+      "reason": "EXIT_ENGINE_HOLD",
+      "location": "root.top10[8]"
+    },
+    {
+      "name": "trend_follow",
+      "decision": "LONG",
+      "weight": 0.72,
+      "reason": "TREND_UP",
+      "location": "root.top10[9]"
+    },
+    {
+      "name": "trend_pullback",
+      "decision": "LONG",
+      "weight": 0.7,
+      "reason": "TREND_UP_NORMAL",
+      "location": "root.strategies[1]"
+    },
+    {
+      "name": "trend_breakout",
+      "decision": "SKIP",
+      "weight": 0.45,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[2]"
+    },
+    {
+      "name": "trend_reversal_up",
+      "decision": "LONG",
+      "weight": 0.68,
+      "reason": "REVERSAL_UP",
+      "location": "root.strategies[3]"
+    },
+    {
+      "name": "trend_memory",
+      "decision": "LONG",
+      "weight": 0.71,
+      "reason": "REPLAY_TREND_MATCH",
+      "location": "root.strategies[4]"
+    },
+    {
+      "name": "trend_confidence",
+      "decision": "SKIP",
+      "weight": 0.45,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[5]"
+    },
+    {
+      "name": "trend_vol_adjust",
+      "decision": "SKIP",
+      "weight": 0.45,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[6]"
+    },
+    {
+      "name": "trend_vol_danger_small",
+      "decision": "LONG",
+      "weight": 0.62,
+      "reason": "VOL_DANGER_SMALL",
+      "location": "root.strategies[7]"
+    },
+    {
+      "name": "trend_hold",
+      "decision": "SKIP",
+      "weight": 0.45,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[8]"
+    },
+    {
+      "name": "trend_skip_if_no_edge",
+      "decision": "SKIP",
+      "weight": 0.45,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[9]"
+    },
+    {
+      "name": "size_boost",
+      "decision": "SKIP",
+      "weight": 0.66,
+      "reason": "SIZE_CHECK",
+      "location": "root.strategies[15]"
+    },
+    {
+      "name": "low_pnl_warning",
+      "decision": "SKIP",
+      "weight": 0.62,
+      "reason": "REAL_PNL_NEGATIVE",
+      "location": "root.strategies[16]"
+    },
+    {
+      "name": "winrate_warning",
+      "decision": "SKIP",
+      "weight": 0.64,
+      "reason": "REAL_WINRATE_LOW",
+      "location": "root.strategies[17]"
+    },
+    {
+      "name": "shadow_profit_override",
+      "decision": "SKIP",
+      "weight": 0.42,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[18]"
+    },
+    {
+      "name": "replay_conflict_guard",
+      "decision": "LONG",
+      "weight": 0.6,
+      "reason": "REPLAY_POSITIVE_REAL_NEGATIVE_SMALL",
+      "location": "root.strategies[19]"
+    },
+    {
+      "name": "temp_block",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[20]"
+    },
+    {
+      "name": "vol_danger_guard",
+      "decision": "SKIP",
+      "weight": 0.72,
+      "reason": "VOL_DANGER",
+      "location": "root.strategies[21]"
+    },
+    {
+      "name": "vol_danger_but_replay",
+      "decision": "LONG",
+      "weight": 0.58,
+      "reason": "VOL_DANGER_REPLAY_OVERRIDE",
+      "location": "root.strategies[22]"
+    },
+    {
+      "name": "confidence_low",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[23]"
+    },
+    {
+      "name": "confidence_high",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[24]"
+    },
+    {
+      "name": "position_exists",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[25]"
+    },
+    {
+      "name": "exit_now",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[26]"
+    },
+    {
+      "name": "small_sample",
+      "decision": "SKIP",
+      "weight": 0.55,
+      "reason": "LOW_SAMPLE_CAUTION",
+      "location": "root.strategies[27]"
+    },
+    {
+      "name": "shadow_profit_safe",
+      "decision": "SKIP",
+      "weight": 0.4,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[28]"
+    },
+    {
+      "name": "capital_protect",
+      "decision": "SKIP",
+      "weight": 0.7,
+      "reason": "CAPITAL_PROTECT",
+      "location": "root.strategies[29]"
+    },
+    {
+      "name": "take_profit_check",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[30]"
+    },
+    {
+      "name": "stop_loss_check",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[31]"
+    },
+    {
+      "name": "hold_flat_pnl",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[32]"
+    },
+    {
+      "name": "hold_winner",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[33]"
+    },
+    {
+      "name": "cut_loser",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[34]"
+    },
+    {
+      "name": "no_position_entry",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[35]"
+    },
+    {
+      "name": "vol_tight_exit",
+      "decision": "SKIP",
+      "weight": 0.62,
+      "reason": "VOL_TIGHT_EXIT",
+      "location": "root.strategies[36]"
+    },
+    {
+      "name": "exit_engine_signal",
+      "decision": "SKIP",
+      "weight": 0.43,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[38]"
+    },
+    {
+      "name": "lifecycle_sync",
+      "decision": "SKIP",
+      "weight": 0.66,
+      "reason": "LIFECYCLE_SYNC",
+      "location": "root.strategies[39]"
+    },
+    {
+      "name": "experience_under_50",
+      "decision": "SKIP",
+      "weight": 0.56,
+      "reason": "LOW_EXPERIENCE",
+      "location": "root.strategies[40]"
+    },
+    {
+      "name": "experience_growth",
+      "decision": "SKIP",
+      "weight": 0.44,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[41]"
+    },
+    {
+      "name": "real_loss_memory",
+      "decision": "SKIP",
+      "weight": 0.65,
+      "reason": "REAL_LOSS_MEMORY",
+      "location": "root.strategies[43]"
+    },
+    {
+      "name": "mistake_avoid",
+      "decision": "SKIP",
+      "weight": 0.64,
+      "reason": "LOSS_AVOID",
+      "location": "root.strategies[45]"
+    },
+    {
+      "name": "success_pattern",
+      "decision": "SKIP",
+      "weight": 0.44,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[46]"
+    },
+    {
+      "name": "sample_growth",
+      "decision": "SKIP",
+      "weight": 0.44,
+      "reason": "CONDITION_FALSE",
+      "location": "root.strategies[47]"
+    },
+    {
+      "name": "beginner_limit",
+      "decision": "SKIP",
+      "weight": 0.58,
+      "reason": "BEGINNER_SMALL_LOT",
+      "location": "root.strategies[49]"
+    }
+  ],
+  "static_strategy_names_found": [],
+  "limitation": null
+}
