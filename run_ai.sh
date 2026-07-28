@@ -66,3 +66,17 @@ git push
 (cd "$HOME/weather_ai" && python3 ai_scoreboard_ai.py)
 (cd "$HOME/weather_ai" && python3 strategy_skip_breakdown_ai.py)
 (cd "$HOME/weather_ai" && python3 learning_log_ai.py)
+
+# ===== PUBLIC DASHBOARD SYNC =====
+python3 dashboard_builder.py
+
+if [ -f history.csv ]; then
+  cp -f history.csv web/history.csv
+fi
+
+if [ -f latest_weather.txt ]; then
+  cp -f latest_weather.txt web/weather.txt
+else
+  printf '更新失敗: latest_weather.txt が存在しません\n' > web/weather.txt
+fi
+# ===== END PUBLIC DASHBOARD SYNC =====

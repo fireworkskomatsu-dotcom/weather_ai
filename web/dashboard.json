@@ -6,14 +6,14 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-03-27 07:23",
+  "updated_at": "2026-07-28 17:14",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
     "cumulative_pnl": 0.0,
     "win_count": 0,
     "loss_count": 0,
-    "trade_count": 194,
+    "trade_count": 199,
     "win_rate": 0.0
   },
   "position": {
@@ -50,49 +50,49 @@
     "event_reason": "通常日"
   },
   "news": {
-    "news_level": "MID",
-    "news_reason": "やや警戒ニュースあり",
-    "news_score": -3,
+    "news_level": "HIGH",
+    "news_reason": "ネガティブニュース多発",
+    "news_score": -14,
     "headlines": [
       {
-        "title": "TOPIXの指数情報・推移 - Yahoo!ファイナンス",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1DeFBMbTJZUmR2akJBZlhCYU12WGMyZ3U3TEVkTm5JOUZHenE2eWRfanNXb0Zvc3NYWFRZSTZSbWdvTDllbjcwejhfSGN3b0ZiUzJxXw?oc=5"
+        "title": "日経平均1日で2%超変動、韓国株が半導体に影響 個人の短期売買活発 - 日本経済新聞",
+        "score": -1,
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBYY3hkbHRtQjRpTE9JY2Q5YXpySldENlFLYjhuV1pXYlpJVmJUaFVPamdVY3lSdnhxdTZ6cWJHdmlFd1VXZ095UUxyU2lkbUdvdU5OOTF0LU9qSXhNSzlWRTUzajN5SmMxdFBjeQ?oc=5"
       },
       {
-        "title": "日経平均、2027年3月に6万円 岡三証券の内山氏 - 日本経済新聞",
+        "title": "(NEXT FUNDS)日経平均レバレッジ上場投信【1570】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9MYUk1Y3dCbDJka21QTnNjN0R4ZTNGRWVzZkhRbUFFYW5FRTFNNi1hTVN6X2lDelNFQmJmUXFsSEdYWG85YmRBVW9DVWJNVXo1QzB1UDlfNFhJVkhmcXB2UHBKa0lJTGQ2WlhURA?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBoSXJOa2dkbWprTUdFYWNqMS1TUks2aF82bXFUblhxcThHSmY3S1I0cWJWeWlqc3QyalZoM3pUMFRpZVhQa3FidUcweFVhUFplRFE?oc=5"
       },
       {
-        "title": "日経平均は3日ぶり反落、中東情勢を巡り楽観と悲観が交錯 - Reuters",
+        "title": "【テクニカル】日経平均株価テクニカル分析－上値重く下値も堅く - 外為どっとコム",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPeXhfWVdxR1M5QWtMaWhhRnEtay1RcDJYTGFORW9TNjhfN3U2Y3R1eEE5c0tyeFcxSkJrNF9xMlZOSDdWakc4bUNoNlZoM2lxWHU3Tm5VSmFqbDlfVGJrYU9IOFVzb1phbHVwSXlZWTRFUHRaazQxSW5SdUVBekg0dA?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1NcVU3OVJTczQzQVFSSW9LYlFUWHVZNVFIRUhXMHRqZDY0RXdsaDNCMURsQ2NZTHpaSDRYYjgwd0hGOHpwTjJ0eUhuYlRoazNHaklfRjBxaFVleXNHRm1tbk03Yw?oc=5"
       },
       {
-        "title": "キオクシア軟調/需要増、医療分野でも注目「わさび」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」3月26日号 - ダイヤモンド・オンライン",
+        "title": "TOPIX先物テクニカルポイント（28日夜間取引終了時点） - 株探",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBpVUNSTU1jdG4yamcxOWg0dmFBbGNUMVZsd0JudnNqS2drNEhnMFhWdGNCUkVlb09xZFNISFkxWldPTHoxOGxHdGpHamI2eXk1bXY4?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1FNnJlRkFVRl8zcl92MzBiUC1BajNzdW5wS0VkVnB4bEFkdi1YOHpfUGNYeUNoS1hQUHFZM3R5VWQ5SzVDTVR4X0s1YzJFaTZFS0E?oc=5"
       },
       {
-        "title": "日米首脳会談の重要な5つの論点 日本株マクロの観点で解説 野村證券・岡崎康平 - nomura.co.jp",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1MUTdPdUFJUnNUVnRUNlI4NVhBc2xCUTJQazYzeUtla0Z0X3F0VUdMV185ZE8tWjZ6Y3NYQWs4RHBCZDFnUXpWVnE0NmR4dElNU3VfSVRUMVoxMGRJNnQ0?oc=5"
+        "title": "日経平均は反発、景気敏感株が支え ＡＩ・半導体の一角は軟調 - ロイター",
+        "score": 1,
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOYVFlbWd6OFYzNC1uTHd0cFNOT0gxTmFudXNSUnd3R1NLcEtrcGk5QmgxNjlMc1dfZUpEclRUUWd2VkttNEtkVmc0ek1TbnVUT2NScnVFc0N4QzdmcExUcWhwcDloYnVZaU9zMEhLZnJfR01wdWt1LUYwcG5ULV9ueg?oc=5"
       },
       {
-        "title": "ローム・東芝・三菱電機、パワー半導体統合協議 世界2位連合へ - 日本経済新聞",
+        "title": "半導体ＣＸＭＴが上場初日に466％高、時価総額中国首位 バブル懸念も - ロイター",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5DV1FlNENWbEtiNWMxUkI5cU5oNmJaX2xDRnhfYUVHT3Bxcjl3YTZFNHRDeVQ5YWdrMl9ROWZWTDktWmU1QkdVa3ZZRkdCR0ItZUVib1JzMjBpNnV6UXVTeV9BWFdiUDlFbDNPXw?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxObXZ1S0VsVHFyZTdCSnZvUTE3RlVfR1JjcG85SGJOLTN1UTZhOUdPSDQwUUxzOHJscnhpbGpyeV9ERmV5b3Bua1J2UFlSdTAzMGNaUkpmZ1pKc1lhT2otY0xTdU1GbEJ5VkhBNDVpWHFqQ2U3RWZfLURwSU5WQk01OQ?oc=5"
       },
       {
-        "title": "パワー半導体統合協議へ デンソーの買収提案に対抗―ローム・東芝・三菱電機 - 時事ドットコム",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5FblFBU2xIWXoycVdkV3ZfdzY3UUdpN05TeGp1eEZGSXpwMzZsSURFQVVCS1ktYlZOTjQ0emRwMmRFT21XOWFYQURPZjFoWHJJdzQzckhOWk5weHdzSEktLXJwdw?oc=5"
+        "title": "NYダウ続伸262ドル高、イラン情勢の懸念後退 半導体関連は下落 - 日本経済新聞",
+        "score": -1,
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1vV1dzQTUxQzd1d1BkZDRZRWMzZDRaT1RmT1d3UU94SHJvR011N3NvWGp6SW9DUzk4bkt3bXlueW51SllrTjUyMk9oQWU2WjgybFpTU0dEM3ZwYlh3T0l3STdaaDhtcFhHZVNBbA?oc=5"
       },
       {
-        "title": "ロームなど3社 半導体統合協議へ - Yahoo!ニュース",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFAtZ0RyQ2dhTEVBU1dvcnNJTTB3VEtTMFNrVXJMVVZWdHMxSVdrTk94YU12Sy1ZTk51MVNITmwzN1BRV0xGd19RM3M2NXQ4SWJl?oc=5"
+        "title": "２８日の株式相場見通し＝売り優勢、「ＡＩ・半導体関連以外」の動きがカギ握る - 株探",
+        "score": -1,
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9JUU9xUVZLcFJBMkVaVjlZNHVMTHpUZ3hYbWdGT3JOVEw4U1FWUmdGalo2Z09CMmtZX3VrbFF5VGZ4WFFsblplNi1LaEdwNTRpbWZNaC1KS05jLTRxZ0FmTg?oc=5"
       }
     ],
     "errors": []
