@@ -82,3 +82,5 @@ else
   printf '更新失敗: latest_weather.txt が存在しません\n' > web/weather.txt
 fi
 # ===== END PUBLIC DASHBOARD SYNC =====
+
+python3 strategy_5x10_trace_runner.py
