@@ -67,6 +67,8 @@ git push
 (cd "$HOME/weather_ai" && python3 strategy_skip_breakdown_ai.py)
 (cd "$HOME/weather_ai" && python3 learning_log_ai.py)
 
+python3 skip_diagnostics_ai.py
+
 # ===== PUBLIC DASHBOARD SYNC =====
 python3 dashboard_builder.py
 

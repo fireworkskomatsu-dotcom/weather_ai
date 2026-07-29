@@ -6,14 +6,14 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-07-28 17:14",
+  "updated_at": "2026-07-29 17:05",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
     "cumulative_pnl": 0.0,
     "win_count": 0,
     "loss_count": 0,
-    "trade_count": 199,
+    "trade_count": 200,
     "win_rate": 0.0
   },
   "position": {
@@ -52,47 +52,47 @@
   "news": {
     "news_level": "HIGH",
     "news_reason": "ネガティブニュース多発",
-    "news_score": -14,
+    "news_score": -11,
     "headlines": [
       {
-        "title": "日経平均1日で2%超変動、韓国株が半導体に影響 個人の短期売買活発 - 日本経済新聞",
-        "score": -1,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBYY3hkbHRtQjRpTE9JY2Q5YXpySldENlFLYjhuV1pXYlpJVmJUaFVPamdVY3lSdnhxdTZ6cWJHdmlFd1VXZ095UUxyU2lkbUdvdU5OOTF0LU9qSXhNSzlWRTUzajN5SmMxdFBjeQ?oc=5"
-      },
-      {
-        "title": "(NEXT FUNDS)日経平均レバレッジ上場投信【1570】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+        "title": "日経平均株価、FOMC結果前に様子見ムード（先読み株式相場） - 日本経済新聞",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBoSXJOa2dkbWprTUdFYWNqMS1TUks2aF82bXFUblhxcThHSmY3S1I0cWJWeWlqc3QyalZoM3pUMFRpZVhQa3FidUcweFVhUFplRFE?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5KeDloVVY0RjV3akNYNDBYei1Bb2E4QUVjYVdKVGMzaGRZUm0td3hhM052V0pKZlhiMUktVUJkR255TnhGWUtjR2dHd3BPOFpXd1JZYmQ5YzhPc2tHeWgwdGo5SUtjcU9TZlFiNw?oc=5"
       },
       {
-        "title": "【テクニカル】日経平均株価テクニカル分析－上値重く下値も堅く - 外為どっとコム",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1NcVU3OVJTczQzQVFSSW9LYlFUWHVZNVFIRUhXMHRqZDY0RXdsaDNCMURsQ2NZTHpaSDRYYjgwd0hGOHpwTjJ0eUhuYlRoazNHaklfRjBxaFVleXNHRm1tbk03Yw?oc=5"
-      },
-      {
-        "title": "TOPIX先物テクニカルポイント（28日夜間取引終了時点） - 株探",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1FNnJlRkFVRl8zcl92MzBiUC1BajNzdW5wS0VkVnB4bEFkdi1YOHpfUGNYeUNoS1hQUHFZM3R5VWQ5SzVDTVR4X0s1YzJFaTZFS0E?oc=5"
-      },
-      {
-        "title": "日経平均は反発、景気敏感株が支え ＡＩ・半導体の一角は軟調 - ロイター",
+        "title": "【日本株】“TOPIX除外”回避に向けて増配が期待できる10銘柄！ 配当利回り5％超ながら、さらなる株主還元に前向きな｢青山商事｣や｢リケンNPR｣などに注目！ - ダイヤモンド・オンライン",
         "score": 1,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOYVFlbWd6OFYzNC1uTHd0cFNOT0gxTmFudXNSUnd3R1NLcEtrcGk5QmgxNjlMc1dfZUpEclRUUWd2VkttNEtkVmc0ek1TbnVUT2NScnVFc0N4QzdmcExUcWhwcDloYnVZaU9zMEhLZnJfR01wdWt1LUYwcG5ULV9ueg?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBIZnJkcm9yUzJ3Z1R3SHpQMUw3VkE0a0N4SmktNC1kbzJRTFAyRlVGU2lJU2NTLWkwNk55WWFpeWIzaTJnZENCR3VOUkhFaFJlOU5F?oc=5"
       },
       {
-        "title": "半導体ＣＸＭＴが上場初日に466％高、時価総額中国首位 バブル懸念も - ロイター",
+        "title": "【テクニカル】日経平均株価テクニカル分析－史上最高値からの下落トレンド続く - 外為どっとコム",
+        "score": -1,
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFBMNGI2TllBcFB1d0JwUXBKS0pORUlJUExHcjlZenE5S25iLUlEMUFkMVljNzludmU3WUIyMXprTG1ueE9nVmlEYmFhWFBnc1E5dnBFY0FfMG16NnVZYTFNV2JFWQ?oc=5"
+      },
+      {
+        "title": "日経平均は２８８４円安と急落、半導体株中心に値下がり銘柄７割＝２８日前場(ウエルスアドバイザー) - Yahoo!ファイナンス",
+        "score": -2,
+        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNaExnZFdwVERnYmRFRnZLc2JtNlRXVUJGSTJyc0dLOUNoQWZTQjNzQW5RbjVyRl9aZ0JvdjZJWmdvR0dVTEFjQnc3cUpqTlR6QWxEVzlzTFFFSG1fMnpHd055NDVUYm10QThQS1U1WlpBalpmLVh1WnZqbXMybmg0OHZxLWRmU2M?oc=5"
+      },
+      {
+        "title": "TOPIX先物テクニカルポイント（29日夜間取引終了時点） - 株探",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxObXZ1S0VsVHFyZTdCSnZvUTE3RlVfR1JjcG85SGJOLTN1UTZhOUdPSDQwUUxzOHJscnhpbGpyeV9ERmV5b3Bua1J2UFlSdTAzMGNaUkpmZ1pKc1lhT2otY0xTdU1GbEJ5VkhBNDVpWHFqQ2U3RWZfLURwSU5WQk01OQ?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1WekdoRXVQQ0Rna215MEZTV3BsWjBPZGRUZ0JFcnJlc0pvN0xXRHBxbE0zNjFoNE1PUUhFY25JWWt1WFNiVng2SlVMOEtyRkJINVE?oc=5"
       },
       {
-        "title": "NYダウ続伸262ドル高、イラン情勢の懸念後退 半導体関連は下落 - 日本経済新聞",
-        "score": -1,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1vV1dzQTUxQzd1d1BkZDRZRWMzZDRaT1RmT1d3UU94SHJvR011N3NvWGp6SW9DUzk4bkt3bXlueW51SllrTjUyMk9oQWU2WjgybFpTU0dEM3ZwYlh3T0l3STdaaDhtcFhHZVNBbA?oc=5"
+        "title": "エヌビディア【NVDA】：株価・株式情報 - Yahoo!ファイナンス",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE4xcERaYlUwR2Rhb0pfZnNyNExXTmhkeHd5MjVsSTNwdG9tR041dE1hYkdPSGswOTFranNkVW85U0cwQ25CaGh0bzJEbnk3UkU?oc=5"
       },
       {
-        "title": "２８日の株式相場見通し＝売り優勢、「ＡＩ・半導体関連以外」の動きがカギ握る - 株探",
-        "score": -1,
-        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9JUU9xUVZLcFJBMkVaVjlZNHVMTHpUZ3hYbWdGT3JOVEw4U1FWUmdGalo2Z09CMmtZX3VrbFF5VGZ4WFFsblplNi1LaEdwNTRpbWZNaC1KS05jLTRxZ0FmTg?oc=5"
+        "title": "中国、半導体製造装置の国産開始か 米ＩＴメディア報道、市場は動揺 - 時事ドットコム",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFBBN1RmaVZ1Q2FPNGYwamRsa3AzdHdKODJLTHBMNmJ6bzJtUmFTQTdVTWVZTWxQY3BIVmpycl8wTzN6eU1oQkVkYjByREVuMldzWG13VThCcmZYOGVmZjEwM0RLTQ?oc=5"
+      },
+      {
+        "title": "韓国発の半導体株急落が再び波及 - SBI証券",
+        "score": -2,
+        "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBEQ0tyd05aWDUtdjV0VWpHZTU0M0VaMERIUHhsTVFQNFVFOGk5aU1oT0w1WmRZRkFfSGFMVU1GV1JUeGVSNUhkV0xVdGRXZzZNT2kzQzlIbTNiVEJuOTc3aV9JWHJueXJNX1dKa0U2Q2lMMkx1?oc=5"
       }
     ],
     "errors": []
