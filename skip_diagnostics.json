@@ -1,0 +1,45 @@
+{
+  "updated_at": "2026-07-30T16:10:39",
+  "final_decision": "SKIP",
+  "diagnosis": "合議結果はSKIPだが明示的な停止フラグは未検出",
+  "primary_reason": "最終合議ロジック内部の条件確認が必要",
+  "block_count": 0,
+  "warning_count": 0,
+  "blocks": [],
+  "warnings": [],
+  "numeric_context": {
+    "confidence": [
+      {
+        "source": "filter.json",
+        "field": "confidence",
+        "value": 93.6
+      },
+      {
+        "source": "strategy_skip_breakdown.json",
+        "field": "skip_strategy_breakdown.trend_confidence",
+        "value": 0.45
+      },
+      {
+        "source": "strategy_skip_breakdown.json",
+        "field": "skip_strategy_breakdown.confidence_low",
+        "value": 0.4
+      },
+      {
+        "source": "strategy_skip_breakdown.json",
+        "field": "skip_strategy_breakdown.confidence_high",
+        "value": 0.4
+      }
+    ],
+    "consensus": [],
+    "threshold": []
+  },
+  "sources_read": [
+    "weighted_multi_agent.json",
+    "filter.json",
+    "winrate_filter.json",
+    "strategy_skip_breakdown.json",
+    "adaptive_strategy_state.json",
+    "news.json",
+    "virtual_account.json"
+  ]
+}

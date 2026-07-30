@@ -1,0 +1,948 @@
+{
+  "time": "2026-07-30 16:10:39",
+  "mode": "REAL_5x10_EVOLUTION",
+  "strategy_count": 50,
+  "votes": {
+    "LONG": 0.0,
+    "SHORT": 0.0,
+    "SKIP": 4.46,
+    "HOLD": 0.0
+  },
+  "final_decision": "SKIP",
+  "family_summary": {
+    "TREND": {
+      "top_score": 74,
+      "longs": 0,
+      "skips": 2,
+      "holds": 0
+    },
+    "REPLAY": {
+      "top_score": 0,
+      "longs": 0,
+      "skips": 0,
+      "holds": 0
+    },
+    "RISK": {
+      "top_score": 72,
+      "longs": 0,
+      "skips": 2,
+      "holds": 0
+    },
+    "EXIT": {
+      "top_score": 66,
+      "longs": 0,
+      "skips": 1,
+      "holds": 0
+    },
+    "MEMORY": {
+      "top_score": 58,
+      "longs": 0,
+      "skips": 2,
+      "holds": 0
+    }
+  },
+  "top10": [
+    {
+      "id": "TREND_06",
+      "family": "TREND",
+      "name": "trend_confidence",
+      "decision": "SKIP",
+      "score": 74,
+      "weight": 0.74,
+      "reasons": [
+        "HIGH_CONFIDENCE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_05",
+      "family": "RISK",
+      "name": "confidence_high",
+      "decision": "SKIP",
+      "score": 72,
+      "weight": 0.72,
+      "reasons": [
+        "HIGH_CONF"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_10",
+      "family": "EXIT",
+      "name": "lifecycle_sync",
+      "decision": "SKIP",
+      "score": 66,
+      "weight": 0.66,
+      "reasons": [
+        "LIFECYCLE_SYNC"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_10",
+      "family": "TREND",
+      "name": "trend_skip_if_no_edge",
+      "decision": "SKIP",
+      "score": 65,
+      "weight": 0.65,
+      "reasons": [
+        "NO_TREND_EDGE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_10",
+      "family": "MEMORY",
+      "name": "beginner_limit",
+      "decision": "SKIP",
+      "score": 58,
+      "weight": 0.58,
+      "reasons": [
+        "BEGINNER_SMALL_LOT"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_01",
+      "family": "MEMORY",
+      "name": "experience_under_50",
+      "decision": "SKIP",
+      "score": 56,
+      "weight": 0.56,
+      "reasons": [
+        "LOW_EXPERIENCE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_08",
+      "family": "RISK",
+      "name": "small_sample",
+      "decision": "SKIP",
+      "score": 55,
+      "weight": 0.55,
+      "reasons": [
+        "LOW_SAMPLE_CAUTION"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_01",
+      "family": "TREND",
+      "name": "trend_follow",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_02",
+      "family": "TREND",
+      "name": "trend_pullback",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_03",
+      "family": "TREND",
+      "name": "trend_breakout",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    }
+  ],
+  "strategies": [
+    {
+      "id": "TREND_01",
+      "family": "TREND",
+      "name": "trend_follow",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_02",
+      "family": "TREND",
+      "name": "trend_pullback",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_03",
+      "family": "TREND",
+      "name": "trend_breakout",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_04",
+      "family": "TREND",
+      "name": "trend_reversal_up",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_05",
+      "family": "TREND",
+      "name": "trend_memory",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_06",
+      "family": "TREND",
+      "name": "trend_confidence",
+      "decision": "SKIP",
+      "score": 74,
+      "weight": 0.74,
+      "reasons": [
+        "HIGH_CONFIDENCE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_07",
+      "family": "TREND",
+      "name": "trend_vol_adjust",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_08",
+      "family": "TREND",
+      "name": "trend_vol_danger_small",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_09",
+      "family": "TREND",
+      "name": "trend_hold",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "TREND_10",
+      "family": "TREND",
+      "name": "trend_skip_if_no_edge",
+      "decision": "SKIP",
+      "score": 65,
+      "weight": 0.65,
+      "reasons": [
+        "NO_TREND_EDGE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_01",
+      "family": "REPLAY",
+      "name": "expectancy_positive",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_02",
+      "family": "REPLAY",
+      "name": "sample_over_30",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_03",
+      "family": "REPLAY",
+      "name": "policy_boost",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_04",
+      "family": "REPLAY",
+      "name": "expectancy_boost",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_05",
+      "family": "REPLAY",
+      "name": "key_exact_match",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_06",
+      "family": "REPLAY",
+      "name": "size_boost",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_07",
+      "family": "REPLAY",
+      "name": "low_pnl_warning",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_08",
+      "family": "REPLAY",
+      "name": "winrate_warning",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_09",
+      "family": "REPLAY",
+      "name": "shadow_profit_override",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "REPLAY_10",
+      "family": "REPLAY",
+      "name": "replay_conflict_guard",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_01",
+      "family": "RISK",
+      "name": "temp_block",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_02",
+      "family": "RISK",
+      "name": "vol_danger_guard",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_03",
+      "family": "RISK",
+      "name": "vol_danger_but_replay",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_04",
+      "family": "RISK",
+      "name": "confidence_low",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_05",
+      "family": "RISK",
+      "name": "confidence_high",
+      "decision": "SKIP",
+      "score": 72,
+      "weight": 0.72,
+      "reasons": [
+        "HIGH_CONF"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_06",
+      "family": "RISK",
+      "name": "position_exists",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_07",
+      "family": "RISK",
+      "name": "exit_now",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_08",
+      "family": "RISK",
+      "name": "small_sample",
+      "decision": "SKIP",
+      "score": 55,
+      "weight": 0.55,
+      "reasons": [
+        "LOW_SAMPLE_CAUTION"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_09",
+      "family": "RISK",
+      "name": "shadow_profit_safe",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "RISK_10",
+      "family": "RISK",
+      "name": "capital_protect",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_01",
+      "family": "EXIT",
+      "name": "take_profit_check",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_02",
+      "family": "EXIT",
+      "name": "stop_loss_check",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_03",
+      "family": "EXIT",
+      "name": "hold_flat_pnl",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_04",
+      "family": "EXIT",
+      "name": "hold_winner",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_05",
+      "family": "EXIT",
+      "name": "cut_loser",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_06",
+      "family": "EXIT",
+      "name": "no_position_entry",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_07",
+      "family": "EXIT",
+      "name": "vol_tight_exit",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_08",
+      "family": "EXIT",
+      "name": "exit_engine_hold",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_09",
+      "family": "EXIT",
+      "name": "exit_engine_signal",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "EXIT_10",
+      "family": "EXIT",
+      "name": "lifecycle_sync",
+      "decision": "SKIP",
+      "score": 66,
+      "weight": 0.66,
+      "reasons": [
+        "LIFECYCLE_SYNC"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_01",
+      "family": "MEMORY",
+      "name": "experience_under_50",
+      "decision": "SKIP",
+      "score": 56,
+      "weight": 0.56,
+      "reasons": [
+        "LOW_EXPERIENCE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_02",
+      "family": "MEMORY",
+      "name": "experience_growth",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_03",
+      "family": "MEMORY",
+      "name": "shadow_win_memory",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_04",
+      "family": "MEMORY",
+      "name": "real_loss_memory",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_05",
+      "family": "MEMORY",
+      "name": "trend_up_long_memory",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_06",
+      "family": "MEMORY",
+      "name": "mistake_avoid",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_07",
+      "family": "MEMORY",
+      "name": "success_pattern",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_08",
+      "family": "MEMORY",
+      "name": "sample_growth",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_09",
+      "family": "MEMORY",
+      "name": "priority_replay",
+      "decision": "ABSTAIN",
+      "score": 0,
+      "weight": 0.0,
+      "reasons": [
+        "CONDITION_FALSE"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    },
+    {
+      "id": "MEMORY_10",
+      "family": "MEMORY",
+      "name": "beginner_limit",
+      "decision": "SKIP",
+      "score": 58,
+      "weight": 0.58,
+      "reasons": [
+        "BEGINNER_SMALL_LOT"
+      ],
+      "regime": "UNKNOWN",
+      "vol_mode": "NORMAL",
+      "replay_key": "",
+      "status": "ACTIVE_SHADOW"
+    }
+  ]
+}
