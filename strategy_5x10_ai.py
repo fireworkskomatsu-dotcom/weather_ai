@@ -39,6 +39,31 @@ votes={"LONG":0.0,"SHORT":0.0,"SKIP":0.0,"HOLD":0.0}
 strategies=[]
 
 def add(sid,family,name,decision,score,reasons):
+    # 以下は停止命令ではなく、既存判断を補足する情報系シグナル。
+    # baseがSKIPのときに独立したSKIP票として重複加算しない。
+    informational_reasons = {
+        "HIGH_CONFIDENCE",
+        "HIGH_CONF",
+        "LIFECYCLE_SYNC",
+        "LOW_EXPERIENCE",
+        "BEGINNER_SMALL_LOT",
+    }
+
+    normalized_reasons = set()
+
+    if isinstance(reasons, list):
+        normalized_reasons = {str(x) for x in reasons}
+    elif reasons is not None:
+        normalized_reasons = {str(reasons)}
+
+    if (
+        decision == "SKIP"
+        and normalized_reasons
+        and normalized_reasons.issubset(informational_reasons)
+    ):
+        decision = "ABSTAIN"
+        score = 0
+
     score=round(max(0,min(100,score)),2)
     weight=round(score/100,4)
     if decision in votes:

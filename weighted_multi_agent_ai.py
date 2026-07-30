@@ -96,10 +96,17 @@ filter_decision = normalize(
     filter_data.get("decision", "SKIP")
 )
 
-if filter_decision in votes:
+if filter_decision in {"LONG", "SHORT"}:
     votes[filter_decision] += 2.0
     reasons.append(f"FILTER_{filter_decision}")
-
+elif (
+    filter_decision == "SKIP"
+    and filter_data.get("blocked") is True
+):
+    votes["SKIP"] += 2.0
+    reasons.append("FILTER_BLOCKED_SKIP")
+elif filter_decision == "SKIP":
+    reasons.append("FILTER_NEUTRAL_SKIP_NO_EXTRA_VOTE")
 replay_key = str(filter_data.get("replay_key", ""))
 
 if "LONG" in replay_key:

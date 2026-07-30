@@ -1,10 +1,10 @@
 {
-  "time": "2026-07-30 16:10:39",
+  "time": "2026-07-30 16:47:55",
   "final_decision": "SKIP",
   "weighted_votes": {
     "LONG": 1.236655,
     "SHORT": 0.0,
-    "SKIP": 3.263345
+    "SKIP": 1.263345
   },
   "strategy_parliament": {
     "raw_votes": {
@@ -24,7 +24,7 @@
   "hard_veto": false,
   "reasons": [
     "ADAPTIVE_STRATEGY_PARLIAMENT",
-    "FILTER_SKIP"
+    "FILTER_NEUTRAL_SKIP_NO_EXTRA_VOTE"
   ],
   "source": "weighted_multi_agent_ai.py",
   "mode": "ADAPTIVE_PARLIAMENT_V1"

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-30T16:10:39",
+  "updated_at": "2026-07-30T16:47:55",
   "final_decision": "SKIP",
   "diagnosis": "合議結果はSKIPだが明示的な停止フラグは未検出",
   "primary_reason": "最終合議ロジック内部の条件確認が必要",
