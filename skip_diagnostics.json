@@ -1,45 +1,70 @@
 {
-  "updated_at": "2026-07-30T16:47:55",
+  "updated_at": "2026-07-30T17:14:25",
   "final_decision": "SKIP",
-  "diagnosis": "合議結果はSKIPだが明示的な停止フラグは未検出",
-  "primary_reason": "最終合議ロジック内部の条件確認が必要",
-  "block_count": 0,
-  "warning_count": 0,
-  "blocks": [],
-  "warnings": [],
-  "numeric_context": {
-    "confidence": [
+  "diagnosis": "有効な戦略票による僅差のSKIP",
+  "primary_reason": "NO_TREND_EDGE / LOW_SAMPLE_CAUTION",
+  "weighted_votes": {
+    "LONG": 1.236655,
+    "SHORT": 0.0,
+    "SKIP": 1.263345
+  },
+  "vote_ranking": [
+    {
+      "decision": "SKIP",
+      "vote": 1.263345
+    },
+    {
+      "decision": "LONG",
+      "vote": 1.236655
+    },
+    {
+      "decision": "SHORT",
+      "vote": 0.0
+    }
+  ],
+  "winner": "SKIP",
+  "runner_up": "LONG",
+  "margin": 0.02669,
+  "margin_pct": 1.0676,
+  "explicit_blocks": [],
+  "strategy_5x10": {
+    "strategy_count": 50,
+    "abstain_count": 48,
+    "active_skip_count": 2,
+    "active_directional_count": 0,
+    "active_skip_strategies": [
       {
-        "source": "filter.json",
-        "field": "confidence",
-        "value": 93.6
+        "id": "TREND_10",
+        "family": "TREND",
+        "name": "trend_skip_if_no_edge",
+        "decision": "SKIP",
+        "score": 65,
+        "weight": 0.65,
+        "reasons": [
+          "NO_TREND_EDGE"
+        ]
       },
       {
-        "source": "strategy_skip_breakdown.json",
-        "field": "skip_strategy_breakdown.trend_confidence",
-        "value": 0.45
-      },
-      {
-        "source": "strategy_skip_breakdown.json",
-        "field": "skip_strategy_breakdown.confidence_low",
-        "value": 0.4
-      },
-      {
-        "source": "strategy_skip_breakdown.json",
-        "field": "skip_strategy_breakdown.confidence_high",
-        "value": 0.4
+        "id": "RISK_08",
+        "family": "RISK",
+        "name": "small_sample",
+        "decision": "SKIP",
+        "score": 55,
+        "weight": 0.55,
+        "reasons": [
+          "LOW_SAMPLE_CAUTION"
+        ]
       }
     ],
-    "consensus": [],
-    "threshold": []
+    "active_directional_strategies": [],
+    "skip_reasons": [
+      "NO_TREND_EDGE",
+      "LOW_SAMPLE_CAUTION"
+    ]
   },
-  "sources_read": [
-    "weighted_multi_agent.json",
-    "filter.json",
-    "winrate_filter.json",
-    "strategy_skip_breakdown.json",
-    "adaptive_strategy_state.json",
-    "news.json",
-    "virtual_account.json"
-  ]
+  "weighted_reasons": [
+    "ADAPTIVE_STRATEGY_PARLIAMENT",
+    "FILTER_NEUTRAL_SKIP_NO_EXTRA_VOTE"
+  ],
+  "filter_decision": null
 }

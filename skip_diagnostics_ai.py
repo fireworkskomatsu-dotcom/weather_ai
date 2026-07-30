@@ -1,306 +1,231 @@
 #!/usr/bin/env python3
 
 import json
-import re
 from datetime import datetime
 from pathlib import Path
 
+
 BASE = Path(__file__).resolve().parent
-OUTPUT = BASE / "skip_diagnostics.json"
-WEATHER = BASE / "latest_weather.txt"
-
-START_MARKER = "【SKIP診断】"
-END_MARKER = "【SKIP診断ここまで】"
-
-FILES = [
-    "weighted_multi_agent.json",
-    "filter.json",
-    "winrate_filter.json",
-    "strategy_skip_breakdown.json",
-    "adaptive_strategy_state.json",
-    "emergency_stop.json",
-    "risk_exit.json",
-    "recovery_mode.json",
-    "market_temperature.json",
-    "news.json",
-    "virtual_account.json",
-]
 
 
-def read_json(filename):
-    path = BASE / filename
+def load_json(name, default=None):
+    path = BASE / name
 
     if not path.exists():
-        return None
+        return {} if default is None else default
 
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
-        return None
+        return {} if default is None else default
 
 
-def flatten(value, prefix=""):
-    rows = []
+weighted = load_json("weighted_multi_agent.json")
+strategy = load_json("strategy_5x10.json")
+filter_data = load_json("winrate_filter.json")
+temperature = load_json("market_temperature.json")
+emergency = load_json("emergency_stop.json")
+recovery = load_json("recovery_mode.json")
 
-    if isinstance(value, dict):
-        for key, child in value.items():
-            name = f"{prefix}.{key}" if prefix else str(key)
-            rows.extend(flatten(child, name))
-
-    elif isinstance(value, list):
-        for index, child in enumerate(value):
-            rows.extend(flatten(child, f"{prefix}[{index}]"))
-
-    else:
-        rows.append((prefix, value))
-
-    return rows
-
-
-def normalized(value):
-    if isinstance(value, str):
-        return value.strip().upper()
-
-    return value
-
-
-def is_true(value):
-    return value is True or normalized(value) in {
-        "TRUE",
-        "YES",
-        "ON",
-        "BLOCKED",
-        "STOP",
-        "DANGER",
-        "HIGH",
-        "NOT_READY",
-    }
-
-
-def is_false(value):
-    return value is False or normalized(value) in {
-        "FALSE",
-        "NO",
-        "OFF",
-        "DENIED",
-    }
-
-
-def add_finding(items, level, source, field, value, reason):
-    marker = (level, source, field, str(value))
-
-    if marker not in {
-        (item["level"], item["source"], item["field"], str(item["value"]))
-        for item in items
-    }:
-        items.append(
-            {
-                "level": level,
-                "source": source,
-                "field": field,
-                "value": value,
-                "reason": reason,
-            }
-        )
-
-
-findings = []
-sources = []
-numeric_context = {
-    "confidence": [],
-    "consensus": [],
-    "threshold": [],
-}
-
-for filename in FILES:
-    data = read_json(filename)
-
-    if data is None:
-        continue
-
-    sources.append(filename)
-
-    for field, value in flatten(data):
-        lower = field.lower()
-        upper_value = normalized(value)
-
-        blocking_fields = (
-            "blocked",
-            "trade_blocked",
-            "force_skip",
-            "skip_required",
-            "emergency_stop",
-            "risk_exit",
-        )
-
-        permission_fields = (
-            "allow_trade",
-            "trade_allowed",
-            "can_trade",
-            "entry_allowed",
-            "go_live",
-        )
-
-        if any(name in lower for name in blocking_fields) and is_true(value):
-            add_finding(
-                findings,
-                "BLOCK",
-                filename,
-                field,
-                value,
-                f"{field} が有効",
-            )
-
-        if any(name in lower for name in permission_fields) and is_false(value):
-            add_finding(
-                findings,
-                "BLOCK",
-                filename,
-                field,
-                value,
-                f"{field} が無効",
-            )
-
-        if (
-            any(name in lower for name in ("status", "state", "readiness"))
-            and upper_value in {"NOT_READY", "BLOCKED", "STOP", "DENIED"}
-        ):
-            add_finding(
-                findings,
-                "BLOCK",
-                filename,
-                field,
-                value,
-                f"{field}={value}",
-            )
-
-        if "recovery_mode" in lower and is_true(value):
-            add_finding(
-                findings,
-                "WARNING",
-                filename,
-                field,
-                value,
-                "回復モードが有効",
-            )
-
-        if "news_level" in lower and upper_value == "HIGH":
-            add_finding(
-                findings,
-                "WARNING",
-                filename,
-                field,
-                value,
-                "ニュース危険度がHIGH",
-            )
-
-        if (
-            isinstance(value, (int, float))
-            and not isinstance(value, bool)
-        ):
-            record = {
-                "source": filename,
-                "field": field,
-                "value": value,
-            }
-
-            if "confidence" in lower:
-                numeric_context["confidence"].append(record)
-
-            if "consensus" in lower:
-                numeric_context["consensus"].append(record)
-
-            if any(
-                name in lower
-                for name in ("threshold", "minimum", "min_confidence")
-            ):
-                numeric_context["threshold"].append(record)
-
-
-weighted = read_json("weighted_multi_agent.json") or {}
-
-final_decision = (
+final_decision = str(
     weighted.get("final_decision")
     or weighted.get("decision")
-    or weighted.get("signal")
     or "UNKNOWN"
+).upper()
+
+votes_raw = weighted.get("weighted_votes") or {}
+votes = {}
+
+for key in ("LONG", "SHORT", "SKIP"):
+    try:
+        votes[key] = float(votes_raw.get(key) or 0)
+    except Exception:
+        votes[key] = 0.0
+
+ranked = sorted(
+    votes.items(),
+    key=lambda item: item[1],
+    reverse=True,
 )
 
-blocks = [item for item in findings if item["level"] == "BLOCK"]
-warnings = [item for item in findings if item["level"] == "WARNING"]
+winner = ranked[0][0] if ranked else "UNKNOWN"
+winner_vote = ranked[0][1] if ranked else 0.0
+runner_up = ranked[1][0] if len(ranked) >= 2 else None
+runner_up_vote = ranked[1][1] if len(ranked) >= 2 else 0.0
+margin = winner_vote - runner_up_vote
+total_votes = sum(votes.values())
+margin_pct = (
+    margin / total_votes * 100
+    if total_votes > 0
+    else 0.0
+)
 
-if blocks:
-    diagnosis = "明示的な停止条件を検出"
-    primary_reason = blocks[0]["reason"]
+strategies = strategy.get("strategies") or []
+active_skip_strategies = []
+active_directional_strategies = []
+abstain_count = 0
 
-elif str(final_decision).upper() == "SKIP":
-    diagnosis = "合議結果はSKIPだが明示的な停止フラグは未検出"
-    primary_reason = "最終合議ロジック内部の条件確認が必要"
+for row in strategies:
+    decision = str(row.get("decision") or "UNKNOWN").upper()
+
+    record = {
+        "id": row.get("id"),
+        "family": row.get("family"),
+        "name": row.get("name"),
+        "decision": decision,
+        "score": row.get("score"),
+        "weight": row.get("weight"),
+        "reasons": row.get("reasons") or [],
+    }
+
+    if decision == "ABSTAIN":
+        abstain_count += 1
+    elif decision == "SKIP":
+        active_skip_strategies.append(record)
+    elif decision in {"LONG", "SHORT"}:
+        active_directional_strategies.append(record)
+
+explicit_blocks = []
+
+if filter_data.get("blocked") is True:
+    explicit_blocks.append({
+        "source": "winrate_filter",
+        "reason": (
+            filter_data.get("reason")
+            or filter_data.get("reasons")
+            or "blocked=True"
+        ),
+    })
+
+if emergency.get("stop") is True:
+    explicit_blocks.append({
+        "source": "emergency_stop",
+        "reason": (
+            emergency.get("reason")
+            or emergency.get("reasons")
+            or "stop=True"
+        ),
+    })
+
+temp_value = str(
+    temperature.get("temperature")
+    or temperature.get("market_temperature")
+    or temperature.get("status")
+    or ""
+).upper()
+
+if temp_value in {"PANIC", "OVERHEAT"}:
+    explicit_blocks.append({
+        "source": "market_temperature",
+        "reason": temp_value,
+    })
+
+if recovery.get("blocked") is True:
+    explicit_blocks.append({
+        "source": "recovery_mode",
+        "reason": (
+            recovery.get("reason")
+            or "blocked=True"
+        ),
+    })
+
+strategy_skip_reasons = []
+
+for row in active_skip_strategies:
+    for reason in row.get("reasons") or []:
+        reason = str(reason)
+
+        if reason not in strategy_skip_reasons:
+            strategy_skip_reasons.append(reason)
+
+if final_decision != "SKIP":
+    diagnosis = "最終判断はSKIPではありません"
+    primary_reason = f"最終判断={final_decision}"
+
+elif explicit_blocks:
+    diagnosis = "明示的な安全停止条件によりSKIP"
+    primary_reason = str(explicit_blocks[0]["reason"])
+
+elif active_skip_strategies:
+    if margin_pct < 2:
+        diagnosis = "有効な戦略票による僅差のSKIP"
+    else:
+        diagnosis = "有効な戦略票によりSKIP"
+
+    primary_reason = (
+        " / ".join(strategy_skip_reasons)
+        if strategy_skip_reasons
+        else "戦略合議によるSKIP"
+    )
+
+elif winner == "SKIP":
+    diagnosis = "合議集計ではSKIPが最多"
+    primary_reason = "5×10以外のAI票または合議補正によるSKIP"
 
 else:
-    diagnosis = "SKIPではありません"
-    primary_reason = "停止条件なし"
+    diagnosis = "最終判断と最多票が一致していません"
+    primary_reason = "最終決定処理の追加確認が必要"
 
-result = {
+report = {
     "updated_at": datetime.now().isoformat(timespec="seconds"),
     "final_decision": final_decision,
     "diagnosis": diagnosis,
     "primary_reason": primary_reason,
-    "block_count": len(blocks),
-    "warning_count": len(warnings),
-    "blocks": blocks,
-    "warnings": warnings,
-    "numeric_context": numeric_context,
-    "sources_read": sources,
+    "weighted_votes": {
+        key: round(value, 6)
+        for key, value in votes.items()
+    },
+    "vote_ranking": [
+        {
+            "decision": key,
+            "vote": round(value, 6),
+        }
+        for key, value in ranked
+    ],
+    "winner": winner,
+    "runner_up": runner_up,
+    "margin": round(margin, 6),
+    "margin_pct": round(margin_pct, 4),
+    "explicit_blocks": explicit_blocks,
+    "strategy_5x10": {
+        "strategy_count": len(strategies),
+        "abstain_count": abstain_count,
+        "active_skip_count": len(active_skip_strategies),
+        "active_directional_count": len(
+            active_directional_strategies
+        ),
+        "active_skip_strategies": active_skip_strategies,
+        "active_directional_strategies":
+            active_directional_strategies,
+        "skip_reasons": strategy_skip_reasons,
+    },
+    "weighted_reasons": weighted.get("reasons") or [],
+    "filter_decision": weighted.get("filter_decision"),
 }
 
-OUTPUT.write_text(
-    json.dumps(result, ensure_ascii=False, indent=2),
+(BASE / "skip_diagnostics.json").write_text(
+    json.dumps(report, ensure_ascii=False, indent=2),
     encoding="utf-8",
 )
 
-display = [
-    START_MARKER,
-    f"最終判断：{final_decision}",
-    f"診断：{diagnosis}",
-    f"主停止理由：{primary_reason}",
-    f"明示的停止条件：{len(blocks)}件",
-    f"警告条件：{len(warnings)}件",
-]
-
-for index, item in enumerate(blocks[:8], 1):
-    display.append(
-        f"停止{index}：{item['reason']}（{item['source']}）"
-    )
-
-for index, item in enumerate(warnings[:5], 1):
-    display.append(
-        f"警告{index}：{item['reason']}（{item['source']}）"
-    )
-
-display.append(END_MARKER)
-diagnostic_text = "\n".join(display)
-
-if WEATHER.exists():
-    original = WEATHER.read_text(
-        encoding="utf-8",
-        errors="replace",
-    )
-
-    old_diagnostic = re.compile(
-        re.escape(START_MARKER)
-        + r".*?"
-        + re.escape(END_MARKER),
-        re.DOTALL,
-    )
-
-    original = old_diagnostic.sub("", original).rstrip()
-    new_weather = original + "\n\n" + diagnostic_text + "\n"
-
-else:
-    new_weather = diagnostic_text + "\n"
-
-WEATHER.write_text(new_weather, encoding="utf-8")
-
-print("SKIP_DIAGNOSTICS_OK")
-print(json.dumps(result, ensure_ascii=False, indent=2))
+print("===== SKIP診断 =====")
+print("final_decision:", final_decision)
+print("diagnosis:", diagnosis)
+print("primary_reason:", primary_reason)
+print(
+    "weighted_votes:",
+    json.dumps(report["weighted_votes"], ensure_ascii=False),
+)
+print("winner:", winner)
+print("runner_up:", runner_up)
+print("margin:", report["margin"])
+print("margin_pct:", report["margin_pct"])
+print("explicit_blocks:", len(explicit_blocks))
+print(
+    "active_skip_count:",
+    len(active_skip_strategies),
+)
+print(
+    "active_skip_reasons:",
+    json.dumps(strategy_skip_reasons, ensure_ascii=False),
+)
