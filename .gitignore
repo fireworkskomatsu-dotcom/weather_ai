@@ -1,1 +1,15 @@
 venv/
+
+# Local backups and audit outputs
+backup_*/
+*.backup_*
+*.backup
+*.bak
+__pycache__/
+*.pyc
+filter_winrate_exact_audit.txt
+upstream_skip_audit.txt
+weighted_skip_audit.txt
+strategy_5x10_source_audit.json
+strategy_5x10_source_audit.txt
+strategy_5x10_trace.json
