@@ -6,7 +6,7 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-07-31 15:47",
+  "updated_at": "2026-07-31 15:52",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
@@ -19,8 +19,8 @@
     "losses": 1,
     "flat_trades": 0,
     "source": "trade_log.json_explicit_realized_pnl_only",
-    "raw_previous_trade_count": 196,
-    "raw_previous_win_rate": 0.0,
+    "raw_previous_trade_count": 2,
+    "raw_previous_win_rate": 50.0,
     "win_rate_available": true
   },
   "position": {
@@ -126,12 +126,9 @@
     ]
   },
   "data_integrity": {
-    "checked_at": "2026-07-31T15:47:17+09:00",
+    "checked_at": "2026-07-31T15:52:21+09:00",
     "status": "OK",
-    "changes": [
-      "expired_open_wait_reason_removed",
-      "trade_count_corrected:196->2"
-    ],
+    "changes": [],
     "warnings": [],
     "dashboard_source": "web/dashboard.json",
     "trade_log_records": 4,
