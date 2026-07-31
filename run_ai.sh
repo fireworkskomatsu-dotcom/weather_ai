@@ -71,6 +71,7 @@ python3 skip_diagnostics_ai.py
 
 # ===== PUBLIC DASHBOARD SYNC =====
 python3 dashboard_builder.py
+python3 dashboard_integrity_ai.py
 
 if [ -f history.csv ]; then
   cp -f history.csv web/history.csv

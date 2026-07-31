@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-07-31T15:47:17+09:00",
+  "changes": [
+    "expired_open_wait_reason_removed",
+    "trade_count_corrected:196->2"
+  ],
+  "warnings": [],
+  "filter": {
+    "decision": "SKIP",
+    "size": 0,
+    "confidence": 93.6,
+    "allowed_direction": "LONG_ONLY",
+    "reason": "有効な戦略票による僅差のSKIP：NO_TREND_EDGE / LOW_SAMPLE_CAUTION",
+    "intraday_reason_expired": true,
+    "intraday_reason_checked_at": "2026-07-31T15:47:17+09:00"
+  },
+  "pnl_stats": {
+    "last_pnl": "-0.0",
+    "cumulative_pnl": 0.0,
+    "win_count": 0,
+    "loss_count": 0,
+    "trade_count": 2,
+    "win_rate": 50.0,
+    "wins": 1,
+    "losses": 1,
+    "flat_trades": 0,
+    "source": "trade_log.json_explicit_realized_pnl_only",
+    "raw_previous_trade_count": 196,
+    "raw_previous_win_rate": 0.0,
+    "win_rate_available": true
+  }
+}
