@@ -87,6 +87,13 @@ python3 skip_diagnostics_ai.py
 python3 dashboard_builder.py
 python3 dashboard_integrity_ai.py
 
+# DASHBOARD_PUBLISH_SYNC_BEGIN
+# web/dashboard.jsonを公開用ルートdashboard.jsonへ同期
+if [ -f "$HOME/weather_ai/dashboard_publish_ai.py" ]; then
+  python3 "$HOME/weather_ai/dashboard_publish_ai.py"
+fi
+# DASHBOARD_PUBLISH_SYNC_END
+
 if [ -f history.csv ]; then
   cp -f history.csv web/history.csv
 fi
