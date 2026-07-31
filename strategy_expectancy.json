@@ -1,20 +1,5 @@
 {
-  "time": "2026-07-31 16:33:57",
-  "strategy_expectancy": [
-    {
-      "strategy": "HYPOTHESIS_001",
-      "base_score": 75,
-      "estimated_expectancy": 0.25,
-      "shadow_pnl": 0,
-      "status": "PROMISING"
-    },
-    {
-      "strategy": "HYPOTHESIS_003",
-      "base_score": 72,
-      "estimated_expectancy": 0.22,
-      "shadow_pnl": 0,
-      "status": "PROMISING"
-    }
-  ],
-  "count": 2
+  "time": "2026-07-31 16:36:28",
+  "strategy_expectancy": [],
+  "count": 0
 }

@@ -1,6 +1,3 @@
 {
-  "weights": {
-    "HYPOTHESIS_001": 0.5,
-    "HYPOTHESIS_003": 0.5
-  }
+  "weights": {}
 }
