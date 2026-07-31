@@ -1,0 +1,24 @@
+{
+  "time": "2026-07-31 16:33:57",
+  "incubating_strategies": [
+    {
+      "id": "HYPOTHESIS_001",
+      "name": "DNA_MEMORY_MATCH_STRATEGY",
+      "stage": "SHADOW_INCUBATION",
+      "score": 75,
+      "expectancy": 0.25,
+      "created": "2026-06-09 16:17:04",
+      "real_trade": false
+    },
+    {
+      "id": "HYPOTHESIS_003",
+      "name": "TREND_AGENT_PRIORITY_STRATEGY",
+      "stage": "SHADOW_INCUBATION",
+      "score": 72,
+      "expectancy": 0.22,
+      "created": "2026-06-09 16:17:04",
+      "real_trade": false
+    }
+  ],
+  "count": 2
+}

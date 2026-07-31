@@ -23,6 +23,20 @@ run recovery_mode_ai.py
 run winrate_filter_ai.py
 run emergency_stop_ai.py
 run filter_ai.py
+
+# AI organization pipeline
+run signal_outcome_ai.py
+run strategy_shadow_pnl_ai.py
+run strategy_expectancy_ai.py
+run strategy_shadow_rank_ai.py
+run strategy_weight_ai.py
+run strategy_allocator_ai.py
+run strategy_incubator_ai.py
+run strategy_promotion_ai.py
+run strategy_retirement_ai.py
+run success_learning_ai.py
+run winrate_breakdown_ai.py
+run winrate_filter_ai.py
 run weighted_multi_agent_ai.py
 # === end canonical fresh decision pipeline ===
 

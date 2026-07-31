@@ -1,0 +1,12 @@
+{
+  "time": "2026-07-31 16:33:57",
+  "original_decision": "SKIP",
+  "allowed_direction": "LONG_ONLY",
+  "original_size": 0,
+  "blocked": false,
+  "final_decision": "SKIP",
+  "final_size": 0,
+  "reason": "学習モード / 小ロット許可",
+  "closed": 0,
+  "win_rate": 0
+}
