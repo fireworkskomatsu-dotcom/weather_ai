@@ -1,0 +1,15 @@
+{
+  "status": "OK",
+  "updated_at": "2026-08-03T17:29:10+09:00",
+  "official_started_at": "2026-08-03T16:30:18+09:00",
+  "initialized": true,
+  "events_added": 0,
+  "trades_opened_this_run": 0,
+  "trades_closed_this_run": 0,
+  "open_trades": 0,
+  "closed_trades": 0,
+  "ledger_records": 0,
+  "ignored_legacy_records": 4,
+  "current_virtual_position": 0,
+  "legacy_data_excluded": true
+}

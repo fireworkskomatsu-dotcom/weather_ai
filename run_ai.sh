@@ -78,6 +78,7 @@ git commit -m "rebuild 1321 v9 single source dashboard"
 git push
 
 (cd "$HOME/weather_ai" && python3 virtual_account_ai.py)
+python3 official_ledger_writer_ai.py
 (cd "$HOME/weather_ai" && python3 decision_trace_ai.py)
 (cd "$HOME/weather_ai" && python3 decision_trace_v2_ai.py)
 (cd "$HOME/weather_ai" && python3 skip_analyzer_ai.py)
