@@ -1,0 +1,25 @@
+{
+  "updated_at": "2026-08-03T16:45:36+09:00",
+  "status": "OK",
+  "evaluation_method": "NEXT_DISTINCT_OFFICIAL_PRICE",
+  "minimum_move_pct": 0.2,
+  "current_price": null,
+  "total_records": 1,
+  "evaluated_records": 0,
+  "waiting_records": 1,
+  "evaluated_this_run": 0,
+  "scorable_records": 0,
+  "correct": 0,
+  "incorrect": 0,
+  "accuracy": null,
+  "classifications": {},
+  "skip_analysis": {
+    "evaluated_skip_records": 0,
+    "protected_loss": 0,
+    "missed_opportunity": 0,
+    "flat": 0,
+    "effectiveness": null,
+    "average_missed_move_pct": null
+  },
+  "legacy_data_excluded": true
+}

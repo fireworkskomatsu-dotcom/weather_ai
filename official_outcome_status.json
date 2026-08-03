@@ -1,0 +1,11 @@
+{
+  "status": "OK",
+  "updated_at": "2026-08-03T16:45:36+09:00",
+  "current_price": null,
+  "evaluated_this_run": 0,
+  "evaluated_records": 0,
+  "waiting_records": 1,
+  "latest_classification": null,
+  "accuracy": null,
+  "skip_effectiveness": null
+}

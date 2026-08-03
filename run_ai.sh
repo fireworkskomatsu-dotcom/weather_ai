@@ -70,6 +70,7 @@ copy replay_policy.json
 
 cd "$WEB" || exit
 
+python3 official_outcome_ai.py
 python3 official_decision_log_ai.py
 
 git add .
