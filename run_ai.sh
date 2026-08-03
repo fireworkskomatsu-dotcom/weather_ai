@@ -69,6 +69,9 @@ copy replay_expectancy.json
 copy replay_policy.json
 
 cd "$WEB" || exit
+
+python3 official_decision_log_ai.py
+
 git add .
 git commit -m "rebuild 1321 v9 single source dashboard"
 git push

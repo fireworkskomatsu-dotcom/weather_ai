@@ -1,0 +1,12 @@
+{
+  "status": "OK",
+  "updated_at": "2026-08-03T16:35:09+09:00",
+  "appended": true,
+  "run_id": "573ca9ee7a9ca398a511",
+  "official_record_count": 1,
+  "latest_decision": "SKIP",
+  "consecutive_skip": 1,
+  "skip_rate": 100.0,
+  "log_file": "official_decision_log.jsonl",
+  "daily_summary": "official_daily_summary.json"
+}

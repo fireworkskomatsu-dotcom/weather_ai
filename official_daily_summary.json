@@ -1,0 +1,33 @@
+{
+  "updated_at": "2026-08-03T16:35:09+09:00",
+  "official_started_at": "2026-08-03T16:30:18+09:00",
+  "total_logged_decisions": 1,
+  "decision_counts": {
+    "SKIP": 1
+  },
+  "skip_count": 1,
+  "skip_rate": 100.0,
+  "consecutive_skip": 1,
+  "top_skip_reasons": [
+    {
+      "reason": "NO_TREND_EDGE",
+      "count": 1
+    },
+    {
+      "reason": "LOW_SAMPLE_CAUTION",
+      "count": 1
+    }
+  ],
+  "daily_record_counts": {
+    "2026-08-03": 1
+  },
+  "latest_run_id": "573ca9ee7a9ca398a511",
+  "latest_decision": "SKIP",
+  "latest_votes": {
+    "LONG": 1.236655,
+    "SHORT": 0.0,
+    "SKIP": 1.263345
+  },
+  "latest_skip_advantage": 0.02669,
+  "legacy_data_excluded": true
+}
