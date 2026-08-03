@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-08-03T16:30:18+09:00",
+  "initial_cash": 500000.0,
+  "scope": "OFFICIAL_FORWARD_TEST_ONLY",
+  "exclude": [
+    "legacy trades",
+    "manual tests",
+    "backtests",
+    "shadow trades",
+    "old virtual account records"
+  ]
+}

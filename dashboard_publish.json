@@ -1,13 +1,13 @@
 {
-  "published_at": "2026-07-31T18:34:41+09:00",
+  "published_at": "2026-08-03T16:30:18+09:00",
   "status": "OK",
   "canonical_dashboard": "web/dashboard.json",
   "root_compatibility_alias": "dashboard.json",
-  "updated_at": "2026-07-31 15:52",
-  "trade_count": 2,
-  "wins": 1,
-  "losses": 1,
-  "win_rate": 50.0,
+  "updated_at": "2026-08-03 16:30",
+  "trade_count": 0,
+  "wins": 0,
+  "losses": 0,
+  "win_rate": null,
   "filter_reason": "有効な戦略票による僅差のSKIP：NO_TREND_EDGE / LOW_SAMPLE_CAUTION",
   "data_integrity_status": "OK"
 }

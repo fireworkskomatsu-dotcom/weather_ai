@@ -207,6 +207,26 @@ if old_trade_count != closed_count:
 # 3. データ整合性情報
 # ------------------------------------------------------------
 
+# OFFICIAL_PERFORMANCE_BEGIN
+official = load_json(BASE / "official_performance.json", {})
+
+if official:
+    pnl_stats["trade_count"] = official.get("closed_trades", 0)
+    pnl_stats["wins"] = official.get("wins", 0)
+    pnl_stats["losses"] = official.get("losses", 0)
+    pnl_stats["flat_trades"] = official.get("flat_trades", 0)
+    pnl_stats["win_rate"] = official.get("win_rate")
+    pnl_stats["win_rate_available"] = official.get(
+        "win_rate_available", False
+    )
+    pnl_stats["total_realized_pnl"] = official.get(
+        "total_realized_pnl", 0.0
+    )
+    pnl_stats["source"] = "official_trade_ledger.json"
+    pnl_stats["scope"] = "OFFICIAL_FORWARD_TEST_ONLY"
+    pnl_stats["legacy_data_excluded"] = True
+# OFFICIAL_PERFORMANCE_END
+
 dashboard["updated_at"] = now.strftime("%Y-%m-%d %H:%M")
 dashboard["data_integrity"] = {
     "checked_at": now.isoformat(timespec="seconds"),

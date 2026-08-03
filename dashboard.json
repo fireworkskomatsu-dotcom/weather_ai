@@ -6,22 +6,25 @@
   "action": "戻り売り優勢",
   "up_prob": "19%",
   "down_prob": "81%",
-  "updated_at": "2026-07-31 15:52",
+  "updated_at": "2026-08-03 16:30",
   "capital": 500000,
   "pnl_stats": {
     "last_pnl": "-0.0",
     "cumulative_pnl": 0.0,
     "win_count": 0,
     "loss_count": 0,
-    "trade_count": 2,
-    "win_rate": 50.0,
-    "wins": 1,
-    "losses": 1,
+    "trade_count": 0,
+    "win_rate": null,
+    "wins": 0,
+    "losses": 0,
     "flat_trades": 0,
-    "source": "trade_log.json_explicit_realized_pnl_only",
-    "raw_previous_trade_count": 2,
-    "raw_previous_win_rate": 50.0,
-    "win_rate_available": true
+    "source": "official_trade_ledger.json",
+    "raw_previous_trade_count": 198,
+    "raw_previous_win_rate": 0.0,
+    "win_rate_available": false,
+    "total_realized_pnl": 0,
+    "scope": "OFFICIAL_FORWARD_TEST_ONLY",
+    "legacy_data_excluded": true
   },
   "position": {
     "weather": "黄",
@@ -52,56 +55,56 @@
     "allowed_direction": "LONG_ONLY",
     "reason": "有効な戦略票による僅差のSKIP：NO_TREND_EDGE / LOW_SAMPLE_CAUTION",
     "intraday_reason_expired": true,
-    "intraday_reason_checked_at": "2026-07-31T15:47:17+09:00"
+    "intraday_reason_checked_at": "2026-08-03T16:30:18+09:00"
   },
   "event": {
     "event_level": "LOW",
     "event_reason": "通常日"
   },
   "news": {
-    "news_level": "LOW",
-    "news_reason": "通常ニュースフロー",
-    "news_score": -2,
+    "news_level": "MID",
+    "news_reason": "やや警戒ニュースあり",
+    "news_score": -4,
     "headlines": [
       {
-        "title": "日経平均、米ハイテク株高が追い風（先読み株式相場） - 日本経済新聞",
+        "title": "日本株、好決算で高まる底入れ機運 「非AI」への資金流入カギ - 日本経済新聞",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5HdzNBVWVadG5fcEpEU3UteVN1QWR1YklsYkZVam5XMW4xZWNWM3p4bm9kU19FS0NzLUtHTTFZSDBFYzFnUFpMZmpaVWV2QUpmaWRfNjZiWnBKTTBRRWtOeFlVckJQYVMxUTJKMQ?oc=5"
+      },
+      {
+        "title": "〔ブル＆ベア〕日経平均株価・今週の重要ポイント(時事通信) - Yahoo!ファイナンス",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQYlFQS242blR3WFhTTjhuZWFaakFBc2NCZ2pPWHJRSDVUNEI4a2xMRGNoYUVaQ0J6X0E1X0tKZzBXMmlJWmZpbkZRSlgyeE5PZl9GZG5ZWklzZTRQbURkaVdwZzZQYmEyNllMNUtaYUtHdVBDX0dVZENuTTVvRk5EWHNDdUVVVHM?oc=5"
+      },
+      {
+        "title": "日本株底入れ近い？中東危機・金利上昇続くが企業業績は良好（窪田真之） - トウシル",
         "score": 1,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5hUXRFZWZ6VWp4MThHOWR3ZmltVE91dG5GdFRwQjBqZnZGTUZfSHhBMnBHakZVOFRUcXZHamxINXN0VE9nY25RdnBsXzFVV3FPZ19CT0pjTkp2NmlNVDhyalY4dHlxcDhwLW1FTQ?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA1SHFHaERlZkhDLTdtNHZwblNIbjV4QnRKNUNGSURrbkNuclRPSU1FZmoxMGtGbVdXX210RHhReGpxWXhPQnd1LUQwaHlRSUVPcmR6d1FreTlTdw?oc=5"
       },
       {
-        "title": "【テクニカル】日経平均株価テクニカル分析－5日線付近で上値抑えられる - 外為どっとコム",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE41cmpzSDF5SnZWYVlLNl9RV3BEdm1NMHltYktiRkQtSGk1bWJEMU4xa1QzUkJ2RktRU0JIeE5yWU9JOUhub2prNmt1QVRZWTRicmtFR0ZxeGQ0VG80ZXpEcG9yTQ?oc=5"
-      },
-      {
-        "title": "日経平均は小反発、好決算銘柄への買いが支え - ロイター",
-        "score": 2,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPQzNkc2JqRjdfUTk3NWxUNS1SMDgxRDZjMkNla1NlbllNbzVOWkRxZGoxeVc3OTF2U1FGSHhrajlzTzJFaHhDRWM2NlgzUmpEaXNYRmNyR3RyT19sMlJDcW9WeV9jaE1UM3RTWjV6OWo4aGFLYUFNSkZyUVFBZkdfQw?oc=5"
-      },
-      {
-        "title": "伊藤智洋が読む「日経平均株価・短期シナリオ」 (7月31日記） - kabutan.jp",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5vcF9paWlzSnBXbXFqS1ZZeW56LVYzQXdQSmFUZ1hwTTJ2dExuREhWR0hqX3llZHozdHJwbTRJLXBEM3g5WjJqYl84eW40blRSRkNPNXFzTTNSZjgwUzNJaQ?oc=5"
-      },
-      {
-        "title": "日経平均、433円24銭高の6万1867円43銭で終了＝東京株式(時事通信) - Yahoo!ファイナンス",
-        "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPM1gyYW95UzNLa2p2OXpnR2l0SUtOMGNYTmV3SnM1cTRIaUlNWlVlZVhOYlhtQVRheTFQd0FVelBpQmJId3BWUXpvNnpyVVhkLVE5VV80TTRjaTRwMmY3MHpzM2pvSjlvSnBhZEM3Z28tSnhxS2ZrV2VpQUhzaWtweVg3ZkJvM3M?oc=5"
-      },
-      {
-        "title": "米国株式市場＝大幅高、マイクロソフトが急伸 半導体株も上昇 - ロイター",
+        "title": "【グローバルマーケットの見通し】米国株同様、日本株も緩やかな株価上昇を想定 - 日経CNBC online",
         "score": 1,
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOdG80WTd1cXFDb2NXQ0J3VFNqS2JVTFhrT2pwQUtydEhNM25xdkJUNlM0OFh2RHk3RUhMVUg4SWVvWTcwakxWTW5XSEQ4UG1JbVJSR2JtM0JGRjlhMnJ4X1VQdm5kLURYel9VXy1RUE90RkNYbU5WZU1lclB5bENHNw?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFA2ME9UZWVSa0hmSElqUHVVMDRkLTJHQmp6aTdZQVd0S293WF9KVmRnUzd2Z0U0T3JHY0gxdnRLdUhZdzR3bGhzMGtXRzcxb2NneFJmcw?oc=5"
       },
       {
-        "title": "スターゲート連合に陰り ソフトバンクG・NVIDIA株は長期傾向が変化も - 日本経済新聞",
+        "title": "伊藤智洋が読む「日経平均株価・短期シナリオ」 (8月3日記） - 株探",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9Pa0RuNjdEeWQxMUtlNlVzcDhrYmlEN3ZwOGpCdkhHcFVjNERLcGxsVFhLODVsU2NWYWo0aEc4SVhybUpXWmZJWVdYdy0wdnMwR25LbWtZSGhzRlplTEpiV1VBam4wd01VNndvUg?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5Zc296VTd4RG1uMkFoRzZiY1JHbVQtSHptLVBOZlBueWFMX1JfTEFuOTZ0aVlrX3VsdWYyWHJaLWlzdmpQY2FfaV9LcDQtWjdPV05nYk1KZUE1dzdDdjZxTA?oc=5"
       },
       {
-        "title": "AI・半導体株懸念を象徴するSOXの20％安 安定化に1-2ヶ月要する傾向も 野村證券ストラテジストが解説 - nomura.co.jp",
+        "title": "エヌビディア【NVDA】：株価・株式情報 - Yahoo!ファイナンス",
         "score": 0,
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9qVjlEUWJuZjhEdVQ3YzlyenBFOWtaY2doZm1TN0Q5MkxRQmYwT2h1ZkpXSFlqSnh4Y0tzOW96cWFzT2prMGY5M0ZNenN6YVNTQXVrangwQkVLejVTb1pv?oc=5"
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE4xcERaYlUwR2Rhb0pfZnNyNExXTmhkeHd5MjVsSTNwdG9tR041dE1hYkdPSGswOTFranNkVW85U0cwQ25CaGh0bzJEbnk3UkU?oc=5"
+      },
+      {
+        "title": "車工場、稼働停止長引く 半導体は順次再開へ―熊本地震 - 時事ドットコム",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE4zX1gzaWRwcFJuTHR5TkdnRGxQTnVSNU12bDhXb1FsekQ3WEJxT0ZKcDJfazVRSThlbEl0dmpvRk90R1dlY0RhclI1N3E3Tl9LRldBUE85WDIwUnNnd3BsU1Vqcw?oc=5"
+      },
+      {
+        "title": "キオクシアHDなど半導体やAI関連株にらみの展開／オープニングコメント - 株探",
+        "score": 0,
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9ZV2ZaTWVoTE1CdlJmTDRXSDBNS0FReENJWU1oNWdHWWstZmxQcXRvV3lKcW5EalhjbWJHYVhNbkhobFJGSGU3MjJtSGkyMDFBYWFjMnpDVXhQY0t4SDlTUw?oc=5"
       }
     ],
     "errors": []
@@ -126,9 +129,12 @@
     ]
   },
   "data_integrity": {
-    "checked_at": "2026-07-31T15:52:21+09:00",
+    "checked_at": "2026-08-03T16:30:18+09:00",
     "status": "OK",
-    "changes": [],
+    "changes": [
+      "expired_open_wait_reason_removed",
+      "trade_count_corrected:198->2"
+    ],
     "warnings": [],
     "dashboard_source": "web/dashboard.json",
     "trade_log_records": 4,
