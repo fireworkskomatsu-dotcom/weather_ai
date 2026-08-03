@@ -1,5 +1,9 @@
 {
-  "time": "2026-07-31 16:36:28",
-  "strategy_expectancy": [],
+  "time": "2026-08-03T17:37:28+09:00",
+  "status": "OK",
+  "source": "strategy_shadow_pnl.json",
+  "minimum_samples": 5,
+  "evaluated_records": 0,
+  "strategy_expectancy": {},
   "count": 0
 }

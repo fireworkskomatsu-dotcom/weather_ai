@@ -1,3 +1,10 @@
 {
+  "updated_at": "2026-08-03T17:37:28+09:00",
+  "status": "OK",
+  "source": "strategy_expectancy.json",
+  "base_weight": 1.0,
+  "minimum_weight": 0.75,
+  "maximum_weight": 1.25,
+  "eligible_strategy_count": 0,
   "weights": {}
 }

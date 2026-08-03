@@ -1,5 +1,5 @@
 {
-  "time": "2026-07-30 17:14:25",
+  "time": "2026-08-03 17:37:28",
   "final_decision": "SKIP",
   "weighted_votes": {
     "LONG": 1.236655,
@@ -22,6 +22,11 @@
     "adaptive_strategy_count": 60
   },
   "hard_veto": false,
+  "official_weight_learning": {
+    "source": "strategy_weight.json",
+    "available_weights": 0,
+    "applied_non_neutral": 0
+  },
   "reasons": [
     "ADAPTIVE_STRATEGY_PARLIAMENT",
     "FILTER_NEUTRAL_SKIP_NO_EXTRA_VOTE"

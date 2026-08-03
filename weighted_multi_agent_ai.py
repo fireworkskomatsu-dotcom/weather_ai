@@ -77,6 +77,104 @@ for item in strategies:
     strategy_raw[decision] += weight
     strategy_count[decision] += 1
 
+# OFFICIAL_STRATEGY_WEIGHT_BEGIN
+weight_path = BASE / "strategy_weight.json"
+official_weight_data = {}
+
+if weight_path.exists():
+    try:
+        official_weight_data = json.loads(
+            weight_path.read_text(encoding="utf-8")
+        )
+    except Exception:
+        official_weight_data = {}
+
+official_weights = official_weight_data.get(
+    "weights",
+    {},
+)
+
+weight_applied_count = 0
+
+adaptive_strategies = adaptive_data.get(
+    "strategies",
+    [],
+)
+
+if isinstance(adaptive_strategies, list):
+    weighted_strategy_raw = {
+        "LONG": 0.0,
+        "SHORT": 0.0,
+        "SKIP": 0.0,
+    }
+
+    usable_rows = 0
+
+    for row in adaptive_strategies:
+        if not isinstance(row, dict):
+            continue
+
+        decision = normalize(
+            row.get("decision")
+            or row.get("final_decision")
+        )
+
+        if decision not in weighted_strategy_raw:
+            continue
+
+        strategy_id = str(
+            row.get("id")
+            or row.get("strategy_id")
+            or row.get("name")
+            or ""
+        )
+
+        try:
+            base_vote = float(
+                row.get("weight")
+                or row.get("score")
+                or 0.0
+            )
+        except (TypeError, ValueError):
+            base_vote = 0.0
+
+        if base_vote > 1.5:
+            base_vote = base_vote / 100.0
+
+        learned = official_weights.get(
+            strategy_id,
+            {},
+        )
+
+        try:
+            learned_weight = float(
+                learned.get("weight", 1.0)
+            )
+        except (TypeError, ValueError):
+            learned_weight = 1.0
+
+        weighted_strategy_raw[decision] += (
+            base_vote * learned_weight
+        )
+
+        usable_rows += 1
+
+        if abs(learned_weight - 1.0) > 1e-12:
+            weight_applied_count += 1
+
+    if usable_rows > 0:
+        strategy_raw = weighted_strategy_raw
+
+        if weight_applied_count > 0:
+            reasons.append(
+                "OFFICIAL_STRATEGY_WEIGHTS_APPLIED"
+            )
+        else:
+            reasons.append(
+                "OFFICIAL_STRATEGY_WEIGHTS_NEUTRAL"
+            )
+# OFFICIAL_STRATEGY_WEIGHT_END
+
 raw_total = sum(strategy_raw.values())
 parliament_cap = 2.5
 
@@ -184,6 +282,11 @@ out = {
         ),
     },
     "hard_veto": hard_veto,
+"official_weight_learning": {
+    "source": "strategy_weight.json",
+    "available_weights": len(official_weights),
+    "applied_non_neutral": weight_applied_count,
+},
     "reasons": reasons,
     "source": "weighted_multi_agent_ai.py",
     "mode": "ADAPTIVE_PARLIAMENT_V1",

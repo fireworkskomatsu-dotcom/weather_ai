@@ -1,3 +1,10 @@
 {
-  "strategy_results": []
+  "updated_at": "2026-08-03T17:37:28+09:00",
+  "status": "OK",
+  "source": "official_decision_log.jsonl",
+  "scope": "OFFICIAL_FORWARD_TEST_ONLY",
+  "evaluated_decision_records": 0,
+  "strategy_count": 0,
+  "strategy_results": {},
+  "legacy_data_excluded": true
 }
