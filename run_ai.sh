@@ -38,6 +38,7 @@ run strategy_expectancy_ai.py
 run strategy_shadow_rank_ai.py
 run strategy_weight_ai.py
 run strategy_allocator_ai.py
+run market_universe_ai.py
 run weighted_multi_agent_ai.py
 # === end canonical fresh decision pipeline ===
 

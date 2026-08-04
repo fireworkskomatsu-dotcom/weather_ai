@@ -1,0 +1,126 @@
+{
+  "updated_at": "2026-08-04T16:38:05+09:00",
+  "policy": {
+    "official_trade_symbol": "1321.T",
+    "maximum_trade_symbols": 1,
+    "monitor_symbols_may_not_write_official_ledger": true,
+    "monitor_symbols_may_not_change_official_performance": true,
+    "monitor_symbols_may_not_receive_learning_weights": true
+  },
+  "summary": {
+    "total_display_assets": 9,
+    "official_trade_targets": 1,
+    "monitor_only_assets": 8,
+    "unverified_monitor_values": 8
+  },
+  "assets": [
+    {
+      "symbol": "1321.T",
+      "name": "NEXT FUNDS 日経225連動型上場投信",
+      "role": "OFFICIAL_TRADE_TARGET",
+      "trade_enabled": true,
+      "official_performance_enabled": true,
+      "learning_enabled": true,
+      "display_enabled": true,
+      "source_path": null,
+      "observed_price": null,
+      "price_verification": "OFFICIAL_FEED_REQUIRED"
+    },
+    {
+      "symbol": null,
+      "name": "日経ETF",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[0]",
+      "observed_price": 3778.0,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "TOPIX",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[1]",
+      "observed_price": 55550.0,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "半導体ETF",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[2]",
+      "observed_price": 369.0,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "QQQ",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[3]",
+      "observed_price": 593.72,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "SOXX",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[4]",
+      "observed_price": 331.32,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "VIX",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[5]",
+      "observed_price": 27.19,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "USDJPY",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[6]",
+      "observed_price": 159.32,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    },
+    {
+      "symbol": null,
+      "name": "BTC",
+      "role": "MONITOR_ONLY",
+      "trade_enabled": false,
+      "official_performance_enabled": false,
+      "learning_enabled": false,
+      "display_enabled": true,
+      "source_path": "[7]",
+      "observed_price": 74031.95,
+      "price_verification": "UNVERIFIED_MONITOR_VALUE"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "OK",
+  "updated_at": "2026-08-04T16:38:05+09:00",
+  "official_trade_symbol": "1321.T",
+  "official_trade_target_count": 1,
+  "monitor_only_count": 8,
+  "display_asset_count": 9,
+  "guard": "TRADE_AND_MONITORING_UNIVERSE_SEPARATED"
+}
