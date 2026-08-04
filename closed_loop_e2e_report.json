@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T17:57:08+09:00",
+  "generated_at": "2026-08-04T18:07:24+09:00",
   "status": "PASS",
   "scope": "ISOLATED_E2E_TEST_ONLY",
   "production_data_modified": false,
@@ -53,10 +53,37 @@
   },
   "official_weight_learning": {
     "source": "strategy_weight.json",
+    "strategy_vote_source": "adaptive_data.weights",
+    "strategy_rows_seen": 60,
     "available_weights": 1,
-    "applied_non_neutral": 0
+    "matched_weights": 2,
+    "applied_non_neutral": 2,
+    "match_details": [
+      {
+        "matched_key": "REPLAY_05",
+        "candidate_keys": [
+          "REPLAY_05",
+          "key_exact_match"
+        ],
+        "decision": "LONG",
+        "base_vote": 0.0,
+        "learned_weight": 1.25,
+        "weighted_vote": 0.0
+      },
+      {
+        "matched_key": "REPLAY_05",
+        "candidate_keys": [
+          "REPLAY_05",
+          "key_exact_match"
+        ],
+        "decision": "LONG",
+        "base_vote": 0.0,
+        "learned_weight": 1.25,
+        "weighted_vote": 0.0
+      }
+    ]
   },
-  "final_decision_after_learning": "SKIP",
+  "final_decision_after_learning": "LONG",
   "checks": {
     "isolated_environment": true,
     "evaluated_records_at_least_5": true,
@@ -65,6 +92,8 @@
     "weight_created": true,
     "weight_changed_from_neutral": true,
     "weighted_agent_read_weight_file": true,
+    "weighted_agent_matched_strategy": true,
+    "weighted_agent_applied_non_neutral": true,
     "production_official_log_untouched": true
   }
 }

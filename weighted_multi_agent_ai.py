@@ -94,85 +94,196 @@ official_weights = official_weight_data.get(
     {},
 )
 
+if not isinstance(official_weights, dict):
+    official_weights = {}
+
 weight_applied_count = 0
+weight_match_count = 0
+weight_match_details = []
 
 adaptive_strategies = adaptive_data.get(
     "strategies",
     [],
 )
 
-if isinstance(adaptive_strategies, list):
-    weighted_strategy_raw = {
-        "LONG": 0.0,
-        "SHORT": 0.0,
-        "SKIP": 0.0,
-    }
+adaptive_strategy_source = "adaptive_data.strategies"
 
-    usable_rows = 0
+if not isinstance(adaptive_strategies, list) or not adaptive_strategies:
+    adaptive_strategies = adaptive_data.get(
+        "weights",
+        [],
+    )
+    adaptive_strategy_source = "adaptive_data.weights"
 
-    for row in adaptive_strategies:
-        if not isinstance(row, dict):
+if not isinstance(adaptive_strategies, list) or not adaptive_strategies:
+    strategy_5x10_path = BASE / "strategy_5x10.json"
+    strategy_5x10_data = {}
+
+    if strategy_5x10_path.exists():
+        try:
+            strategy_5x10_data = json.loads(
+                strategy_5x10_path.read_text(
+                    encoding="utf-8"
+                )
+            )
+        except Exception:
+            strategy_5x10_data = {}
+
+    adaptive_strategies = strategy_5x10_data.get(
+        "strategies",
+        [],
+    )
+    adaptive_strategy_source = "strategy_5x10.json.strategies"
+
+if not isinstance(adaptive_strategies, list):
+    adaptive_strategies = []
+    adaptive_strategy_source = "NONE"
+
+weighted_strategy_raw = {
+    "LONG": 0.0,
+    "SHORT": 0.0,
+    "SKIP": 0.0,
+}
+
+usable_rows = 0
+
+
+def official_strategy_keys(row):
+    values = [
+        row.get("id"),
+        row.get("strategy_id"),
+        row.get("name"),
+    ]
+
+    keys = []
+
+    for value in values:
+        if value in (None, ""):
             continue
 
-        decision = normalize(
-            row.get("decision")
-            or row.get("final_decision")
-        )
+        key = str(value).strip()
 
-        if decision not in weighted_strategy_raw:
+        if key and key not in keys:
+            keys.append(key)
+
+    return keys
+
+
+def official_learned_weight(row):
+    candidate_keys = official_strategy_keys(row)
+
+    for key in candidate_keys:
+        learned = official_weights.get(key)
+
+        if not isinstance(learned, dict):
             continue
-
-        strategy_id = str(
-            row.get("id")
-            or row.get("strategy_id")
-            or row.get("name")
-            or ""
-        )
 
         try:
-            base_vote = float(
-                row.get("weight")
-                or row.get("score")
-                or 0.0
+            value = float(
+                learned.get("weight", 1.0)
             )
         except (TypeError, ValueError):
-            base_vote = 0.0
+            value = 1.0
 
-        if base_vote > 1.5:
-            base_vote = base_vote / 100.0
+        return value, key, candidate_keys
+
+    normalized = {
+        str(source_key).strip().lower(): source_key
+        for source_key in official_weights
+    }
+
+    for key in candidate_keys:
+        source_key = normalized.get(key.lower())
+
+        if source_key is None:
+            continue
 
         learned = official_weights.get(
-            strategy_id,
+            source_key,
             {},
         )
 
         try:
-            learned_weight = float(
+            value = float(
                 learned.get("weight", 1.0)
             )
         except (TypeError, ValueError):
-            learned_weight = 1.0
+            value = 1.0
 
-        weighted_strategy_raw[decision] += (
-            base_vote * learned_weight
+        return value, source_key, candidate_keys
+
+    return 1.0, None, candidate_keys
+
+
+for row in adaptive_strategies:
+    if not isinstance(row, dict):
+        continue
+
+    decision = normalize(
+        row.get("decision")
+        or row.get("final_decision")
+    )
+
+    if decision not in weighted_strategy_raw:
+        continue
+
+    try:
+        base_vote = float(
+            row.get("weight")
+            or row.get("score")
+            or 0.0
         )
+    except (TypeError, ValueError):
+        base_vote = 0.0
 
-        usable_rows += 1
+    if base_vote > 1.5:
+        base_vote = base_vote / 100.0
 
-        if abs(learned_weight - 1.0) > 1e-12:
-            weight_applied_count += 1
+    learned_weight, matched_key, candidate_keys = (
+        official_learned_weight(row)
+    )
 
-    if usable_rows > 0:
-        strategy_raw = weighted_strategy_raw
+    weighted_vote = base_vote * learned_weight
 
-        if weight_applied_count > 0:
-            reasons.append(
-                "OFFICIAL_STRATEGY_WEIGHTS_APPLIED"
-            )
-        else:
-            reasons.append(
-                "OFFICIAL_STRATEGY_WEIGHTS_NEUTRAL"
-            )
+    weighted_strategy_raw[decision] += weighted_vote
+    usable_rows += 1
+
+    if matched_key is not None:
+        weight_match_count += 1
+
+        weight_match_details.append({
+            "matched_key": matched_key,
+            "candidate_keys": candidate_keys,
+            "decision": decision,
+            "base_vote": round(base_vote, 8),
+            "learned_weight": round(
+                learned_weight,
+                8,
+            ),
+            "weighted_vote": round(
+                weighted_vote,
+                8,
+            ),
+        })
+
+    if abs(learned_weight - 1.0) > 1e-12:
+        weight_applied_count += 1
+
+if usable_rows > 0:
+    strategy_raw = weighted_strategy_raw
+
+    if weight_applied_count > 0:
+        reasons.append(
+            "OFFICIAL_STRATEGY_WEIGHTS_APPLIED"
+        )
+    elif weight_match_count > 0:
+        reasons.append(
+            "OFFICIAL_STRATEGY_WEIGHTS_MATCHED_NEUTRAL"
+        )
+    else:
+        reasons.append(
+            "OFFICIAL_STRATEGY_WEIGHTS_NO_MATCH"
+        )
 # OFFICIAL_STRATEGY_WEIGHT_END
 
 raw_total = sum(strategy_raw.values())
@@ -292,6 +403,17 @@ out = {
     "mode": "ADAPTIVE_PARLIAMENT_V1",
 }
 
+# OFFICIAL_WEIGHT_DIAGNOSTIC_BEGIN
+out["official_weight_learning"] = {
+    "source": "strategy_weight.json",
+    "strategy_vote_source": adaptive_strategy_source,
+    "strategy_rows_seen": len(adaptive_strategies),
+    "available_weights": len(official_weights),
+    "matched_weights": weight_match_count,
+    "applied_non_neutral": weight_applied_count,
+    "match_details": weight_match_details[:20],
+}
+# OFFICIAL_WEIGHT_DIAGNOSTIC_END
 (BASE / "weighted_multi_agent.json").write_text(
     json.dumps(out, ensure_ascii=False, indent=2),
     encoding="utf-8",

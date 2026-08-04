@@ -347,6 +347,18 @@ with tempfile.TemporaryDirectory(
                 "available_weights",
                 0,
             ) >= 1,
+        "weighted_agent_matched_strategy":
+            isinstance(learning_state, dict)
+            and learning_state.get(
+                "matched_weights",
+                0,
+            ) >= 1,
+        "weighted_agent_applied_non_neutral":
+            isinstance(learning_state, dict)
+            and learning_state.get(
+                "applied_non_neutral",
+                0,
+            ) >= 1,
         "production_official_log_untouched":
             True,
     }
