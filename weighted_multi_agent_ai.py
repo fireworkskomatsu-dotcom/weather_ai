@@ -98,8 +98,15 @@ if not isinstance(official_weights, dict):
     official_weights = {}
 
 weight_applied_count = 0
+weight_effective_count = 0
 weight_match_count = 0
 weight_match_details = []
+seen_strategy_keys = set()
+raw_before_learning = {
+    "LONG": 0.0,
+    "SHORT": 0.0,
+    "SKIP": 0.0,
+}
 
 adaptive_strategies = adaptive_data.get(
     "strategies",
@@ -243,7 +250,28 @@ for row in adaptive_strategies:
         official_learned_weight(row)
     )
 
+    canonical_key = (
+        matched_key
+        or (
+            candidate_keys[0]
+            if candidate_keys
+            else None
+        )
+    )
+
+    # 同じ戦略IDが複数配列に重複していても一度だけ数える。
+    if canonical_key is not None:
+        canonical_key = str(canonical_key).strip().lower()
+
+        if canonical_key in seen_strategy_keys:
+            continue
+
+        seen_strategy_keys.add(canonical_key)
+
+    raw_before_learning[decision] += base_vote
+
     weighted_vote = base_vote * learned_weight
+    vote_delta = weighted_vote - base_vote
 
     weighted_strategy_raw[decision] += weighted_vote
     usable_rows += 1
@@ -264,10 +292,17 @@ for row in adaptive_strategies:
                 weighted_vote,
                 8,
             ),
+            "vote_delta": round(
+                vote_delta,
+                8,
+            ),
         })
 
     if abs(learned_weight - 1.0) > 1e-12:
         weight_applied_count += 1
+
+        if abs(vote_delta) > 1e-12:
+            weight_effective_count += 1
 
 if usable_rows > 0:
     strategy_raw = weighted_strategy_raw
@@ -411,6 +446,15 @@ out["official_weight_learning"] = {
     "available_weights": len(official_weights),
     "matched_weights": weight_match_count,
     "applied_non_neutral": weight_applied_count,
+    "effective_non_zero": weight_effective_count,
+    "raw_votes_before_learning": {
+        key: round(value, 8)
+        for key, value in raw_before_learning.items()
+    },
+    "raw_votes_after_learning": {
+        key: round(value, 8)
+        for key, value in weighted_strategy_raw.items()
+    },
     "match_details": weight_match_details[:20],
 }
 # OFFICIAL_WEIGHT_DIAGNOSTIC_END

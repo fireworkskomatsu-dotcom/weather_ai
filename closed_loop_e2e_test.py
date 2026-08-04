@@ -262,6 +262,63 @@ with tempfile.TemporaryDirectory(
     save_json(work / "live_price.json", live_price)
     save_json(work / "price_data.json", live_price)
 
+    # 合議AIが読む実戦略データへ、選択戦略の実票を1.0で設定。
+    adaptive_path = work / "adaptive_strategy_weights.json"
+    adaptive_data = load_json(adaptive_path, {})
+
+    if not isinstance(adaptive_data, dict):
+        adaptive_data = {}
+
+    adaptive_rows = adaptive_data.get("weights", [])
+
+    if not isinstance(adaptive_rows, list):
+        adaptive_rows = []
+
+    target_found = False
+    deduplicated = []
+    seen_ids = set()
+
+    for row in adaptive_rows:
+        if not isinstance(row, dict):
+            continue
+
+        row_id = str(
+            row.get("id")
+            or row.get("strategy_id")
+            or row.get("name")
+            or ""
+        )
+
+        if not row_id:
+            continue
+
+        if row_id in seen_ids:
+            continue
+
+        seen_ids.add(row_id)
+
+        if row_id == strategy["id"]:
+            row = dict(row)
+            row["decision"] = direction
+            row["weight"] = 1.0
+            row["score"] = 100
+            target_found = True
+
+        deduplicated.append(row)
+
+    if not target_found:
+        deduplicated.append({
+            "id": strategy["id"],
+            "name": strategy["name"],
+            "family": strategy["family"],
+            "decision": direction,
+            "weight": 1.0,
+            "score": 100,
+        })
+
+    adaptive_data["weights"] = deduplicated
+    save_json(adaptive_path, adaptive_data)
+
     outputs = {}
 
     for module in [
@@ -359,6 +416,37 @@ with tempfile.TemporaryDirectory(
                 "applied_non_neutral",
                 0,
             ) >= 1,
+        "weighted_agent_changed_real_vote":
+            isinstance(learning_state, dict)
+            and learning_state.get(
+                "effective_non_zero",
+                0,
+            ) >= 1,
+        "weighted_vote_delta_is_correct":
+            any(
+                abs(
+                    float(item.get("vote_delta", 0.0))
+                    - (
+                        float(item.get("base_vote", 0.0))
+                        * (
+                            float(
+                                item.get(
+                                    "learned_weight",
+                                    1.0,
+                                )
+                            )
+                            - 1.0
+                        )
+                    )
+                ) < 1e-9
+                and abs(
+                    float(item.get("vote_delta", 0.0))
+                ) > 1e-12
+                for item in learning_state.get(
+                    "match_details",
+                    [],
+                )
+            ),
         "production_official_log_untouched":
             True,
     }

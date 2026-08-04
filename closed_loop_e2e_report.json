@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T18:07:24+09:00",
+  "generated_at": "2026-08-04T18:10:06+09:00",
   "status": "PASS",
   "scope": "ISOLATED_E2E_TEST_ONLY",
   "production_data_modified": false,
@@ -54,10 +54,21 @@
   "official_weight_learning": {
     "source": "strategy_weight.json",
     "strategy_vote_source": "adaptive_data.weights",
-    "strategy_rows_seen": 60,
+    "strategy_rows_seen": 50,
     "available_weights": 1,
-    "matched_weights": 2,
-    "applied_non_neutral": 2,
+    "matched_weights": 1,
+    "applied_non_neutral": 1,
+    "effective_non_zero": 1,
+    "raw_votes_before_learning": {
+      "LONG": 1.0,
+      "SHORT": 0.0,
+      "SKIP": 0.0
+    },
+    "raw_votes_after_learning": {
+      "LONG": 1.25,
+      "SHORT": 0.0,
+      "SKIP": 0.0
+    },
     "match_details": [
       {
         "matched_key": "REPLAY_05",
@@ -66,20 +77,10 @@
           "key_exact_match"
         ],
         "decision": "LONG",
-        "base_vote": 0.0,
+        "base_vote": 1.0,
         "learned_weight": 1.25,
-        "weighted_vote": 0.0
-      },
-      {
-        "matched_key": "REPLAY_05",
-        "candidate_keys": [
-          "REPLAY_05",
-          "key_exact_match"
-        ],
-        "decision": "LONG",
-        "base_vote": 0.0,
-        "learned_weight": 1.25,
-        "weighted_vote": 0.0
+        "weighted_vote": 1.25,
+        "vote_delta": 0.25
       }
     ]
   },
@@ -94,6 +95,8 @@
     "weighted_agent_read_weight_file": true,
     "weighted_agent_matched_strategy": true,
     "weighted_agent_applied_non_neutral": true,
+    "weighted_agent_changed_real_vote": true,
+    "weighted_vote_delta_is_correct": true,
     "production_official_log_untouched": true
   }
 }
