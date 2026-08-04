@@ -7,7 +7,7 @@ copy(){ [ -f "$BASE/$1" ] && cp "$BASE/$1" "$WEB/"; }
 
 cd "$BASE" || exit
 
-run fetch_real_price_ai.py
+# PRICE_FEED_DISABLED_UNTIL_JQUANTS_KEY run fetch_real_price_ai.py
 run trend_reversal_ai.py
 run replay_analyzer_ai.py
 run replay_summary_ai.py
