@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-08-04T17:57:08+09:00",
+  "status": "PASS",
+  "scope": "ISOLATED_E2E_TEST_ONLY",
+  "production_data_modified": false,
+  "selected_existing_strategy": {
+    "id": "REPLAY_05",
+    "name": "key_exact_match",
+    "family": "REPLAY",
+    "decision": "LONG"
+  },
+  "simulated_records": 6,
+  "current_test_price": 110.0,
+  "evaluated_records": 6,
+  "strategy_samples": 6,
+  "strategy_result": {
+    "strategy_id": "REPLAY_05",
+    "name": "key_exact_match",
+    "family": "REPLAY",
+    "samples": 6,
+    "wins": 6,
+    "losses": 0,
+    "flats": 0,
+    "total_return": 0.44081281,
+    "correct": 6,
+    "incorrect": 0,
+    "total_return_pct": 44.0813,
+    "average_return": 0.0734688,
+    "average_return_pct": 7.3469,
+    "win_rate": 100.0,
+    "profit_factor": 999.0
+  },
+  "expectancy_result": {
+    "strategy_id": "REPLAY_05",
+    "name": "key_exact_match",
+    "family": "REPLAY",
+    "samples": 6,
+    "win_rate": 100.0,
+    "profit_factor": 999.0,
+    "raw_expectancy": 0.0734688,
+    "raw_expectancy_pct": 7.3469,
+    "reliability": 0.2,
+    "expectancy": 0.01469376,
+    "expectancy_pct": 1.4694,
+    "eligible_for_weight_change": true
+  },
+  "weight_result": {
+    "weight": 1.25,
+    "samples": 6,
+    "expectancy": 0.01469376,
+    "expectancy_pct": 1.4694,
+    "reason": "OFFICIAL_EXPECTANCY_APPLIED"
+  },
+  "official_weight_learning": {
+    "source": "strategy_weight.json",
+    "available_weights": 1,
+    "applied_non_neutral": 0
+  },
+  "final_decision_after_learning": "SKIP",
+  "checks": {
+    "isolated_environment": true,
+    "evaluated_records_at_least_5": true,
+    "strategy_samples_at_least_5": true,
+    "expectancy_created": true,
+    "weight_created": true,
+    "weight_changed_from_neutral": true,
+    "weighted_agent_read_weight_file": true,
+    "production_official_log_untouched": true
+  }
+}
