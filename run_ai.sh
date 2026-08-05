@@ -32,6 +32,7 @@ run strategy_retirement_ai.py
 run success_learning_ai.py
 run winrate_breakdown_ai.py
 run winrate_filter_ai.py
+run price_provider_ai.py
 run official_outcome_ai.py
 run strategy_shadow_pnl_ai.py
 run strategy_expectancy_ai.py

@@ -1,0 +1,11 @@
+{
+  "provider": "DISABLED",
+  "mode": "OFFICIAL",
+  "symbol": "1321.T",
+  "policy": {
+    "provisional_price_may_write_official_performance": false,
+    "provisional_price_may_write_official_learning": false,
+    "test_price_requires_isolated_environment": true,
+    "official_provider_required_for_forward_operation": true
+  }
+}

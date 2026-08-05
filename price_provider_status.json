@@ -1,0 +1,9 @@
+{
+  "status": "BLOCKED",
+  "updated_at": "2026-08-05T16:02:22+09:00",
+  "symbol": "1321.T",
+  "provider": "DISABLED",
+  "mode": "OFFICIAL",
+  "reason": "正式モードでは検証済み公式プロバイダー以外を使用できません",
+  "price_written": false
+}

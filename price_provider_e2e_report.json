@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-08-05T16:02:24+09:00",
+  "status": "PASS",
+  "scope": "ISOLATED_PRICE_PROVIDER_E2E",
+  "production_data_modified": false,
+  "provider": "TEST_FIXED",
+  "test_price": 70123.0,
+  "canonical_price": {
+    "schema_version": 1,
+    "symbol": "1321.T",
+    "price": 70123.0,
+    "last_price": 70123.0,
+    "current_price": 70123.0,
+    "currency": "JPY",
+    "market_time": "2026-08-05T16:02:24+09:00",
+    "fetched_at": "2026-08-05T16:02:24+09:00",
+    "provider": "TEST_FIXED",
+    "source": "TEST_FIXED",
+    "mode": "ISOLATED_TEST",
+    "verification_level": "ISOLATED_TEST_ONLY",
+    "official_eligible": false,
+    "allow_official_performance": false,
+    "allow_official_learning": false,
+    "verification": {
+      "symbol_exact_match": true,
+      "price_range_verified": true,
+      "official_source_verified": false
+    }
+  },
+  "provider_status": {
+    "status": "OK",
+    "updated_at": "2026-08-05T16:02:24+09:00",
+    "symbol": "1321.T",
+    "provider": "TEST_FIXED",
+    "mode": "ISOLATED_TEST",
+    "reason": "価格プロバイダー契約を満たしました",
+    "price_written": true,
+    "price": 70123.0,
+    "market_time": "2026-08-05T16:02:24+09:00",
+    "verification_level": "ISOLATED_TEST_ONLY",
+    "official_eligible": false,
+    "canonical_file": "canonical_price.json",
+    "official_files_written": false
+  },
+  "checks": {
+    "isolated_environment": true,
+    "test_provider_ran": true,
+    "symbol_exact": true,
+    "price_exact": true,
+    "test_mode_recorded": true,
+    "official_eligible_false": true,
+    "official_learning_blocked": true,
+    "official_performance_blocked": true,
+    "live_price_not_written": true,
+    "price_data_not_written": true,
+    "production_files_unchanged": true
+  },
+  "stdout": "===== PRICE PROVIDER =====\nstatus: OK\nsymbol: 1321.T\nprice: 70123.0\nprovider: TEST_FIXED\nmode: ISOLATED_TEST\nverification_level: ISOLATED_TEST_ONLY\nofficial_eligible: False\ncanonical_file: canonical_price.json\nofficial_files_written: False\n"
+}
