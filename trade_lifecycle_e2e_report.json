@@ -1,0 +1,152 @@
+{
+  "generated_at": "2026-08-05T15:54:06+09:00",
+  "status": "PASS",
+  "scope": "ISOLATED_TRADE_E2E_ONLY",
+  "production_data_modified": false,
+  "symbol": "1321.T",
+  "entry_price": 100.0,
+  "exit_price": 103.0,
+  "expected_realized_pnl": 3.0,
+  "entry_account": {
+    "cash": 499900.0,
+    "equity": 500000.0,
+    "position": 1,
+    "entry_price": 100.0,
+    "history": [
+      {
+        "time": "2026-08-05T15:54:06",
+        "signal": "LONG",
+        "price": 100.0,
+        "cash": 499900.0,
+        "position": 1,
+        "equity": 500000.0,
+        "action": "BUY"
+      }
+    ],
+    "updated_at": "2026-08-05T15:54:06",
+    "last_price": 100.0,
+    "last_signal": "LONG",
+    "last_action": "BUY"
+  },
+  "exit_account": {
+    "cash": 500003.0,
+    "equity": 500003.0,
+    "position": 0,
+    "entry_price": null,
+    "history": [
+      {
+        "time": "2026-08-05T15:54:06",
+        "signal": "LONG",
+        "price": 100.0,
+        "cash": 499900.0,
+        "position": 1,
+        "equity": 500000.0,
+        "action": "BUY"
+      },
+      {
+        "time": "2026-08-05T15:54:06",
+        "signal": "EXIT",
+        "price": 103.0,
+        "cash": 500003.0,
+        "position": 0,
+        "equity": 500003.0,
+        "action": "SELL"
+      }
+    ],
+    "updated_at": "2026-08-05T15:54:06",
+    "last_price": 103.0,
+    "last_signal": "EXIT",
+    "last_action": "SELL"
+  },
+  "trade_log": [
+    {
+      "time": "2026-08-05T15:54:06",
+      "action": "BUY",
+      "price": 100.0,
+      "qty": 1,
+      "reason": "LONG"
+    },
+    {
+      "time": "2026-08-05T15:54:06",
+      "action": "SELL",
+      "price": 103.0,
+      "qty": 1,
+      "pnl": 3.0,
+      "reason": "EXIT"
+    }
+  ],
+  "official_ledger": [
+    {
+      "trade_id": "ecf2ceaad97b8f8727c55529",
+      "scope": "OFFICIAL_FORWARD_TEST_ONLY",
+      "symbol": "1321.T",
+      "side": "LONG",
+      "status": "CLOSED",
+      "opened_at": "2026-08-05T15:54:06+09:00",
+      "entry_price": 100.0,
+      "qty": 1,
+      "entry_reason": "LONG",
+      "source_event_id": "e4a9aefd8878b8f819b1b995",
+      "decision": "SKIP",
+      "legacy_data_excluded": true,
+      "closed_at": "2026-08-05T15:54:06+09:00",
+      "exit_price": 103.0,
+      "exit_reason": "EXIT",
+      "realized_pnl": 3.0,
+      "close_source_event_id": "f0c8a7a58ca933800bc84623"
+    }
+  ],
+  "official_performance": {
+    "updated_at": "2026-08-05T15:54:06+09:00",
+    "scope": "OFFICIAL_FORWARD_TEST_ONLY",
+    "started_at": "2026-08-05T14:54:06+09:00",
+    "initial_cash": 500000.0,
+    "closed_trades": 1,
+    "wins": 1,
+    "losses": 0,
+    "flat_trades": 0,
+    "win_rate": 100.0,
+    "win_rate_available": true,
+    "total_realized_pnl": 3.0,
+    "legacy_data_excluded": true,
+    "source": "official_trade_ledger.json"
+  },
+  "ledger_writer_status": {
+    "status": "OK",
+    "updated_at": "2026-08-05T15:54:06+09:00",
+    "official_started_at": "2026-08-05T14:54:06+09:00",
+    "initialized": true,
+    "events_added": 1,
+    "trades_opened_this_run": 0,
+    "trades_closed_this_run": 1,
+    "open_trades": 0,
+    "closed_trades": 1,
+    "ledger_records": 1,
+    "ignored_legacy_records": 0,
+    "current_virtual_position": 0,
+    "legacy_data_excluded": true
+  },
+  "checks": {
+    "isolated_environment": true,
+    "entry_position_opened": true,
+    "entry_price_saved": true,
+    "buy_logged": true,
+    "official_open_trade_created": true,
+    "exit_position_closed": true,
+    "sell_logged": true,
+    "official_trade_closed": true,
+    "realized_pnl_correct": true,
+    "official_performance_closed_one": true,
+    "official_performance_wins_one": true,
+    "official_performance_losses_zero": true,
+    "official_total_pnl_correct": true,
+    "legacy_data_excluded": true
+  },
+  "module_outputs": {
+    "entry_virtual_account": "{\n  \"status\": \"OK\",\n  \"signal\": \"LONG\",\n  \"price\": 100.0,\n  \"action_taken\": \"BUY\",\n  \"cash\": 499900.0,\n  \"position\": 1,\n  \"equity\": 500000.0\n}\n",
+    "entry_ledger_writer": "===== OFFICIAL LEDGER WRITER =====\nstatus: OK\nofficial_started_at: 2026-08-05T14:54:06+09:00\nevents_added: 1\ntrades_opened_this_run: 1\ntrades_closed_this_run: 0\nopen_trades: 1\nclosed_trades: 0\nledger_records: 1\nignored_legacy_records: 0\ncurrent_virtual_position: 1\n",
+    "exit_virtual_account": "{\n  \"status\": \"OK\",\n  \"signal\": \"EXIT\",\n  \"price\": 103.0,\n  \"action_taken\": \"SELL\",\n  \"cash\": 500003.0,\n  \"position\": 0,\n  \"equity\": 500003.0\n}\n",
+    "exit_ledger_writer": "===== OFFICIAL LEDGER WRITER =====\nstatus: OK\nofficial_started_at: 2026-08-05T14:54:06+09:00\nevents_added: 1\ntrades_opened_this_run: 0\ntrades_closed_this_run: 1\nopen_trades: 0\nclosed_trades: 1\nledger_records: 1\nignored_legacy_records: 0\ncurrent_virtual_position: 0\n",
+    "official_performance": "{\n  \"updated_at\": \"2026-08-05T15:54:06+09:00\",\n  \"scope\": \"OFFICIAL_FORWARD_TEST_ONLY\",\n  \"started_at\": \"2026-08-05T14:54:06+09:00\",\n  \"initial_cash\": 500000.0,\n  \"closed_trades\": 1,\n  \"wins\": 1,\n  \"losses\": 0,\n  \"flat_trades\": 0,\n  \"win_rate\": 100.0,\n  \"win_rate_available\": true,\n  \"total_realized_pnl\": 3.0,\n  \"legacy_data_excluded\": true,\n  \"source\": \"official_trade_ledger.json\"\n}\n"
+  }
+}
