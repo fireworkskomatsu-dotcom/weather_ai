@@ -135,6 +135,13 @@
       </article>
 
       <article class="card">
+        <div class="label">Next-session monitoring outcomes</div>
+        <div class="value" id="outcome-value">—</div>
+        <div class="detail" id="outcome-detail">翌取引日の結果を読み込み中</div>
+        <div class="meta">監視成績のみ。正式成績・正式学習には含めません。</div>
+      </article>
+
+      <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
         <div class="detail" id="provider-detail">読み込み中</div>
@@ -287,6 +294,9 @@
       const forwardRows = typeof historyText === "string"
         ? historyText.split(/\r?\n/).filter((row) => row.startsWith("FORWARD_V1,"))
         : [];
+      const outcomeRows = typeof historyText === "string"
+        ? historyText.split(/\r?\n/).filter((row) => row.startsWith("OUTCOME_V1,"))
+        : [];
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
         const forwardDataStatus = latestForward[13] || "UNKNOWN";
@@ -303,6 +313,21 @@
       } else {
         text("forward-log-value", "開始待ち");
         text("forward-log-detail", "次回の定時市場更新から、重複のない監視ログを記録します。");
+      }
+
+      if (outcomeRows.length) {
+        const parsedOutcomes = outcomeRows.map((row) => row.split(","));
+        const correct = parsedOutcomes.filter((row) => row[10] === "CORRECT").length;
+        const incorrect = parsedOutcomes.filter((row) => row[10] === "INCORRECT").length;
+        const directional = correct + incorrect;
+        const accuracy = directional ? (correct / directional * 100).toFixed(1) : null;
+        text("outcome-value", `${outcomeRows.length}評価`);
+        text("outcome-detail", accuracy === null
+          ? "方向判断の評価対象はまだありません。"
+          : `方向判断 正解 ${correct} / 不正解 ${incorrect} / 正解率 ${accuracy}%`);
+      } else {
+        text("outcome-value", "結果待ち");
+        text("outcome-detail", "次の1321取引日データが入った後に自動評価します。");
       }
 
       if (provider) {

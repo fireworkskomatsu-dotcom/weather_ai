@@ -315,6 +315,25 @@ with open("cards.json", "w") as f:
     json.dump(cards, f, ensure_ascii=False, indent=2)
 
 history_path = Path("history.csv")
+target_rows = (
+    df[df["Code"] == "13210"]
+    .copy()
+    .sort_values("Date")
+)
+if target_rows.empty:
+    raise RuntimeError("監視対象1321.Tの価格データがありません")
+
+target_latest = target_rows.iloc[-1]
+target_data_as_of = str(target_latest["Date"])
+target_close = float(target_latest["C"])
+monitoring_direction = (
+    "LONG"
+    if prob_up >= 55
+    else "SHORT"
+    if prob_up <= 45
+    else "SKIP"
+)
+
 forward_payload = {
     "logged_at": now,
     "data_as_of": data_as_of,
@@ -329,6 +348,10 @@ forward_payload = {
     "official_eligible": False,
     "data_status": data_status,
     "data_age_days": data_age_days,
+    "target_symbol": "1321.T",
+    "target_data_as_of": target_data_as_of,
+    "target_close": round(target_close, 6),
+    "monitoring_direction": monitoring_direction,
 }
 fingerprint_source = {
     key: value
@@ -369,6 +392,78 @@ if run_id not in existing_run_ids:
             str(forward_payload["official_eligible"]).lower(),
             forward_payload["data_status"],
             forward_payload["data_age_days"],
+            forward_payload["target_symbol"],
+            forward_payload["target_data_as_of"],
+            forward_payload["target_close"],
+            forward_payload["monitoring_direction"],
         ])
+
+# 過去の監視判断は、次の取引日が到来した後だけ追記評価する。
+with history_path.open("r", encoding="utf-8", newline="") as handle:
+    history_rows = list(csv.reader(handle))
+
+evaluated_run_ids = {
+    row[1]
+    for row in history_rows
+    if len(row) >= 2 and row[0] == "OUTCOME_V1"
+}
+outcomes = []
+for row in history_rows:
+    if len(row) < 19 or row[0] != "FORWARD_V1":
+        continue
+
+    previous_run_id = row[1]
+    previous_data_status = row[13]
+    previous_symbol = row[15]
+    previous_target_date = row[16]
+    previous_entry_price = float(row[17])
+    previous_direction = row[18]
+
+    if (
+        previous_run_id in evaluated_run_ids
+        or previous_data_status != "FRESH"
+        or previous_symbol != "1321.T"
+    ):
+        continue
+
+    later = target_rows[target_rows["Date"] > previous_target_date]
+    if later.empty:
+        continue
+
+    next_row = later.iloc[0]
+    exit_date = str(next_row["Date"])
+    exit_price = float(next_row["C"])
+    return_pct = (
+        (exit_price - previous_entry_price)
+        / previous_entry_price
+        * 100
+    )
+
+    if previous_direction == "LONG":
+        result = "CORRECT" if return_pct > 0 else "INCORRECT" if return_pct < 0 else "FLAT"
+    elif previous_direction == "SHORT":
+        result = "CORRECT" if return_pct < 0 else "INCORRECT" if return_pct > 0 else "FLAT"
+    else:
+        result = "SKIP"
+
+    outcomes.append([
+        "OUTCOME_V1",
+        previous_run_id,
+        now,
+        "1321.T",
+        previous_target_date,
+        exit_date,
+        previous_entry_price,
+        exit_price,
+        round(return_pct, 6),
+        previous_direction,
+        result,
+        "FREE_MONITORING_ONLY",
+        "false",
+    ])
+
+if outcomes:
+    with history_path.open("a", encoding="utf-8", newline="") as handle:
+        csv.writer(handle).writerows(outcomes)
 
 print(text)
