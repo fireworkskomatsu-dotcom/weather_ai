@@ -90,7 +90,8 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_virtual_status_") as tempora
     allowed_keys = {
         "schema_version", "account_type", "real_money", "currency",
         "initial_cash", "cash", "equity", "position", "entry_price",
-        "last_price", "unrealized_virtual_pnl", "total_virtual_pnl",
+        "last_price", "price_available", "data_status",
+        "unrealized_virtual_pnl", "total_virtual_pnl",
         "last_signal", "last_action", "updated_at", "source",
         "history_included", "note",
     }
@@ -105,6 +106,8 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_virtual_status_") as tempora
         "open_entry_price_recorded": opened.get("entry_price") == 100.0,
         "closed_position_recorded": closed.get("position") == 0,
         "virtual_profit_correct": closed.get("total_virtual_pnl") == 3.0,
+        "price_availability_recorded": closed.get("price_available") is True,
+        "data_status_recorded": closed.get("data_status") == "CURRENT_WITH_PRICE",
         "production_files_unchanged": production_before == {
             name: digest(BASE / name) for name in production_before
         },

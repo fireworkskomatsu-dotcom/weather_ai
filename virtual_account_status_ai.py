@@ -95,6 +95,12 @@ def build_public_status(
         "position": position,
         "entry_price": entry_price,
         "last_price": last_price,
+        "price_available": last_price is not None,
+        "data_status": (
+            "CURRENT_WITH_PRICE"
+            if last_price is not None
+            else "STALE_NO_PRICE"
+        ),
         "unrealized_virtual_pnl": round(unrealized_pnl, 2),
         "total_virtual_pnl": round(equity - initial_cash, 2),
         "last_signal": str(account.get("last_signal") or "UNKNOWN"),

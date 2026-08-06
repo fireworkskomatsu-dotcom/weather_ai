@@ -9,6 +9,8 @@
   "position": 0,
   "entry_price": null,
   "last_price": null,
+  "price_available": false,
+  "data_status": "STALE_NO_PRICE",
   "unrealized_virtual_pnl": 0.0,
   "total_virtual_pnl": 0.0,
   "last_signal": "SKIP",

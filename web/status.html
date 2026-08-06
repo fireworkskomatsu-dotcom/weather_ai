@@ -189,7 +189,10 @@
         text("account-position", `${Number(account.position || 0)}口`);
         text("account-entry", account.entry_price == null ? "保有なし" : yen(account.entry_price));
         text("account-pnl", yen(account.total_virtual_pnl));
-        text("account-detail", `最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
+        const dataState = account.price_available
+          ? "価格あり"
+          : "価格なし・更新停止中";
+        text("account-detail", `データ状態: ${dataState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
         text("account-time", time(account.updated_at));
       } else {
         ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));
