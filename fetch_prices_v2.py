@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 import os
 import tempfile
+import time
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Callable
@@ -17,6 +18,7 @@ BASE = Path(__file__).resolve().parent
 OUTPUT = BASE / "prices.csv"
 MAX_DATA_AGE_DAYS = 7
 PERIOD = "400d"
+DOWNLOAD_ATTEMPTS = 3
 
 SYMBOLS = (
     ("1306.T", "13060", "日経ETF"),
@@ -58,16 +60,34 @@ def rows_for_symbol(
     code: str,
     downloader: Callable[..., pd.DataFrame],
 ) -> list[list[object]]:
-    frame = downloader(
-        symbol,
-        period=PERIOD,
-        interval="1d",
-        auto_adjust=False,
-        progress=False,
-        threads=False,
-    )
+    frame = None
+    errors = []
+    for attempt in range(1, DOWNLOAD_ATTEMPTS + 1):
+        try:
+            frame = downloader(
+                symbol,
+                period=PERIOD,
+                interval="1d",
+                auto_adjust=False,
+                progress=False,
+                threads=False,
+                timeout=30,
+            )
+            if frame is not None and not frame.empty:
+                break
+            errors.append(f"attempt {attempt}: empty")
+        except Exception as error:
+            errors.append(
+                f"attempt {attempt}: {type(error).__name__}: {error}"
+            )
+
+        if attempt < DOWNLOAD_ATTEMPTS:
+            time.sleep(attempt * 2)
+
     if frame is None or frame.empty:
-        raise RuntimeError(f"価格データがありません: {symbol}")
+        raise RuntimeError(
+            f"価格データがありません: {symbol}: " + " | ".join(errors)
+        )
 
     frame = normalize_columns(frame.reset_index())
     required = ("Date", "Open", "High", "Low", "Close", "Volume")

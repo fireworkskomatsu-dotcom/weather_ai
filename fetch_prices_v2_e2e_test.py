@@ -52,6 +52,23 @@ def fake_download(
     }, index=pd.DatetimeIndex(dates, name="Date"))
 
 
+retry_calls = {"count": 0}
+
+
+def transient_download(symbol: str, **kwargs: object) -> pd.DataFrame:
+    retry_calls["count"] += 1
+    if retry_calls["count"] < 3:
+        raise ConnectionError("temporary test failure")
+    return fake_download(symbol, **kwargs)
+
+
+retry_rows = target.rows_for_symbol(
+    target.SYMBOLS[0][0],
+    target.SYMBOLS[0][1],
+    transient_download,
+)
+
+
 fresh = target.build_prices(fake_download, today=today)
 
 
@@ -73,6 +90,7 @@ checks = {
     "expected_schema": tuple(fresh.columns) == target.COLUMNS,
     "fresh_latest_date": fresh["Date"].max() == today.isoformat(),
     "positive_prices_only": bool((fresh[["O", "H", "L", "C"]] > 0).all().all()),
+    "transient_failure_retried": retry_calls["count"] == 3 and bool(retry_rows),
     "stale_download_blocked": stale_blocked,
     "production_files_unchanged": production_before == {
         name: digest(BASE / name) for name in production_before
