@@ -56,6 +56,10 @@
     .check { display: flex; align-items: center; gap: 9px; }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px rgba(56,217,150,.45); }
     .dot.bad { background: var(--bad); }
+    .account-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+    .account-item { padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: rgba(7,16,25,.45); }
+    .account-item span { display: block; color: var(--muted); font-size: 11px; }
+    .account-item strong { display: block; margin-top: 3px; font-size: 18px; }
     footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
     a { color: var(--accent); }
     @media (max-width: 760px) {
@@ -63,6 +67,7 @@
       .grid { grid-template-columns: 1fr; }
       .wide { grid-column: auto; }
       .checks { grid-template-columns: 1fr; }
+      .account-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -83,6 +88,25 @@
     </section>
 
     <section class="grid">
+      <article class="card wide">
+        <div class="label">Virtual account — simulation only</div>
+        <h2>仮想口座（実資金ではありません）</h2>
+        <div class="account-grid">
+          <div class="account-item"><span>現金残高</span><strong id="account-cash">—</strong></div>
+          <div class="account-item"><span>評価額</span><strong id="account-equity">—</strong></div>
+          <div class="account-item"><span>保有数</span><strong id="account-position">—</strong></div>
+          <div class="account-item"><span>取得価格</span><strong id="account-entry">—</strong></div>
+        </div>
+        <div class="detail" id="account-detail">公開用口座状態を読み込み中</div>
+        <div class="meta" id="account-time"></div>
+      </article>
+
+      <article class="card">
+        <div class="label">Virtual P&amp;L</div>
+        <div class="value" id="account-pnl">—</div>
+        <div class="detail">初期資金に対する仮想評価損益。手数料・税金・スリッページは含みません。</div>
+      </article>
+
       <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
@@ -141,17 +165,36 @@
       readJson("../market_universe_status.json"),
       readJson("../closed_loop_e2e_report.json"),
       readJson("../trade_lifecycle_e2e_report.json"),
-      readJson("../price_provider_e2e_report.json")
+      readJson("../price_provider_e2e_report.json"),
+      readJson("../virtual_account_status.json")
     ]).then((results) => {
       const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
       const provider = value(0);
       const performance = value(1);
       const universe = value(2);
+      const account = value(6);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
         ["価格プロバイダー境界", value(5)]
       ];
+
+      const yen = (amount) => Number.isFinite(Number(amount))
+        ? new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY", maximumFractionDigits: 0 }).format(Number(amount))
+        : "確認不能";
+
+      if (account && account.account_type === "VIRTUAL") {
+        text("account-cash", yen(account.cash));
+        text("account-equity", yen(account.equity));
+        text("account-position", `${Number(account.position || 0)}口`);
+        text("account-entry", account.entry_price == null ? "保有なし" : yen(account.entry_price));
+        text("account-pnl", yen(account.total_virtual_pnl));
+        text("account-detail", `最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
+        text("account-time", time(account.updated_at));
+      } else {
+        ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));
+        text("account-detail", "仮想口座の公開状態を取得できませんでした。");
+      }
 
       if (provider) {
         text("provider-value", `${provider.status} / ${provider.provider}`);

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "account_type": "VIRTUAL",
+  "real_money": false,
+  "currency": "JPY",
+  "initial_cash": 500000.0,
+  "cash": 500000.0,
+  "equity": 500000.0,
+  "position": 0,
+  "entry_price": null,
+  "last_price": null,
+  "total_virtual_pnl": 0.0,
+  "last_signal": "SKIP",
+  "last_action": "NO_PRICE",
+  "updated_at": "2026-07-28T17:19:07",
+  "source": "virtual_account.json",
+  "note": "公開用スナップショット。取引履歴は含みません。"
+}
