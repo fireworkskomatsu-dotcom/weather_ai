@@ -95,7 +95,8 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_virtual_status_") as tempora
         "last_price", "price_available", "data_status",
         "unrealized_virtual_pnl", "total_virtual_pnl",
         "last_signal", "last_action", "updated_at", "source",
-        "price_verification", "history_included", "note",
+        "price_verification", "decision_verification",
+        "history_included", "note",
     }
 
     checks = {

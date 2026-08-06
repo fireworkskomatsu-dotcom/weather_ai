@@ -17,6 +17,26 @@ def save_json(path, data):
 
 now = datetime.datetime.now().isoformat(timespec="seconds")
 
+def parse_time(value):
+    if not value:
+        return None
+    try:
+        parsed = datetime.datetime.fromisoformat(
+            str(value).replace("Z", "+00:00")
+        )
+        if parsed.tzinfo is None:
+            parsed = parsed.astimezone()
+        return parsed
+    except (TypeError, ValueError):
+        return None
+
+def is_fresh(value, maximum_hours=24):
+    parsed = parse_time(value)
+    if parsed is None:
+        return False
+    age = datetime.datetime.now().astimezone() - parsed
+    return datetime.timedelta(0) <= age <= datetime.timedelta(hours=maximum_hours)
+
 decision = load_json("master_decision.json", {})
 price_data = load_json("price_data.json", {})
 price_config = load_json("price_provider_config.json", {})
@@ -67,6 +87,20 @@ try:
 except (TypeError, ValueError):
     canonical_value = None
 
+decision_time = (
+    decision.get("updated_at")
+    or decision.get("generated_at")
+    or decision.get("time")
+    or decision.get("market_time")
+)
+canonical_time = (
+    canonical_price.get("fetched_at")
+    or canonical_price.get("market_time")
+    or canonical_price.get("updated_at")
+)
+decision_fresh = is_fresh(decision_time)
+canonical_fresh = is_fresh(canonical_time)
+
 official_price_eligible = (
     price_config.get("mode") == "OFFICIAL"
     and price_config.get("provider") not in (None, "", "DISABLED")
@@ -75,6 +109,9 @@ official_price_eligible = (
     and canonical_price.get("symbol") == "1321.T"
     and canonical_value is not None
     and canonical_value > 0
+    and decision.get("symbol") == "1321.T"
+    and decision_fresh
+    and canonical_fresh
 )
 
 if not isolated_test:
@@ -159,6 +196,15 @@ account.update({
             "OFFICIAL_ELIGIBLE"
             if official_price_eligible
             else "BLOCKED"
+        )
+    ),
+    "decision_verification": (
+        "ISOLATED_TEST"
+        if isolated_test
+        else (
+            "FRESH_OFFICIAL"
+            if decision_fresh and canonical_fresh
+            else "BLOCKED_STALE_OR_MISSING_TIME"
         )
     ),
     "updated_at": now

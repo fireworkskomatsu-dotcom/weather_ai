@@ -7,11 +7,13 @@ import json
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 
 BASE = Path(__file__).resolve().parent
+NOW = datetime.now().astimezone()
 
 
 def save_json(path: Path, value: Any) -> None:
@@ -67,6 +69,7 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_price_guard_") as temporary:
         "final_decision": "LONG",
         "price": 99999.0,
         "reason": "STALE_UNVERIFIED_PRICE_MUST_NOT_TRADE",
+        "updated_at": (NOW - timedelta(days=10)).isoformat(),
     })
     save_json(work / "price_data.json", {
         "symbol": "1321.T",
@@ -116,6 +119,13 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_price_guard_") as temporary:
         "symbol": "1321.T",
         "price": 100.0,
         "official_eligible": True,
+        "fetched_at": NOW.isoformat(),
+    })
+    save_json(work / "master_decision.json", {
+        "symbol": "1321.T",
+        "final_decision": "LONG",
+        "price": 99999.0,
+        "updated_at": NOW.isoformat(),
     })
     save_json(work / "virtual_account.json", {
         "cash": 500000.0,
@@ -139,6 +149,35 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_price_guard_") as temporary:
     official_account = load_json(work / "virtual_account.json", {})
     official_trade_log = load_json(work / "trade_log.json", [])
 
+    # 公式価格が新しくても、判断時刻が古ければ取引しない。
+    save_json(work / "master_decision.json", {
+        "symbol": "1321.T",
+        "final_decision": "LONG",
+        "price": 99999.0,
+        "updated_at": (NOW - timedelta(days=2)).isoformat(),
+    })
+    save_json(work / "virtual_account.json", {
+        "cash": 500000.0,
+        "equity": 500000.0,
+        "position": 0,
+        "entry_price": None,
+        "history": [],
+    })
+    save_json(work / "trade_log.json", [])
+    stale_decision_result = subprocess.run(
+        ["python3", "virtual_account_ai.py"],
+        cwd=work,
+        text=True,
+        capture_output=True,
+        timeout=60,
+    )
+    if stale_decision_result.returncode != 0:
+        raise RuntimeError(
+            stale_decision_result.stdout + "\n" + stale_decision_result.stderr
+        )
+    stale_decision_account = load_json(work / "virtual_account.json", {})
+    stale_decision_trades = load_json(work / "trade_log.json", [])
+
     checks = {
         "isolated_filesystem": work != BASE,
         "stale_long_blocked": blocked_account.get("position") == 0,
@@ -154,6 +193,10 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_price_guard_") as temporary:
         "stale_decision_price_ignored": official_account.get("entry_price") != 99999.0,
         "official_trade_logged_at_canonical_price": bool(official_trade_log) and official_trade_log[0].get("price") == 100.0,
         "official_verification_recorded": official_account.get("price_verification") == "OFFICIAL_ELIGIBLE",
+        "fresh_decision_recorded": official_account.get("decision_verification") == "FRESH_OFFICIAL",
+        "stale_official_decision_blocked": stale_decision_account.get("position") == 0,
+        "stale_decision_reason_recorded": stale_decision_account.get("decision_verification") == "BLOCKED_STALE_OR_MISSING_TIME",
+        "stale_decision_trade_log_empty": stale_decision_trades == [],
         "production_files_unchanged": production_before == {
             name: digest(BASE / name) for name in production_before
         },

@@ -246,7 +246,12 @@
           : account.price_verification === "ISOLATED_TEST"
             ? "隔離テスト"
             : "未検証・売買停止";
-        text("account-detail", `データ状態: ${dataState} / 価格検証: ${verificationState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
+        const decisionState = account.decision_verification === "FRESH_OFFICIAL"
+          ? "判断時刻確認済み"
+          : account.decision_verification === "ISOLATED_TEST"
+            ? "隔離テスト"
+            : "判断時刻未確認・停止";
+        text("account-detail", `データ状態: ${dataState} / 価格検証: ${verificationState} / 判断検証: ${decisionState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
         text("account-time", time(account.updated_at));
       } else {
         ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));

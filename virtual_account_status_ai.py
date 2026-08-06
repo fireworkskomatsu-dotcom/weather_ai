@@ -106,6 +106,7 @@ def build_public_status(
         "last_signal": str(account.get("last_signal") or "UNKNOWN"),
         "last_action": str(account.get("last_action") or "UNKNOWN"),
         "price_verification": str(account.get("price_verification") or "UNKNOWN"),
+        "decision_verification": str(account.get("decision_verification") or "UNKNOWN"),
         "updated_at": account.get("updated_at"),
         "source": "virtual_account.json",
         "history_included": False,
