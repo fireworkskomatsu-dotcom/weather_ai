@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -76,6 +77,7 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_virtual_status_") as tempora
         result = subprocess.run(
             ["python3", "virtual_account_ai.py"],
             cwd=work,
+            env={**os.environ, "WEATHER_AI_ISOLATED_TEST": "1"},
             text=True,
             capture_output=True,
             timeout=60,
@@ -93,7 +95,7 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_virtual_status_") as tempora
         "last_price", "price_available", "data_status",
         "unrealized_virtual_pnl", "total_virtual_pnl",
         "last_signal", "last_action", "updated_at", "source",
-        "history_included", "note",
+        "price_verification", "history_included", "note",
     }
 
     checks = {

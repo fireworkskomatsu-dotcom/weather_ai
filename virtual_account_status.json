@@ -15,6 +15,7 @@
   "total_virtual_pnl": 0.0,
   "last_signal": "SKIP",
   "last_action": "NO_PRICE",
+  "price_verification": "UNKNOWN",
   "updated_at": "2026-07-28T17:19:07",
   "source": "virtual_account.json",
   "history_included": false,

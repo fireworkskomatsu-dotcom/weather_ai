@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -40,9 +41,12 @@ def load_json(path: Path, default: Any) -> Any:
 
 
 def run(work: Path, module: str) -> str:
+    env = os.environ.copy()
+    env["WEATHER_AI_ISOLATED_TEST"] = "1"
     result = subprocess.run(
         ["python3", module],
         cwd=work,
+        env=env,
         text=True,
         capture_output=True,
         timeout=60,

@@ -105,6 +105,7 @@ def build_public_status(
         "total_virtual_pnl": round(equity - initial_cash, 2),
         "last_signal": str(account.get("last_signal") or "UNKNOWN"),
         "last_action": str(account.get("last_action") or "UNKNOWN"),
+        "price_verification": str(account.get("price_verification") or "UNKNOWN"),
         "updated_at": account.get("updated_at"),
         "source": "virtual_account.json",
         "history_included": False,

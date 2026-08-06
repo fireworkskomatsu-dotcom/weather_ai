@@ -19,6 +19,9 @@ now = datetime.datetime.now().isoformat(timespec="seconds")
 
 decision = load_json("master_decision.json", {})
 price_data = load_json("price_data.json", {})
+price_config = load_json("price_provider_config.json", {})
+price_status = load_json("price_provider_status.json", {})
+canonical_price = load_json("canonical_price.json", {})
 account = load_json("virtual_account.json", {
     "cash": 500000,
     "position": 0,
@@ -53,11 +56,39 @@ try:
 except Exception:
     price = None
 
+isolated_test = os.environ.get("WEATHER_AI_ISOLATED_TEST") == "1"
+canonical_value = (
+    canonical_price.get("price")
+    or canonical_price.get("current_price")
+    or canonical_price.get("last_price")
+)
+try:
+    canonical_value = float(canonical_value)
+except (TypeError, ValueError):
+    canonical_value = None
+
+official_price_eligible = (
+    price_config.get("mode") == "OFFICIAL"
+    and price_config.get("provider") not in (None, "", "DISABLED")
+    and price_status.get("status") == "OK"
+    and canonical_price.get("official_eligible") is True
+    and canonical_price.get("symbol") == "1321.T"
+    and canonical_value is not None
+    and canonical_value > 0
+)
+
+if not isolated_test:
+    price = canonical_value if official_price_eligible else None
+
 cash = float(account.get("cash", 500000))
 position = int(account.get("position", 0) or 0)
 entry_price = account.get("entry_price")
 
-action_taken = "NO_PRICE"
+action_taken = (
+    "NO_PRICE"
+    if isolated_test or official_price_eligible
+    else "BLOCKED_UNVERIFIED_OFFICIAL_PRICE"
+)
 
 if price is not None:
     action_taken = "HOLD"
@@ -121,6 +152,15 @@ account.update({
     "equity": round(equity, 2),
     "last_signal": signal,
     "last_action": action_taken,
+    "price_verification": (
+        "ISOLATED_TEST"
+        if isolated_test
+        else (
+            "OFFICIAL_ELIGIBLE"
+            if official_price_eligible
+            else "BLOCKED"
+        )
+    ),
     "updated_at": now
 })
 

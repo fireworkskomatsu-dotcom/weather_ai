@@ -225,7 +225,12 @@
         const dataState = account.price_available
           ? "価格あり"
           : "価格なし・更新停止中";
-        text("account-detail", `データ状態: ${dataState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
+        const verificationState = account.price_verification === "OFFICIAL_ELIGIBLE"
+          ? "公式確認済み"
+          : account.price_verification === "ISOLATED_TEST"
+            ? "隔離テスト"
+            : "未検証・売買停止";
+        text("account-detail", `データ状態: ${dataState} / 価格検証: ${verificationState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
         text("account-time", time(account.updated_at));
       } else {
         ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));
