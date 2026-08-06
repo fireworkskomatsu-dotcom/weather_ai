@@ -1,6 +1,6 @@
 [
   {
-    "name": "日経ETF",
+    "name": "TOPIX ETF (1306)",
     "price": 423.7,
     "change": 1.56,
     "ma25": 420.59,
@@ -8,7 +8,7 @@
     "rsi": 52.7
   },
   {
-    "name": "TOPIX",
+    "name": "日経225 ETF (1321)",
     "price": 67990.0,
     "change": 2.15,
     "ma25": 68564.0,
@@ -16,15 +16,7 @@
     "rsi": 46.3
   },
   {
-    "name": "半導体ETF",
-    "price": 416.8,
-    "change": 0.39,
-    "ma25": 416.92,
-    "ma200": 379.87,
-    "rsi": 49.2
-  },
-  {
-    "name": "QQQ",
+    "name": "NASDAQ 100 ETF (QQQ)",
     "price": 717.3,
     "change": 4.94,
     "ma25": 703.97,
@@ -32,7 +24,7 @@
     "rsi": 54.1
   },
   {
-    "name": "SOXX",
+    "name": "米国半導体 ETF (SOXX)",
     "price": 530.7,
     "change": 5.19,
     "ma25": 541.07,
@@ -41,7 +33,7 @@
   },
   {
     "name": "VIX",
-    "price": 15.85,
+    "price": 15.93,
     "change": "-",
     "ma25": "-",
     "ma200": "-",
@@ -49,16 +41,16 @@
   },
   {
     "name": "USDJPY",
-    "price": 157.84,
-    "change": -1.46,
+    "price": 157.87,
+    "change": -1.45,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
   },
   {
     "name": "BTC",
-    "price": 64786.2,
-    "change": 2.05,
+    "price": 64615.2,
+    "change": 1.79,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
