@@ -50,6 +50,7 @@
     .value { margin: 8px 0 4px; font-size: 25px; font-weight: 800; letter-spacing: -.02em; }
     .value.ok { color: var(--ok); }
     .value.warn { color: var(--warn); }
+    .value.bad { color: var(--bad); }
     .detail, .meta { color: var(--muted); }
     .meta { margin-top: 12px; font-size: 12px; }
     .checks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 18px; margin-top: 16px; }
@@ -141,6 +142,19 @@
         <div class="meta">監視成績のみ。正式成績・正式学習には含めません。</div>
       </article>
 
+      <article class="card wide">
+        <div class="label">Research walk-forward — not live performance</div>
+        <h2>時系列検証</h2>
+        <div class="account-grid">
+          <div class="account-item"><span>全標本</span><strong id="walk-samples">—</strong></div>
+          <div class="account-item"><span>方向判断</span><strong id="walk-directional">—</strong></div>
+          <div class="account-item"><span>正解率</span><strong id="walk-accuracy">—</strong></div>
+          <div class="account-item"><span>コスト後平均</span><strong id="walk-net">—</strong></div>
+        </div>
+        <div class="detail" id="walk-detail">未来データを遮断した検証結果を読み込み中</div>
+        <div class="meta" id="walk-time"></div>
+      </article>
+
       <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
@@ -210,7 +224,8 @@
       readJson("../strategy_shadow_pnl.json"),
       readJson("../strategy_weight.json"),
       readText("../latest_weather.txt"),
-      readText("../history.csv")
+      readText("../history.csv"),
+      readJson("../monitoring_walk_forward_report.json")
     ]).then((results) => {
       const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
       const provider = value(0);
@@ -222,6 +237,7 @@
       const strategyWeight = value(9);
       const weatherText = value(10);
       const historyText = value(11);
+      const walkForward = value(12);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
@@ -336,6 +352,23 @@
       } else {
         text("outcome-value", "結果待ち");
         text("outcome-detail", "次の1321取引日データが入った後に自動評価します。");
+      }
+
+      if (walkForward && walkForward.scope === "RESEARCH_WALK_FORWARD_ONLY") {
+        const averageNet = Number(walkForward.average_net_after_cost_pct);
+        const holdout = walkForward.holdout_segment || {};
+        text("walk-samples", String(walkForward.samples));
+        text("walk-directional", String(walkForward.directional_samples));
+        text("walk-accuracy", `${Number(walkForward.accuracy_pct).toFixed(2)}%`);
+        text("walk-net", `${averageNet >= 0 ? "+" : ""}${averageNet.toFixed(3)}%`);
+        const holdoutNet = Number(holdout.average_net_after_cost_pct);
+        text("walk-detail", averageNet > 0 && holdoutNet > 0
+          ? `全期間・未使用期間ともコスト後プラス。未使用期間 ${Number(holdout.accuracy_pct).toFixed(2)}% / ${holdoutNet.toFixed(3)}%。フォワード確認が必要です。`
+          : `現戦略の優位性は未証明。未使用期間 正解率 ${Number(holdout.accuracy_pct).toFixed(2)}% / コスト後平均 ${holdoutNet.toFixed(3)}%。`);
+        text("walk-time", time(walkForward.generated_at));
+      } else {
+        ["walk-samples", "walk-directional", "walk-accuracy", "walk-net"].forEach((id) => text(id, "確認不能"));
+        text("walk-detail", "ウォークフォワード検証結果を取得できませんでした。");
       }
 
       if (provider) {
