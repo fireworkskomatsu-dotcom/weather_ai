@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>1321 ETF AI Trading System — Status</title>
+  <style>
+    :root {
+      --bg: #071019;
+      --panel: #0d1a26;
+      --panel-2: #102232;
+      --line: #21384a;
+      --text: #eaf4f8;
+      --muted: #94aeba;
+      --ok: #38d996;
+      --warn: #ffbd59;
+      --bad: #ff7185;
+      --accent: #60c8ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 0%, #103047 0, transparent 34rem),
+        linear-gradient(160deg, var(--bg), #08141e 55%, #061019);
+      font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 64px; }
+    header { margin-bottom: 28px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+    h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); line-height: 1.14; letter-spacing: -.03em; }
+    .lead { max-width: 740px; margin: 14px 0 0; color: var(--muted); font-size: 16px; }
+    .banner, .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(16,34,50,.96), rgba(10,24,35,.96));
+      box-shadow: 0 18px 48px rgba(0,0,0,.18);
+    }
+    .banner { display: flex; gap: 18px; align-items: flex-start; padding: 22px; margin-bottom: 18px; }
+    .signal { flex: 0 0 auto; width: 13px; height: 13px; margin-top: 7px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 20px rgba(255,189,89,.7); }
+    .banner h2, .card h2 { margin: 0; font-size: 18px; }
+    .banner p { margin: 5px 0 0; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { padding: 22px; min-height: 170px; }
+    .wide { grid-column: span 2; }
+    .label { color: var(--muted); font-size: 12px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+    .value { margin: 8px 0 4px; font-size: 25px; font-weight: 800; letter-spacing: -.02em; }
+    .value.ok { color: var(--ok); }
+    .value.warn { color: var(--warn); }
+    .detail, .meta { color: var(--muted); }
+    .meta { margin-top: 12px; font-size: 12px; }
+    .checks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 18px; margin-top: 16px; }
+    .check { display: flex; align-items: center; gap: 9px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px rgba(56,217,150,.45); }
+    .dot.bad { background: var(--bad); }
+    footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+    a { color: var(--accent); }
+    @media (max-width: 760px) {
+      main { padding-top: 30px; }
+      .grid { grid-template-columns: 1fr; }
+      .wide { grid-column: auto; }
+      .checks { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">VERIFIED SYSTEM STATUS</p>
+      <h1>1321 ETF AI Trading System</h1>
+      <p class="lead">検証用E2Eと正式フォワード運用を分離して表示します。テスト結果は本番成績に含みません。</p>
+    </header>
+
+    <section class="banner" aria-live="polite">
+      <span class="signal" id="overall-signal"></span>
+      <div>
+        <h2 id="overall-title">状態を読み込み中</h2>
+        <p id="overall-detail">公開済みの状態ファイルを確認しています。</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <div class="label">Official price provider</div>
+        <div class="value warn" id="provider-value">—</div>
+        <div class="detail" id="provider-detail">読み込み中</div>
+        <div class="meta" id="provider-time"></div>
+      </article>
+
+      <article class="card">
+        <div class="label">Official forward results</div>
+        <div class="value" id="trades-value">—</div>
+        <div class="detail" id="performance-detail">読み込み中</div>
+        <div class="meta" id="performance-time"></div>
+      </article>
+
+      <article class="card">
+        <div class="label">Trade universe</div>
+        <div class="value ok" id="symbol-value">1321.T</div>
+        <div class="detail" id="universe-detail">正式売買対象を確認中</div>
+        <div class="meta" id="universe-time"></div>
+      </article>
+
+      <article class="card wide">
+        <div class="label">Isolated E2E proofs</div>
+        <h2>既存の検証スイート</h2>
+        <div class="checks" id="proof-list">
+          <div class="check">読み込み中</div>
+        </div>
+        <div class="meta">各テストは隔離環境で実行され、本番データを変更しないことを確認します。</div>
+      </article>
+
+      <article class="card">
+        <div class="label">Remaining blocker</div>
+        <div class="value warn">公式価格接続</div>
+        <div class="detail">検証済み公式プロバイダーが有効になるまで、正式価格の書き込み・正式学習・正式成績更新は停止します。</div>
+      </article>
+    </section>
+
+    <footer>
+      このページはリポジトリ内の公開状態JSONを直接参照します。取得できない項目は推測せず「確認不能」と表示します。
+    </footer>
+  </main>
+
+  <script>
+    const readJson = async (path) => {
+      const response = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) throw new Error(path + ": HTTP " + response.status);
+      return response.json();
+    };
+
+    const text = (id, value) => { document.getElementById(id).textContent = value; };
+    const time = (value) => value ? `更新: ${value}` : "更新時刻: 確認不能";
+
+    Promise.allSettled([
+      readJson("../price_provider_status.json"),
+      readJson("../official_performance.json"),
+      readJson("../market_universe_status.json"),
+      readJson("../closed_loop_e2e_report.json"),
+      readJson("../trade_lifecycle_e2e_report.json"),
+      readJson("../price_provider_e2e_report.json")
+    ]).then((results) => {
+      const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
+      const provider = value(0);
+      const performance = value(1);
+      const universe = value(2);
+      const proofs = [
+        ["学習閉ループ", value(3)],
+        ["売買ライフサイクル", value(4)],
+        ["価格プロバイダー境界", value(5)]
+      ];
+
+      if (provider) {
+        text("provider-value", `${provider.status} / ${provider.provider}`);
+        text("provider-detail", provider.reason || "理由の記録なし");
+        text("provider-time", time(provider.updated_at));
+      } else {
+        text("provider-value", "確認不能");
+        text("provider-detail", "価格プロバイダー状態を取得できませんでした。");
+      }
+
+      if (performance) {
+        const trades = Number(performance.closed_trades || 0);
+        text("trades-value", `${trades} closed trade${trades === 1 ? "" : "s"}`);
+        text("performance-detail", trades ? `勝 ${performance.wins} / 敗 ${performance.losses} / 実現損益 ${performance.total_realized_pnl}` : "正式フォワードの確定取引はまだありません。");
+        text("performance-time", time(performance.updated_at));
+      } else {
+        text("trades-value", "確認不能");
+        text("performance-detail", "正式成績を取得できませんでした。");
+      }
+
+      if (universe) {
+        text("symbol-value", universe.official_trade_symbol || "確認不能");
+        text("universe-detail", `正式売買 ${universe.official_trade_target_count}銘柄 / 監視のみ ${universe.monitor_only_count}銘柄`);
+        text("universe-time", time(universe.updated_at));
+      } else {
+        text("symbol-value", "確認不能");
+        text("universe-detail", "売買対象の分離状態を取得できませんでした。");
+      }
+
+      const list = document.getElementById("proof-list");
+      list.replaceChildren();
+      proofs.forEach(([name, proof]) => {
+        const passed = proof && proof.status === "PASS" && proof.production_data_modified === false;
+        const row = document.createElement("div");
+        row.className = "check";
+        const dot = document.createElement("span");
+        dot.className = "dot" + (passed ? "" : " bad");
+        const label = document.createElement("span");
+        label.textContent = `${name}: ${passed ? "PASS" : "確認不能 / FAIL"}`;
+        row.append(dot, label);
+        list.append(row);
+      });
+
+      const allProofsPass = proofs.every(([, proof]) => proof && proof.status === "PASS" && proof.production_data_modified === false);
+      const providerBlocked = provider && provider.status === "BLOCKED";
+      text("overall-title", providerBlocked ? "安全停止中 — 公式価格待ち" : "運用状態を確認してください");
+      text("overall-detail", allProofsPass
+        ? "隔離E2EはすべてPASS。正式運用は公式価格プロバイダーが未接続のためフェイルクローズしています。"
+        : "一部のE2E結果を確認できません。正式運用を開始せず、状態ファイルを確認してください。");
+    });
+  </script>
+</body>
+</html>
