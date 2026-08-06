@@ -107,6 +107,26 @@
         <div class="detail">初期資金に対する仮想評価損益。手数料・税金・スリッページは含みません。</div>
       </article>
 
+      <article class="card wide">
+        <div class="label">Free market monitoring — not an execution price</div>
+        <h2>市場監視</h2>
+        <div class="account-grid">
+          <div class="account-item"><span>AI判断</span><strong id="monitor-decision">—</strong></div>
+          <div class="account-item"><span>市場天気</span><strong id="monitor-weather">—</strong></div>
+          <div class="account-item"><span>危険度</span><strong id="monitor-risk">—</strong></div>
+          <div class="account-item"><span>市場温度</span><strong id="monitor-temperature">—</strong></div>
+        </div>
+        <div class="detail" id="monitor-detail">無料の監視データを読み込み中</div>
+        <div class="meta" id="monitor-time"></div>
+      </article>
+
+      <article class="card">
+        <div class="label">Official learning readiness</div>
+        <div class="value warn" id="learning-value">—</div>
+        <div class="detail" id="learning-detail">正式学習状態を読み込み中</div>
+        <div class="meta" id="learning-time"></div>
+      </article>
+
       <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
@@ -155,6 +175,11 @@
       if (!response.ok) throw new Error(path + ": HTTP " + response.status);
       return response.json();
     };
+    const readText = async (path) => {
+      const response = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) throw new Error(path + ": HTTP " + response.status);
+      return response.text();
+    };
 
     const text = (id, value) => { document.getElementById(id).textContent = value; };
     const time = (value) => value ? `更新: ${value}` : "更新時刻: 確認不能";
@@ -166,13 +191,21 @@
       readJson("../closed_loop_e2e_report.json"),
       readJson("../trade_lifecycle_e2e_report.json"),
       readJson("../price_provider_e2e_report.json"),
-      readJson("../virtual_account_status.json")
+      readJson("../virtual_account_status.json"),
+      readJson("../weighted_multi_agent.json"),
+      readJson("../strategy_shadow_pnl.json"),
+      readJson("../strategy_weight.json"),
+      readText("../latest_weather.txt")
     ]).then((results) => {
       const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
       const provider = value(0);
       const performance = value(1);
       const universe = value(2);
       const account = value(6);
+      const weightedDecision = value(7);
+      const shadowPnl = value(8);
+      const strategyWeight = value(9);
+      const weatherText = value(10);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
@@ -197,6 +230,44 @@
       } else {
         ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));
         text("account-detail", "仮想口座の公開状態を取得できませんでした。");
+      }
+
+      const weatherField = (label) => {
+        if (typeof weatherText !== "string") return null;
+        const line = weatherText.split(/\r?\n/).find((row) => row.startsWith(label));
+        return line ? line.slice(label.length).trim() : null;
+      };
+      const decision = weightedDecision && weightedDecision.final_decision;
+      const decisionTime = weightedDecision && weightedDecision.time;
+      const parsedDecisionTime = decisionTime
+        ? Date.parse(String(decisionTime).replace(" ", "T"))
+        : NaN;
+      const decisionIsStale = !Number.isFinite(parsedDecisionTime)
+        || Date.now() - parsedDecisionTime > 36 * 60 * 60 * 1000;
+      text("monitor-decision", decision
+        ? `${decision}${decisionIsStale ? "（古いデータ）" : ""}`
+        : "確認不能");
+      text("monitor-weather", weatherField("天気：") || "確認不能");
+      text("monitor-risk", weatherField("危険度：") || "確認不能");
+      text("monitor-temperature", weatherField("市場温度：") || "確認不能");
+      if (weightedDecision) {
+        const votes = weightedDecision.weighted_votes || {};
+        text("monitor-detail", `監視票 LONG ${Number(votes.LONG || 0).toFixed(3)} / SHORT ${Number(votes.SHORT || 0).toFixed(3)} / SKIP ${Number(votes.SKIP || 0).toFixed(3)}。正式売買価格には使用しません。`);
+        const weatherUpdated = weatherField("更新 ") || "確認不能";
+        text("monitor-time", `AI票更新: ${decisionTime || "確認不能"} / 市場天気更新: ${weatherUpdated}`);
+      } else {
+        text("monitor-detail", "市場監視判断を取得できませんでした。正式売買には進みません。");
+      }
+
+      if (shadowPnl && strategyWeight) {
+        const evaluated = Number(shadowPnl.evaluated_decision_records || 0);
+        const eligible = Number(strategyWeight.eligible_strategy_count || 0);
+        text("learning-value", evaluated > 0 ? "評価中" : "学習待ち");
+        text("learning-detail", `正式評価 ${evaluated}件 / 重み適用可能 ${eligible}戦略。テスト結果は正式学習件数に含めません。`);
+        text("learning-time", time(strategyWeight.updated_at || shadowPnl.updated_at));
+      } else {
+        text("learning-value", "確認不能");
+        text("learning-detail", "正式学習状態を取得できませんでした。");
       }
 
       if (provider) {
