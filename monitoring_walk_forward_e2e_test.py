@@ -37,7 +37,7 @@ future_data = pd.concat([data, pd.DataFrame([future])], ignore_index=True)
 after_future_injection = target.evaluate(future_data, end_date=end_date)
 
 report = target.build_report(data)
-records = report["records"]
+records = target.evaluate(data)
 
 checks = {
     "has_walk_forward_samples": len(records) >= 50,
@@ -49,6 +49,7 @@ checks = {
     ),
     "overseas_same_day_forbidden": report["anti_leakage_policy"]["overseas_fx_crypto_data"] == "strictly_before_decision_date",
     "cost_included": report["assumed_round_trip_cost_pct"] > 0,
+    "record_digest_present": len(report["records_sha256"]) == 64,
     "holdout_has_samples": report["holdout_segment"]["samples"] >= 30,
     "chronological_holdout_after_development": (
         report["development_segment"]["last_outcome_date"]

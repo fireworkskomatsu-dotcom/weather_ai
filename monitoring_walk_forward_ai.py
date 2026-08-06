@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -189,7 +190,14 @@ def build_report(data: pd.DataFrame) -> dict[str, Any]:
         "chronological_split": "first_60_percent_development_last_40_percent_holdout",
         "development_segment": summary(development),
         "holdout_segment": summary(holdout),
-        "records": records,
+        "records_sha256": hashlib.sha256(
+            json.dumps(
+                records,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest(),
     }
 
 
