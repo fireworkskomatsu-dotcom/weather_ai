@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime
+import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -302,26 +304,57 @@ with open("cards.json", "w") as f:
     json.dump(cards, f, ensure_ascii=False, indent=2)
 
 history_path = Path("history.csv")
-if not history_path.exists():
-    with open("history.csv", "w") as f:
-        f.write("datetime,weather,score,risk,temp,judgement,prob_up,prob_down\n")
+data_as_of = str(df["Date"].max())
+forward_payload = {
+    "logged_at": now,
+    "data_as_of": data_as_of,
+    "weather": weather,
+    "score": score,
+    "risk": risk_level,
+    "temperature": market_temp,
+    "judgement": trade_judgement,
+    "prob_up": prob_up,
+    "prob_down": prob_down,
+    "scope": "FREE_MONITORING_ONLY",
+    "official_eligible": False,
+}
+fingerprint_source = {
+    key: value
+    for key, value in forward_payload.items()
+    if key != "logged_at"
+}
+run_id = hashlib.sha256(
+    json.dumps(
+        fingerprint_source,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+).hexdigest()[:20]
 
-with open("history.csv", "a") as f:
-    f.write(f"{now},{weather},{score},{risk_level},{market_temp},{trade_judgement},{prob_up},{prob_down}\n")
+existing_run_ids = set()
+if history_path.exists():
+    with history_path.open("r", encoding="utf-8", newline="") as handle:
+        for row in csv.reader(handle):
+            if len(row) >= 2 and row[0] == "FORWARD_V1":
+                existing_run_ids.add(row[1])
+
+if run_id not in existing_run_ids:
+    with history_path.open("a", encoding="utf-8", newline="") as handle:
+        csv.writer(handle).writerow([
+            "FORWARD_V1",
+            run_id,
+            forward_payload["logged_at"],
+            forward_payload["data_as_of"],
+            forward_payload["weather"],
+            forward_payload["score"],
+            forward_payload["risk"],
+            forward_payload["temperature"],
+            forward_payload["judgement"],
+            forward_payload["prob_up"],
+            forward_payload["prob_down"],
+            forward_payload["scope"],
+            str(forward_payload["official_eligible"]).lower(),
+        ])
 
 print(text)
-import datetime
-import os
-
-score = -5
-
-history_file = "history.csv"
-
-line = f"{datetime.date.today()},{score}\n"
-
-if not os.path.exists(history_file):
-    with open(history_file,"w") as f:
-        f.write("date,score\n")
-
-with open(history_file,"a") as f:
-    f.write(line)
