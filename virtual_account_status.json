@@ -9,10 +9,12 @@
   "position": 0,
   "entry_price": null,
   "last_price": null,
+  "unrealized_virtual_pnl": 0.0,
   "total_virtual_pnl": 0.0,
   "last_signal": "SKIP",
   "last_action": "NO_PRICE",
   "updated_at": "2026-07-28T17:19:07",
   "source": "virtual_account.json",
+  "history_included": false,
   "note": "公開用スナップショット。取引履歴は含みません。"
 }

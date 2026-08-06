@@ -1,5 +1,7 @@
 import json, os, datetime
 
+from virtual_account_status_ai import publish_virtual_account_status
+
 def load_json(path, default):
     if not os.path.exists(path):
         return default
@@ -137,6 +139,7 @@ account["history"] = account["history"][-300:]
 
 save_json("virtual_account.json", account)
 save_json("trade_log.json", trade_log[-1000:])
+publish_virtual_account_status()
 
 print(json.dumps({
     "status": "OK",
