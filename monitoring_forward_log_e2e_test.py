@@ -71,10 +71,12 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
         "isolated_filesystem": work != BASE,
         "legacy_row_preserved": rows[0] == ["LEGACY", "ROW", "PRESERVED"],
         "one_record_after_two_runs": len(forward_rows) == 1,
-        "schema_has_13_fields": len(row) == 13,
+        "schema_has_15_fields": len(row) == 15,
         "stable_run_id_present": len(row) >= 2 and len(row[1]) == 20,
         "scope_monitoring_only": len(row) >= 12 and row[11] == "FREE_MONITORING_ONLY",
         "official_eligible_false": len(row) >= 13 and row[12] == "false",
+        "data_status_recorded": len(row) >= 14 and row[13] in {"FRESH", "STALE_DATA"},
+        "data_age_recorded": len(row) >= 15 and row[14].lstrip("-").isdigit(),
         "production_files_unchanged": production_before == {
             name: digest(BASE / name) for name in production_before
         },

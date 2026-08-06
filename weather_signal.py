@@ -273,6 +273,15 @@ prob_down = 100 - prob_up
 ai_comment = " ".join(comment_lines)
 
 now = datetime.now().strftime("%Y-%m-%d %H:%M")
+data_as_of = str(df["Date"].max())
+data_age_days = (
+    datetime.now().date()
+    - pd.to_datetime(data_as_of).date()
+).days
+data_status = "FRESH" if data_age_days <= 3 else "STALE_DATA"
+
+if data_status != "FRESH":
+    trade_judgement = "データ期限切れ・判断停止"
 
 text = f"""天気：JP={weather}
 スコア：{score}
@@ -281,6 +290,8 @@ text = f"""天気：JP={weather}
 売買判断：{trade_judgement}
 上昇確率：{prob_up}%
 下落確率：{prob_down}%
+データ基準日：{data_as_of}
+データ状態：{data_status}
 
 AIコメント
 {ai_comment}
@@ -304,7 +315,6 @@ with open("cards.json", "w") as f:
     json.dump(cards, f, ensure_ascii=False, indent=2)
 
 history_path = Path("history.csv")
-data_as_of = str(df["Date"].max())
 forward_payload = {
     "logged_at": now,
     "data_as_of": data_as_of,
@@ -317,6 +327,8 @@ forward_payload = {
     "prob_down": prob_down,
     "scope": "FREE_MONITORING_ONLY",
     "official_eligible": False,
+    "data_status": data_status,
+    "data_age_days": data_age_days,
 }
 fingerprint_source = {
     key: value
@@ -355,6 +367,8 @@ if run_id not in existing_run_ids:
             forward_payload["prob_down"],
             forward_payload["scope"],
             str(forward_payload["official_eligible"]).lower(),
+            forward_payload["data_status"],
+            forward_payload["data_age_days"],
         ])
 
 print(text)

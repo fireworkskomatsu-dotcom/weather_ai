@@ -289,9 +289,17 @@
         : [];
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
+        const forwardDataStatus = latestForward[13] || "UNKNOWN";
+        const forwardIsStale = forwardDataStatus !== "FRESH";
         text("forward-log-value", `${forwardRows.length}記録`);
-        text("forward-log-detail", `最新判断: ${latestForward[8] || "確認不能"} / スコア ${latestForward[5] || "—"} / 正式利用不可`);
-        text("forward-log-time", `記録: ${latestForward[2] || "確認不能"} / データ基準日: ${latestForward[3] || "確認不能"}`);
+        text("forward-log-detail", forwardIsStale
+          ? `データ期限切れ・判断停止 / 基準日 ${latestForward[3] || "確認不能"} / 正式利用不可`
+          : `最新判断: ${latestForward[8] || "確認不能"} / スコア ${latestForward[5] || "—"} / 正式利用不可`);
+        text("forward-log-time", `記録: ${latestForward[2] || "確認不能"} / データ状態: ${forwardDataStatus}`);
+        if (forwardIsStale) {
+          text("monitor-decision", "停止（データ期限切れ）");
+          text("monitor-detail", `市場データ基準日 ${latestForward[3] || "確認不能"}。新しいデータが入るまで判断を使用しません。`);
+        }
       } else {
         text("forward-log-value", "開始待ち");
         text("forward-log-detail", "次回の定時市場更新から、重複のない監視ログを記録します。");
