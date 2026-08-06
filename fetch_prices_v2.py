@@ -21,9 +21,9 @@ PERIOD = "400d"
 DOWNLOAD_ATTEMPTS = 3
 
 SYMBOLS = (
-    ("1306.T", "13060", "日経ETF"),
+    ("1306.T", "13060", "TOPIX ETF"),
     ("1321.T", "13210", "日経225連動型ETF"),
-    ("1475.T", "14750", "TOPIX ETF"),
+    ("1475.T", "14750", "TOPIX ETF（補助監視）"),
     ("QQQ", "88880", "NASDAQ 100 ETF"),
     ("SOXX", "77770", "半導体ETF"),
     ("^VIX", "66660", "VIX"),

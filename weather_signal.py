@@ -38,11 +38,10 @@ df = pd.read_csv("prices.csv")
 df["Code"] = df["Code"].astype(str)
 
 targets = {
-    "13060": "日経ETF",
-    "13210": "TOPIX",
-    "14750": "半導体ETF",
-    "88880": "QQQ",
-    "77770": "SOXX",
+    "13060": "TOPIX ETF (1306)",
+    "13210": "日経225 ETF (1321)",
+    "88880": "NASDAQ 100 ETF (QQQ)",
+    "77770": "米国半導体 ETF (SOXX)",
 }
 
 score = 0

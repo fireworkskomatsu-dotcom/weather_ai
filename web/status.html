@@ -309,6 +309,9 @@
         if (forwardIsStale) {
           text("monitor-decision", "停止（データ期限切れ）");
           text("monitor-detail", `市場データ基準日 ${latestForward[3] || "確認不能"}。新しいデータが入るまで判断を使用しません。`);
+        } else if (latestForward.length >= 19) {
+          text("monitor-decision", latestForward[18] || "確認不能");
+          text("monitor-detail", `1321監視判断: ${latestForward[8] || "確認不能"} / 監視価格 ${latestForward[17] || "確認不能"}円。正式売買には使用しません。`);
         }
       } else {
         text("forward-log-value", "開始待ち");
