@@ -41,16 +41,16 @@
   },
   {
     "name": "USDJPY",
-    "price": 157.74,
-    "change": 0.1,
+    "price": 157.7,
+    "change": 0.11,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
   },
   {
     "name": "BTC",
-    "price": 64975.38,
-    "change": 1.44,
+    "price": 65154.67,
+    "change": 0.86,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
