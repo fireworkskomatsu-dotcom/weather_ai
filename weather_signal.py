@@ -499,4 +499,10 @@ try:
 except Exception as error:
     print(f"PAPER_CONTROL_PLANE_PROTECTED: {type(error).__name__}: {error}")
 
+try:
+    from research_factory_v2_ai import run as run_research_factory
+    run_research_factory(report_path=None)
+except Exception as error:
+    print(f"RESEARCH_FACTORY_PROTECTED: {type(error).__name__}: {error}")
+
 print(text)

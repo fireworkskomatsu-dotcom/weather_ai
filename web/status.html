@@ -403,7 +403,11 @@
       const controlRows = typeof historyText === "string"
         ? historyText.split(/\r?\n/).filter((row) => row.startsWith("CONTROL_V2,"))
         : [];
+      const researchRows = typeof historyText === "string"
+        ? historyText.split(/\r?\n/).filter((row) => row.startsWith("RESEARCH_V2,"))
+        : [];
       let latestControl = null;
+      let latestResearch = null;
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
         const uniqueTargetDates = new Set(
@@ -474,6 +478,18 @@
         } catch (error) {
           text("control-status", "取得エラー");
           text("control-detail", "次世代仮想運用の記録を読み取れませんでした。");
+        }
+      }
+
+      if (researchRows.length) {
+        try {
+          const fields = researchRows[researchRows.length - 1].split(",");
+          const encoded = fields[3].replace(/-/g, "+").replace(/_/g, "/");
+          const binary = atob(encoded);
+          const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+          latestResearch = JSON.parse(new TextDecoder().decode(bytes));
+        } catch (error) {
+          latestResearch = null;
         }
       }
 
@@ -593,7 +609,10 @@
       text("operator-paper", paper
         ? `${yen(paper.equity)}・${Number(paper.position || 0)}口`
         : "AIが蓄積中");
-      text("operator-progress", `${directionalOutcomes.length}/30件`);
+      const candidateCount = Number(latestResearch && latestResearch.candidate_count || 0);
+      text("operator-progress", candidateCount
+        ? `${directionalOutcomes.length}/30件・候補${candidateCount}`
+        : `${directionalOutcomes.length}/30件`);
 
       if (automaticLiveReady) {
         text("operator-state", "AIは正常です");
