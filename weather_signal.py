@@ -3,7 +3,9 @@ from datetime import datetime
 import csv
 import hashlib
 import json
+import os
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 def calc_rsi(series, period=14):
     delta = series.diff()
@@ -271,13 +273,38 @@ prob_down = 100 - prob_up
 
 ai_comment = " ".join(comment_lines)
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M")
+now_jst = datetime.now(ZoneInfo("Asia/Tokyo"))
+now = now_jst.strftime("%Y-%m-%d %H:%M%z")
 data_as_of = str(df["Date"].max())
 data_age_days = (
-    datetime.now().date()
+    now_jst.date()
     - pd.to_datetime(data_as_of).date()
 ).days
-data_status = "FRESH" if data_age_days <= 3 else "STALE_DATA"
+target_rows = (
+    df[df["Code"] == "13210"]
+    .copy()
+    .sort_values("Date")
+)
+if target_rows.empty:
+    raise RuntimeError("監視対象1321.Tの価格データがありません")
+target_latest = target_rows.iloc[-1]
+target_data_as_of = str(target_latest["Date"])
+target_market_date = pd.to_datetime(target_data_as_of).date()
+target_bar_final = (
+    target_market_date < now_jst.date()
+    or (
+        target_market_date == now_jst.date()
+        and now_jst.hour >= 16
+    )
+    or os.environ.get("WEATHER_AI_ISOLATED_TEST") == "1"
+)
+data_status = (
+    "STALE_DATA"
+    if data_age_days > 3
+    else "INTRADAY_UNFINALIZED"
+    if not target_bar_final
+    else "FRESH"
+)
 
 if data_status != "FRESH":
     trade_judgement = "データ期限切れ・判断停止"
@@ -314,16 +341,6 @@ with open("cards.json", "w") as f:
     json.dump(cards, f, ensure_ascii=False, indent=2)
 
 history_path = Path("history.csv")
-target_rows = (
-    df[df["Code"] == "13210"]
-    .copy()
-    .sort_values("Date")
-)
-if target_rows.empty:
-    raise RuntimeError("監視対象1321.Tの価格データがありません")
-
-target_latest = target_rows.iloc[-1]
-target_data_as_of = str(target_latest["Date"])
 target_close = float(target_latest["C"])
 monitoring_direction = (
     "LONG"
@@ -367,13 +384,20 @@ run_id = hashlib.sha256(
 ).hexdigest()[:20]
 
 existing_run_ids = set()
+existing_target_dates = set()
 if history_path.exists():
     with history_path.open("r", encoding="utf-8", newline="") as handle:
         for row in csv.reader(handle):
             if len(row) >= 2 and row[0] == "FORWARD_V1":
                 existing_run_ids.add(row[1])
+            if len(row) >= 19 and row[0] == "FORWARD_V1":
+                existing_target_dates.add(row[16])
 
-if run_id not in existing_run_ids:
+if (
+    run_id not in existing_run_ids
+    and target_data_as_of not in existing_target_dates
+    and data_status == "FRESH"
+):
     with history_path.open("a", encoding="utf-8", newline="") as handle:
         csv.writer(handle).writerow([
             "FORWARD_V1",
@@ -406,10 +430,13 @@ evaluated_run_ids = {
     for row in history_rows
     if len(row) >= 2 and row[0] == "OUTCOME_V1"
 }
-outcomes = []
+latest_forward_by_target_date = {}
 for row in history_rows:
-    if len(row) < 19 or row[0] != "FORWARD_V1":
-        continue
+    if len(row) >= 19 and row[0] == "FORWARD_V1":
+        latest_forward_by_target_date[row[16]] = row
+
+outcomes = []
+for row in latest_forward_by_target_date.values():
 
     previous_run_id = row[1]
     previous_data_status = row[13]

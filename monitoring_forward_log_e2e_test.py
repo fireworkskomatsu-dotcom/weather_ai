@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -57,6 +58,7 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
         result = subprocess.run(
             [sys.executable, "weather_signal.py"],
             cwd=work,
+            env={**os.environ, "WEATHER_AI_ISOLATED_TEST": "1"},
             text=True,
             capture_output=True,
             timeout=120,
@@ -76,6 +78,16 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
 
     forward_rows = [row for row in rows if row and row[0] == "FORWARD_V1"]
     row = forward_rows[0] if forward_rows else []
+
+    duplicate_run_id = "d" * 20
+    duplicate = list(row)
+    duplicate[1] = duplicate_run_id
+    with (work / "history.csv").open(
+        "a",
+        encoding="utf-8",
+        newline="",
+    ) as handle:
+        csv.writer(handle).writerow(duplicate)
 
     # 次の取引日を追加し、過去判断だけが評価されることを確認。
     prices = pd.read_csv(work / "prices.csv", dtype={"Code": str})
@@ -113,7 +125,8 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
         "target_price_recorded": len(row) >= 18 and float(row[17]) > 0,
         "direction_recorded": len(row) >= 19 and row[18] in {"LONG", "SHORT", "SKIP"},
         "one_next_day_outcome": len(outcome_rows) == 1,
-        "outcome_links_run_id": len(outcome) >= 2 and outcome[1] == row[1],
+        "duplicate_target_date_one_outcome": len(outcome_rows) == 1,
+        "latest_duplicate_selected": len(outcome) >= 2 and outcome[1] == duplicate_run_id,
         "outcome_scope_monitoring_only": len(outcome) >= 12 and outcome[11] == "FREE_MONITORING_ONLY",
         "outcome_official_eligible_false": len(outcome) >= 13 and outcome[12] == "false",
         "production_files_unchanged": production_before == {

@@ -1,0 +1,124 @@
+{
+  "generated_at": "2026-08-10T16:54:41+09:00",
+  "status": "BLOCKED",
+  "scope": "RESEARCH_CHALLENGER_ONLY",
+  "official_eligible": false,
+  "selection_policy": "development_first_60_percent_only",
+  "holdout_policy": "last_40_percent_never_used_for_selection",
+  "selected_candidate": "CHAMPION_55",
+  "promotion_checks": {
+    "candidate_selected_on_development_only": true,
+    "holdout_directional_samples_at_least_30": true,
+    "holdout_accuracy_at_least_52": false,
+    "holdout_average_net_positive": false,
+    "forward_directional_samples_at_least_30": false,
+    "forward_accuracy_at_least_52": false,
+    "forward_average_net_positive": false
+  },
+  "forward_summary": {
+    "outcomes": 1,
+    "directional_samples": 1,
+    "correct": 0,
+    "incorrect": 1,
+    "accuracy_pct": 0.0,
+    "average_net_after_cost_pct": -0.923651
+  },
+  "candidates": [
+    {
+      "id": "CHAMPION_55",
+      "development": {
+        "samples": 79,
+        "directional_samples": 77,
+        "correct": 41,
+        "incorrect": 36,
+        "accuracy_pct": 53.2468,
+        "average_net_after_cost_pct": 0.068103
+      },
+      "holdout": {
+        "samples": 54,
+        "directional_samples": 51,
+        "correct": 21,
+        "incorrect": 30,
+        "accuracy_pct": 41.1765,
+        "average_net_after_cost_pct": -0.391252
+      }
+    },
+    {
+      "id": "CONSERVATIVE_60",
+      "development": {
+        "samples": 79,
+        "directional_samples": 70,
+        "correct": 35,
+        "incorrect": 35,
+        "accuracy_pct": 50.0,
+        "average_net_after_cost_pct": -0.105632
+      },
+      "holdout": {
+        "samples": 54,
+        "directional_samples": 45,
+        "correct": 20,
+        "incorrect": 25,
+        "accuracy_pct": 44.4444,
+        "average_net_after_cost_pct": -0.314772
+      }
+    },
+    {
+      "id": "HIGH_CONVICTION_65",
+      "development": {
+        "samples": 79,
+        "directional_samples": 66,
+        "correct": 33,
+        "incorrect": 33,
+        "accuracy_pct": 50.0,
+        "average_net_after_cost_pct": -0.091986
+      },
+      "holdout": {
+        "samples": 54,
+        "directional_samples": 40,
+        "correct": 16,
+        "incorrect": 24,
+        "accuracy_pct": 40.0,
+        "average_net_after_cost_pct": -0.441047
+      }
+    },
+    {
+      "id": "LONG_ONLY_60",
+      "development": {
+        "samples": 79,
+        "directional_samples": 61,
+        "correct": 32,
+        "incorrect": 29,
+        "accuracy_pct": 52.459,
+        "average_net_after_cost_pct": 0.061376
+      },
+      "holdout": {
+        "samples": 54,
+        "directional_samples": 35,
+        "correct": 16,
+        "incorrect": 19,
+        "accuracy_pct": 45.7143,
+        "average_net_after_cost_pct": -0.22304
+      }
+    },
+    {
+      "id": "RISK_VETO_60",
+      "development": {
+        "samples": 79,
+        "directional_samples": 60,
+        "correct": 32,
+        "incorrect": 28,
+        "accuracy_pct": 53.3333,
+        "average_net_after_cost_pct": 0.04842
+      },
+      "holdout": {
+        "samples": 54,
+        "directional_samples": 45,
+        "correct": 20,
+        "incorrect": 25,
+        "accuracy_pct": 44.4444,
+        "average_net_after_cost_pct": -0.314772
+      }
+    }
+  ],
+  "candidate_definitions_sha256": "72b80ebf8a86e22d761e2712c47fe912dba663ff15058e450ad31aa60043e0de"
+}

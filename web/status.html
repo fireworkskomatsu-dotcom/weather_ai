@@ -156,6 +156,13 @@
       </article>
 
       <article class="card">
+        <div class="label">Challenger promotion gate</div>
+        <div class="value warn" id="challenger-value">—</div>
+        <div class="detail" id="challenger-detail">候補戦略の昇格条件を読み込み中</div>
+        <div class="meta" id="challenger-time"></div>
+      </article>
+
+      <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
         <div class="detail" id="provider-detail">読み込み中</div>
@@ -225,7 +232,8 @@
       readJson("../strategy_weight.json"),
       readText("../latest_weather.txt"),
       readText("../history.csv"),
-      readJson("../monitoring_walk_forward_report.json")
+      readJson("../monitoring_walk_forward_report.json"),
+      readJson("../monitoring_challenger_report.json")
     ]).then((results) => {
       const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
       const provider = value(0);
@@ -238,6 +246,7 @@
       const weatherText = value(10);
       const historyText = value(11);
       const walkForward = value(12);
+      const challenger = value(13);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
@@ -320,9 +329,15 @@
         : [];
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
+        const uniqueTargetDates = new Set(
+          forwardRows
+            .map((row) => row.split(","))
+            .filter((row) => row.length >= 19)
+            .map((row) => row[16])
+        );
         const forwardDataStatus = latestForward[13] || "UNKNOWN";
         const forwardIsStale = forwardDataStatus !== "FRESH";
-        text("forward-log-value", `${forwardRows.length}記録`);
+        text("forward-log-value", `${uniqueTargetDates.size}取引日`);
         text("forward-log-detail", forwardIsStale
           ? `データ期限切れ・判断停止 / 基準日 ${latestForward[3] || "確認不能"} / 正式利用不可`
           : `最新判断: ${latestForward[8] || "確認不能"} / スコア ${latestForward[5] || "—"} / 正式利用不可`);
@@ -369,6 +384,18 @@
       } else {
         ["walk-samples", "walk-directional", "walk-accuracy", "walk-net"].forEach((id) => text(id, "確認不能"));
         text("walk-detail", "ウォークフォワード検証結果を取得できませんでした。");
+      }
+
+      if (challenger && challenger.scope === "RESEARCH_CHALLENGER_ONLY") {
+        const forward = challenger.forward_summary || {};
+        const selected = challenger.selected_candidate || "候補なし";
+        const promoted = challenger.status === "PROMOTED";
+        text("challenger-value", promoted ? "昇格可能" : "昇格停止");
+        text("challenger-detail", `選択候補 ${selected} / 実フォワード ${Number(forward.directional_samples || 0)}件（最低30件）/ 正解率 ${Number(forward.accuracy_pct || 0).toFixed(1)}%。`);
+        text("challenger-time", time(challenger.generated_at));
+      } else {
+        text("challenger-value", "確認不能");
+        text("challenger-detail", "チャレンジャー検証結果を取得できませんでした。");
       }
 
       if (provider) {
