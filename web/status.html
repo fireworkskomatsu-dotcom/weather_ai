@@ -132,25 +132,6 @@
         <p>無料価格による市場監視・記録・翌取引日の答え合わせです。実資金は使いません。</p>
       </div>
       <article class="card wide">
-        <div class="label">Virtual account — simulation only</div>
-        <h2>仮想口座（実資金ではありません）</h2>
-        <div class="account-grid">
-          <div class="account-item"><span>現金残高</span><strong id="account-cash">—</strong></div>
-          <div class="account-item"><span>評価額</span><strong id="account-equity">—</strong></div>
-          <div class="account-item"><span>保有数</span><strong id="account-position">—</strong></div>
-          <div class="account-item"><span>取得価格</span><strong id="account-entry">—</strong></div>
-        </div>
-        <div class="detail" id="account-detail">公開用口座状態を読み込み中</div>
-        <div class="meta" id="account-time"></div>
-      </article>
-
-      <article class="card">
-        <div class="label">Virtual P&amp;L</div>
-        <div class="value" id="account-pnl">—</div>
-        <div class="detail">初期資金に対する仮想評価損益。手数料・税金・スリッページは含みません。</div>
-      </article>
-
-      <article class="card wide">
         <div class="label">Free market monitoring — not an execution price</div>
         <h2>市場監視</h2>
         <div class="account-grid">
@@ -292,9 +273,25 @@
       return response.text();
     };
 
-    const text = (id, value) => { document.getElementById(id).textContent = value; };
+    const text = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    };
     const time = (value) => value ? `更新: ${value}` : "更新時刻: 未記録";
 
+    if (location.protocol === "file:") {
+      text("operator-state", "このファイルは使用できません");
+      text("operator-instruction", "公開画面を開く");
+      text("operator-action", "ローカルファイルを閉じて、下のリンクを開いてください");
+      text("operator-paper", "公開画面で確認");
+      text("operator-progress", "公開画面で確認");
+      const reason = document.getElementById("operator-reason");
+      const link = document.createElement("a");
+      link.href = "https://fireworkskomatsu-dotcom.github.io/weather_ai/web/status.html";
+      link.textContent = "正しい1321 AI運用画面を開く";
+      reason.replaceChildren(link);
+      document.querySelector("details.technical").hidden = true;
+    } else {
     Promise.allSettled([
       readJson("../price_provider_status.json"),
       readJson("../official_performance.json"),
@@ -615,6 +612,7 @@
         text("operator-reason", `理由：${reasons.join("／") || "実運用条件の確認中"}。仮想運用の判断を実売買には使いません。`);
       }
     });
+    }
   </script>
 </body>
 </html>
