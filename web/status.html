@@ -247,18 +247,18 @@
       readJson("../monitoring_walk_forward_report.json"),
       readJson("../monitoring_challenger_report.json")
     ]).then((results) => {
-      const value = (index) => results[index].status === "fulfilled" ? results[index].value : null;
+      const value = (index) => results[index] && results[index].status === "fulfilled" ? results[index].value : null;
       const provider = value(0);
       const performance = value(1);
       const universe = value(2);
       const account = value(6);
       const weightedDecision = value(7);
-      const shadowPnl = value(9);
-      const strategyWeight = value(10);
-      const weatherText = value(11);
-      const historyText = value(12);
-      const walkForward = value(13);
-      const challenger = value(14);
+      const shadowPnl = value(8);
+      const strategyWeight = value(9);
+      const weatherText = value(10);
+      const historyText = value(11);
+      const walkForward = value(12);
+      const challenger = value(13);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
