@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>1321 ETF AI Trading System — Status</title>
+  <title>1321 AI運用画面</title>
   <style>
     :root {
       --bg: #071019;
@@ -67,6 +67,21 @@
     .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 14px; margin-top: 14px; }
     .feature { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: 12px; }
     .feature::before { content: "●"; margin-right: 7px; color: var(--ok); }
+    .operator { padding: 28px; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, rgba(16,34,50,.98), rgba(10,24,35,.98)); }
+    .operator-state { color: var(--ok); font-weight: 800; }
+    .instruction { margin: 14px 0 4px; color: var(--warn); font-size: clamp(38px, 8vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -.04em; }
+    .human-action { margin: 0 0 22px; color: var(--text); font-size: 20px; font-weight: 700; }
+    .operator-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .operator-item { padding: 15px; border: 1px solid var(--line); border-radius: 14px; background: rgba(7,16,25,.52); }
+    .operator-item span { display: block; color: var(--muted); font-size: 12px; }
+    .operator-item strong { display: block; margin-top: 5px; font-size: 18px; }
+    .reason-box { margin-top: 16px; padding: 14px 16px; border-left: 3px solid var(--warn); background: rgba(255,189,89,.06); color: var(--muted); }
+    details.technical { margin-top: 22px; }
+    details.technical > summary { cursor: pointer; list-style: none; padding: 17px 20px; border: 1px solid var(--line); border-radius: 14px; color: var(--muted); font-weight: 700; }
+    details.technical > summary::-webkit-details-marker { display: none; }
+    details.technical > summary::after { content: "＋"; float: right; color: var(--accent); }
+    details.technical[open] > summary::after { content: "−"; }
+    .technical-body { margin-top: 18px; }
     footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
     a { color: var(--accent); }
     @media (max-width: 760px) {
@@ -75,17 +90,34 @@
       .wide { grid-column: auto; }
       .checks { grid-template-columns: 1fr; }
       .account-grid { grid-template-columns: repeat(2, 1fr); }
+      .operator-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
   <main>
     <header>
-      <p class="eyebrow">VERIFIED SYSTEM STATUS</p>
-      <h1>1321 ETF AI Trading System</h1>
-      <p class="lead">検証用E2Eと正式フォワード運用を分離して表示します。テスト結果は本番成績に含みません。</p>
+      <p class="eyebrow">AI OPERATOR</p>
+      <h1>1321 AI運用画面</h1>
+      <p class="lead">人間はこの画面の指示だけを確認します。分析・判断・検証はAIが行います。</p>
     </header>
 
+    <section class="operator" aria-live="polite">
+      <div class="operator-state" id="operator-state">AIが状態を確認中</div>
+      <div class="instruction" id="operator-instruction">待つ</div>
+      <p class="human-action" id="operator-action">画面の読み込みが終わるまで操作しない</p>
+      <div class="operator-grid">
+        <div class="operator-item"><span>実資金</span><strong id="operator-money">未使用</strong></div>
+        <div class="operator-item"><span>対象</span><strong>1321</strong></div>
+        <div class="operator-item"><span>AI仮想口座</span><strong id="operator-paper">確認中</strong></div>
+        <div class="operator-item"><span>実運用判定</span><strong id="operator-progress">確認中</strong></div>
+      </div>
+      <div class="reason-box" id="operator-reason">AIが安全条件を確認しています。</div>
+    </section>
+
+    <details class="technical">
+      <summary>AI・開発者用の詳細を見る（通常は開かなくて大丈夫です）</summary>
+      <div class="technical-body">
     <section class="banner" aria-live="polite">
       <span class="signal" id="overall-signal"></span>
       <div>
@@ -240,9 +272,11 @@
         <div class="detail">実売買へ進む場合にのみ接続します。接続するまでは正式学習・正式成績を安全に保護します。</div>
       </article>
     </section>
+      </div>
+    </details>
 
     <footer>
-      このページは公開状態ファイルを直接参照します。未接続・データ待ち・取得エラーを区別し、推測値は表示しません。
+      実売買指示が「何もしない」の間は、証券会社を操作しないでください。仮想運用はAIが自動継続します。
     </footer>
   </main>
 
@@ -372,6 +406,7 @@
       const controlRows = typeof historyText === "string"
         ? historyText.split(/\r?\n/).filter((row) => row.startsWith("CONTROL_V2,"))
         : [];
+      let latestControl = null;
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
         const uniqueTargetDates = new Set(
@@ -421,6 +456,7 @@
           const binary = atob(encoded);
           const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
           const control = JSON.parse(new TextDecoder().decode(bytes));
+          latestControl = control;
           const paper = control.paper_account || {};
           const risk = control.risk || {};
           const quality = control.data_quality || {};
@@ -543,6 +579,40 @@
         text("overall-title", "検証結果の取得エラー");
         text("overall-detail", "一部の安全検証を取得できないため判断を保護しています。実資金への影響はありません。");
         signal.style.background = "var(--bad)";
+      }
+
+      const parsedOutcomes = outcomeRows.map((row) => row.split(","));
+      const directionalOutcomes = parsedOutcomes.filter((row) => row[9] === "LONG" || row[9] === "SHORT");
+      const providerReady = provider && provider.status === "OK" && provider.provider !== "DISABLED";
+      const strategyReady = challenger && challenger.status === "PROMOTED" && directionalOutcomes.length >= 30;
+      const paper = latestControl && latestControl.paper_account;
+      const paperHealthy = latestControl
+        && latestControl.risk && latestControl.risk.status === "READY"
+        && latestControl.data_quality && latestControl.data_quality.status !== "FAIL"
+        && latestControl.reconciliation && latestControl.reconciliation.status === "PASS";
+      const automaticLiveReady = providerReady && strategyReady && allProofsPass && paperHealthy;
+
+      text("operator-money", "未使用");
+      text("operator-paper", paper
+        ? `${yen(paper.equity)}・${Number(paper.position || 0)}口`
+        : "AIが蓄積中");
+      text("operator-progress", `${directionalOutcomes.length}/30件`);
+
+      if (automaticLiveReady) {
+        text("operator-state", "AIは正常です");
+        text("operator-instruction", "何もしない");
+        text("operator-action", "AIによる証券口座の自動接続が完了するまで、手動売買しない");
+        text("operator-reason", "実運用の検証条件は通過しました。手入力による誤発注を避けるため、証券口座の自動接続前は売買しません。");
+      } else {
+        const reasons = [];
+        if (!providerReady) reasons.push("実売買用の公式価格が未接続");
+        if (!strategyReady) reasons.push(`実運用検証は${directionalOutcomes.length}/30件`);
+        if (!allProofsPass) reasons.push("安全検証データを確認できない");
+        if (!paperHealthy) reasons.push("仮想運用の安全状態を確認中");
+        text("operator-state", freeMonitoringHealthy ? "AIは仮想運用を継続中" : "AIは安全停止中");
+        text("operator-instruction", "何もしない");
+        text("operator-action", "証券会社を操作しない。AIが自動で記録・検証を続けます");
+        text("operator-reason", `理由：${reasons.join("／") || "実運用条件の確認中"}。仮想運用の判断を実売買には使いません。`);
       }
     });
   </script>
