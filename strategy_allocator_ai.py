@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-BASE=Path("/Users/Owner/weather_ai")
+BASE=Path(__file__).resolve().parent
 
 def r(n,d):
     try:return json.loads((BASE/n).read_text())

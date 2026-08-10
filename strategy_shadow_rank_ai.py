@@ -1,14 +1,18 @@
 import json
 from pathlib import Path
-BASE=Path("/Users/Owner/weather_ai")
+BASE=Path(__file__).resolve().parent
 
 def r(n,d):
     try:return json.loads((BASE/n).read_text())
     except:return d
 
-res=r("strategy_shadow_pnl.json",{}).get("strategy_results",[])
-
-ranked=sorted(res,key=lambda x:x["shadow_pnl"],reverse=True)
+res=r("strategy_shadow_pnl.json",{}).get("strategy_results",{})
+rows=list(res.values()) if isinstance(res,dict) else res
+ranked=sorted(
+    (row for row in rows if isinstance(row,dict)),
+    key=lambda row: row.get("total_return",row.get("shadow_pnl",0)),
+    reverse=True,
+)
 
 out={
     "ranking":ranked

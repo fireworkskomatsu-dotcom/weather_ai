@@ -44,6 +44,9 @@
     .banner h2, .card h2 { margin: 0; font-size: 18px; }
     .banner p { margin: 5px 0 0; color: var(--muted); }
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .section-title { grid-column: 1 / -1; margin: 12px 2px -4px; }
+    .section-title h2 { margin: 0; font-size: 21px; }
+    .section-title p { margin: 3px 0 0; color: var(--muted); }
     .card { padding: 22px; min-height: 170px; }
     .wide { grid-column: span 2; }
     .label { color: var(--muted); font-size: 12px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
@@ -89,6 +92,10 @@
     </section>
 
     <section class="grid">
+      <div class="section-title">
+        <h2>無料運用（稼働中）</h2>
+        <p>無料価格による市場監視・記録・翌取引日の答え合わせです。実資金は使いません。</p>
+      </div>
       <article class="card wide">
         <div class="label">Virtual account — simulation only</div>
         <h2>仮想口座（実資金ではありません）</h2>
@@ -162,6 +169,11 @@
         <div class="meta" id="challenger-time"></div>
       </article>
 
+      <div class="section-title">
+        <h2>将来機能（未接続・保護中）</h2>
+        <p>有料の公式価格や実売買を使う場合だけ必要です。現在の無料運用には影響しません。</p>
+      </div>
+
       <article class="card">
         <div class="label">Official price provider</div>
         <div class="value warn" id="provider-value">—</div>
@@ -193,14 +205,14 @@
       </article>
 
       <article class="card">
-        <div class="label">Remaining blocker</div>
-        <div class="value warn">公式価格接続</div>
-        <div class="detail">検証済み公式プロバイダーが有効になるまで、正式価格の書き込み・正式学習・正式成績更新は停止します。</div>
+        <div class="label">Optional future expansion</div>
+        <div class="value warn">公式価格（任意）</div>
+        <div class="detail">実売買へ進む場合にのみ接続します。接続するまでは正式学習・正式成績を安全に保護します。</div>
       </article>
     </section>
 
     <footer>
-      このページはリポジトリ内の公開状態JSONを直接参照します。取得できない項目は推測せず「確認不能」と表示します。
+      このページは公開状態ファイルを直接参照します。未接続・データ待ち・取得エラーを区別し、推測値は表示しません。
     </footer>
   </main>
 
@@ -217,7 +229,7 @@
     };
 
     const text = (id, value) => { document.getElementById(id).textContent = value; };
-    const time = (value) => value ? `更新: ${value}` : "更新時刻: 確認不能";
+    const time = (value) => value ? `更新: ${value}` : "更新時刻: 未記録";
 
     Promise.allSettled([
       readJson("../price_provider_status.json"),
@@ -241,12 +253,12 @@
       const universe = value(2);
       const account = value(6);
       const weightedDecision = value(7);
-      const shadowPnl = value(8);
-      const strategyWeight = value(9);
-      const weatherText = value(10);
-      const historyText = value(11);
-      const walkForward = value(12);
-      const challenger = value(13);
+      const shadowPnl = value(9);
+      const strategyWeight = value(10);
+      const weatherText = value(11);
+      const historyText = value(12);
+      const walkForward = value(13);
+      const challenger = value(14);
       const proofs = [
         ["学習閉ループ", value(3)],
         ["売買ライフサイクル", value(4)],
@@ -255,7 +267,7 @@
 
       const yen = (amount) => Number.isFinite(Number(amount))
         ? new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY", maximumFractionDigits: 0 }).format(Number(amount))
-        : "確認不能";
+        : "取得エラー";
 
       if (account && account.account_type === "VIRTUAL") {
         text("account-cash", yen(account.cash));
@@ -279,8 +291,8 @@
         text("account-detail", `データ状態: ${dataState} / 価格検証: ${verificationState} / 判断検証: ${decisionState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
         text("account-time", time(account.updated_at));
       } else {
-        ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "確認不能"));
-        text("account-detail", "仮想口座の公開状態を取得できませんでした。");
+        ["account-cash", "account-equity", "account-position", "account-entry", "account-pnl"].forEach((id) => text(id, "取得エラー"));
+        text("account-detail", "仮想口座の公開状態を取得できませんでした。実資金への影響はありません。");
       }
 
       const weatherField = (label) => {
@@ -297,15 +309,15 @@
         || Date.now() - parsedDecisionTime > 36 * 60 * 60 * 1000;
       text("monitor-decision", decision
         ? `${decision}${decisionIsStale ? "（古いデータ）" : ""}`
-        : "確認不能");
-      text("monitor-weather", weatherField("天気：") || "確認不能");
-      text("monitor-risk", weatherField("危険度：") || "確認不能");
-      text("monitor-temperature", weatherField("市場温度：") || "確認不能");
+        : "データ待ち");
+      text("monitor-weather", weatherField("天気：") || "データ待ち");
+      text("monitor-risk", weatherField("危険度：") || "データ待ち");
+      text("monitor-temperature", weatherField("市場温度：") || "データ待ち");
       if (weightedDecision) {
         const votes = weightedDecision.weighted_votes || {};
         text("monitor-detail", `監視票 LONG ${Number(votes.LONG || 0).toFixed(3)} / SHORT ${Number(votes.SHORT || 0).toFixed(3)} / SKIP ${Number(votes.SKIP || 0).toFixed(3)}。正式売買価格には使用しません。`);
-        const weatherUpdated = weatherField("更新 ") || "確認不能";
-        text("monitor-time", `AI票更新: ${decisionTime || "確認不能"} / 市場天気更新: ${weatherUpdated}`);
+        const weatherUpdated = weatherField("更新 ") || "未記録";
+        text("monitor-time", `AI票更新: ${decisionTime || "未記録"} / 市場天気更新: ${weatherUpdated}`);
       } else {
         text("monitor-detail", "市場監視判断を取得できませんでした。正式売買には進みません。");
       }
@@ -317,8 +329,8 @@
         text("learning-detail", `正式評価 ${evaluated}件 / 重み適用可能 ${eligible}戦略。テスト結果は正式学習件数に含めません。`);
         text("learning-time", time(strategyWeight.updated_at || shadowPnl.updated_at));
       } else {
-        text("learning-value", "確認不能");
-        text("learning-detail", "正式学習状態を取得できませんでした。");
+        text("learning-value", "取得エラー");
+        text("learning-detail", "正式学習状態を取得できませんでした。無料監視は継続できます。");
       }
 
       const forwardRows = typeof historyText === "string"
@@ -339,15 +351,15 @@
         const forwardIsStale = forwardDataStatus !== "FRESH";
         text("forward-log-value", `${uniqueTargetDates.size}取引日`);
         text("forward-log-detail", forwardIsStale
-          ? `データ期限切れ・判断停止 / 基準日 ${latestForward[3] || "確認不能"} / 正式利用不可`
-          : `最新判断: ${latestForward[8] || "確認不能"} / スコア ${latestForward[5] || "—"} / 正式利用不可`);
-        text("forward-log-time", `記録: ${latestForward[2] || "確認不能"} / データ状態: ${forwardDataStatus}`);
+          ? `データ期限切れ・判断保護中 / 基準日 ${latestForward[3] || "未記録"} / 監視専用`
+          : `最新判断: ${latestForward[8] || "データ待ち"} / スコア ${latestForward[5] || "—"} / 監視専用`);
+        text("forward-log-time", `記録: ${latestForward[2] || "未記録"} / データ状態: ${forwardDataStatus}`);
         if (forwardIsStale) {
           text("monitor-decision", "停止（データ期限切れ）");
-          text("monitor-detail", `市場データ基準日 ${latestForward[3] || "確認不能"}。新しいデータが入るまで判断を使用しません。`);
+          text("monitor-detail", `市場データ基準日 ${latestForward[3] || "未記録"}。新しいデータが入るまで判断を保護します。`);
         } else if (latestForward.length >= 19) {
-          text("monitor-decision", latestForward[18] || "確認不能");
-          text("monitor-detail", `1321監視判断: ${latestForward[8] || "確認不能"} / 監視価格 ${latestForward[17] || "確認不能"}円。正式売買には使用しません。`);
+          text("monitor-decision", latestForward[18] || "データ待ち");
+          text("monitor-detail", `1321監視判断: ${latestForward[8] || "データ待ち"} / 監視価格 ${latestForward[17] || "データ待ち"}円。実売買には使用しません。`);
         }
       } else {
         text("forward-log-value", "開始待ち");
@@ -382,7 +394,7 @@
           : `現戦略の優位性は未証明。未使用期間 正解率 ${Number(holdout.accuracy_pct).toFixed(2)}% / コスト後平均 ${holdoutNet.toFixed(3)}%。`);
         text("walk-time", time(walkForward.generated_at));
       } else {
-        ["walk-samples", "walk-directional", "walk-accuracy", "walk-net"].forEach((id) => text(id, "確認不能"));
+        ["walk-samples", "walk-directional", "walk-accuracy", "walk-net"].forEach((id) => text(id, "取得エラー"));
         text("walk-detail", "ウォークフォワード検証結果を取得できませんでした。");
       }
 
@@ -399,35 +411,36 @@
         text("challenger-detail", `選択候補 ${selected} / 実フォワード ${directionalOutcomes.length}件（最低30件）/ 正解率 ${liveAccuracy.toFixed(1)}%。`);
         text("challenger-time", time(challenger.generated_at));
       } else {
-        text("challenger-value", "確認不能");
+        text("challenger-value", "取得エラー");
         text("challenger-detail", "チャレンジャー検証結果を取得できませんでした。");
       }
 
       if (provider) {
-        text("provider-value", `${provider.status} / ${provider.provider}`);
-        text("provider-detail", provider.reason || "理由の記録なし");
+        const disconnected = provider.status === "BLOCKED" || provider.provider === "DISABLED";
+        text("provider-value", disconnected ? "未接続（将来機能）" : `${provider.status} / ${provider.provider}`);
+        text("provider-detail", disconnected ? "有料APIを使わない設定です。無料監視には影響しません。" : (provider.reason || "状態理由は未記録です。"));
         text("provider-time", time(provider.updated_at));
       } else {
-        text("provider-value", "確認不能");
+        text("provider-value", "取得エラー");
         text("provider-detail", "価格プロバイダー状態を取得できませんでした。");
       }
 
       if (performance) {
         const trades = Number(performance.closed_trades || 0);
-        text("trades-value", `${trades} closed trade${trades === 1 ? "" : "s"}`);
+        text("trades-value", trades ? `${trades}件` : "未開始");
         text("performance-detail", trades ? `勝 ${performance.wins} / 敗 ${performance.losses} / 実現損益 ${performance.total_realized_pnl}` : "正式フォワードの確定取引はまだありません。");
         text("performance-time", time(performance.updated_at));
       } else {
-        text("trades-value", "確認不能");
+        text("trades-value", "取得エラー");
         text("performance-detail", "正式成績を取得できませんでした。");
       }
 
       if (universe) {
-        text("symbol-value", universe.official_trade_symbol || "確認不能");
+        text("symbol-value", universe.official_trade_symbol || "未設定");
         text("universe-detail", `正式売買 ${universe.official_trade_target_count}銘柄 / 監視のみ ${universe.monitor_only_count}銘柄`);
         text("universe-time", time(universe.updated_at));
       } else {
-        text("symbol-value", "確認不能");
+        text("symbol-value", "取得エラー");
         text("universe-detail", "売買対象の分離状態を取得できませんでした。");
       }
 
@@ -440,17 +453,28 @@
         const dot = document.createElement("span");
         dot.className = "dot" + (passed ? "" : " bad");
         const label = document.createElement("span");
-        label.textContent = `${name}: ${passed ? "PASS" : "確認不能 / FAIL"}`;
+        label.textContent = `${name}: ${passed ? "PASS" : "取得エラー / FAIL"}`;
         row.append(dot, label);
         list.append(row);
       });
 
       const allProofsPass = proofs.every(([, proof]) => proof && proof.status === "PASS" && proof.production_data_modified === false);
-      const providerBlocked = provider && provider.status === "BLOCKED";
-      text("overall-title", providerBlocked ? "安全停止中 — 公式価格待ち" : "運用状態を確認してください");
-      text("overall-detail", allProofsPass
-        ? "隔離E2EはすべてPASS。正式運用は公式価格プロバイダーが未接続のためフェイルクローズしています。"
-        : "一部のE2E結果を確認できません。正式運用を開始せず、状態ファイルを確認してください。");
+      const latestForwardFields = forwardRows.length ? forwardRows[forwardRows.length - 1].split(",") : [];
+      const freeMonitoringHealthy = forwardRows.length > 0 && latestForwardFields[13] === "FRESH";
+      const signal = document.getElementById("overall-signal");
+      if (freeMonitoringHealthy && allProofsPass) {
+        text("overall-title", "無料監視モード — 正常稼働");
+        text("overall-detail", `市場監視・記録・翌日評価を継続中（記録 ${new Set(forwardRows.map((row) => row.split(",")[16])).size}取引日 / 評価 ${outcomeRows.length}件）。実資金は未使用です。`);
+        signal.style.background = "var(--ok)";
+        signal.style.boxShadow = "0 0 20px rgba(56,217,150,.7)";
+      } else if (allProofsPass) {
+        text("overall-title", "無料監視モード — データ更新待ち");
+        text("overall-detail", "安全機能は正常です。次の市場データが入るまで判断を保護しています。実資金は未使用です。");
+      } else {
+        text("overall-title", "検証結果の取得エラー");
+        text("overall-detail", "一部の安全検証を取得できないため判断を保護しています。実資金への影響はありません。");
+        signal.style.background = "var(--bad)";
+      }
     });
   </script>
 </body>
