@@ -33,7 +33,7 @@
   },
   {
     "name": "VIX",
-    "price": 15.47,
+    "price": 15.48,
     "change": "-",
     "ma25": "-",
     "ma200": "-",
@@ -41,16 +41,16 @@
   },
   {
     "name": "USDJPY",
-    "price": 158.67,
-    "change": 0.73,
+    "price": 158.69,
+    "change": 0.74,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
   },
   {
     "name": "BTC",
-    "price": 65171.71,
-    "change": 1.42,
+    "price": 65159.4,
+    "change": 1.4,
     "ma25": "-",
     "ma200": "-",
     "rsi": "-"
