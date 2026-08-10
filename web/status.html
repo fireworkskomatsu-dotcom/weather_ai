@@ -387,11 +387,16 @@
       }
 
       if (challenger && challenger.scope === "RESEARCH_CHALLENGER_ONLY") {
-        const forward = challenger.forward_summary || {};
         const selected = challenger.selected_candidate || "候補なし";
         const promoted = challenger.status === "PROMOTED";
+        const parsedOutcomes = outcomeRows.map((row) => row.split(","));
+        const directionalOutcomes = parsedOutcomes.filter((row) => row[9] === "LONG" || row[9] === "SHORT");
+        const correctOutcomes = directionalOutcomes.filter((row) => row[10] === "CORRECT").length;
+        const liveAccuracy = directionalOutcomes.length
+          ? correctOutcomes / directionalOutcomes.length * 100
+          : 0;
         text("challenger-value", promoted ? "昇格可能" : "昇格停止");
-        text("challenger-detail", `選択候補 ${selected} / 実フォワード ${Number(forward.directional_samples || 0)}件（最低30件）/ 正解率 ${Number(forward.accuracy_pct || 0).toFixed(1)}%。`);
+        text("challenger-detail", `選択候補 ${selected} / 実フォワード ${directionalOutcomes.length}件（最低30件）/ 正解率 ${liveAccuracy.toFixed(1)}%。`);
         text("challenger-time", time(challenger.generated_at));
       } else {
         text("challenger-value", "確認不能");
