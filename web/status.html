@@ -277,17 +277,17 @@
         text("account-pnl", yen(account.total_virtual_pnl));
         const dataState = account.price_available
           ? "価格あり"
-          : "価格なし・更新停止中";
+          : "公式価格未接続・保護中";
         const verificationState = account.price_verification === "OFFICIAL_ELIGIBLE"
           ? "公式確認済み"
           : account.price_verification === "ISOLATED_TEST"
             ? "隔離テスト"
-            : "未検証・売買停止";
+            : "正式利用は保護中";
         const decisionState = account.decision_verification === "FRESH_OFFICIAL"
           ? "判断時刻確認済み"
           : account.decision_verification === "ISOLATED_TEST"
             ? "隔離テスト"
-            : "判断時刻未確認・停止";
+            : "正式判断は保護中";
         text("account-detail", `データ状態: ${dataState} / 価格検証: ${verificationState} / 判断検証: ${decisionState} / 最終動作: ${account.last_action || "記録なし"} / 最終シグナル: ${account.last_signal || "記録なし"}`);
         text("account-time", time(account.updated_at));
       } else {
@@ -460,11 +460,17 @@
 
       const allProofsPass = proofs.every(([, proof]) => proof && proof.status === "PASS" && proof.production_data_modified === false);
       const latestForwardFields = forwardRows.length ? forwardRows[forwardRows.length - 1].split(",") : [];
+      const liveTargetDayCount = new Set(
+        forwardRows
+          .map((row) => row.split(","))
+          .filter((row) => row.length >= 19)
+          .map((row) => row[16])
+      ).size;
       const freeMonitoringHealthy = forwardRows.length > 0 && latestForwardFields[13] === "FRESH";
       const signal = document.getElementById("overall-signal");
       if (freeMonitoringHealthy && allProofsPass) {
         text("overall-title", "無料監視モード — 正常稼働");
-        text("overall-detail", `市場監視・記録・翌日評価を継続中（記録 ${new Set(forwardRows.map((row) => row.split(",")[16])).size}取引日 / 評価 ${outcomeRows.length}件）。実資金は未使用です。`);
+        text("overall-detail", `市場監視・記録・翌日評価を継続中（記録 ${liveTargetDayCount}取引日 / 評価 ${outcomeRows.length}件）。実資金は未使用です。`);
         signal.style.background = "var(--ok)";
         signal.style.boxShadow = "0 0 20px rgba(56,217,150,.7)";
       } else if (allProofsPass) {
