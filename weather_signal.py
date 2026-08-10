@@ -492,4 +492,11 @@ if outcomes:
     with history_path.open("a", encoding="utf-8", newline="") as handle:
         csv.writer(handle).writerows(outcomes)
 
+# 無料監視ログを使った次世代仮想運用。実資金・公式成績には接続しない。
+try:
+    from paper_control_plane_ai import process as run_paper_control_plane
+    run_paper_control_plane()
+except Exception as error:
+    print(f"PAPER_CONTROL_PLANE_PROTECTED: {type(error).__name__}: {error}")
+
 print(text)

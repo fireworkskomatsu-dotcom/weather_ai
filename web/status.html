@@ -64,6 +64,9 @@
     .account-item { padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: rgba(7,16,25,.45); }
     .account-item span { display: block; color: var(--muted); font-size: 11px; }
     .account-item strong { display: block; margin-top: 3px; font-size: 18px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 14px; margin-top: 14px; }
+    .feature { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: 12px; }
+    .feature::before { content: "●"; margin-right: 7px; color: var(--ok); }
     footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
     a { color: var(--accent); }
     @media (max-width: 760px) {
@@ -147,6 +150,33 @@
         <div class="value" id="outcome-value">—</div>
         <div class="detail" id="outcome-detail">翌取引日の結果を読み込み中</div>
         <div class="meta">監視成績のみ。正式成績・正式学習には含めません。</div>
+      </article>
+
+      <article class="card wide">
+        <div class="label">Paper control plane v2 — simulation only</div>
+        <h2>次世代仮想運用</h2>
+        <div class="account-grid">
+          <div class="account-item"><span>運用状態</span><strong id="control-status">蓄積待ち</strong></div>
+          <div class="account-item"><span>市場局面</span><strong id="control-regime">—</strong></div>
+          <div class="account-item"><span>仮想評価額</span><strong id="control-equity">—</strong></div>
+          <div class="account-item"><span>ベンチマーク差</span><strong id="control-benchmark">—</strong></div>
+        </div>
+        <div class="feature-grid" id="control-features">
+          <div class="feature">約定再現</div><div class="feature">リスク管理</div>
+          <div class="feature">仮想口座</div><div class="feature">市場局面</div>
+          <div class="feature">ベンチマーク</div><div class="feature">戦略淘汰</div>
+          <div class="feature">データ異常検知</div><div class="feature">注文前検査</div>
+          <div class="feature">残高照合</div><div class="feature">日次レポート</div>
+        </div>
+        <div class="detail" id="control-detail">次の自動更新から1取引日1回、重複なく記録します。</div>
+        <div class="meta" id="control-time"></div>
+      </article>
+
+      <article class="card">
+        <div class="label">Risk &amp; data guard</div>
+        <div class="value ok" id="control-risk">保護中</div>
+        <div class="detail" id="control-risk-detail">最大損失・連敗・データ品質を監視します。</div>
+        <div class="meta">実資金・外部証券口座には接続しません。</div>
       </article>
 
       <article class="card wide">
@@ -339,6 +369,9 @@
       const outcomeRows = typeof historyText === "string"
         ? historyText.split(/\r?\n/).filter((row) => row.startsWith("OUTCOME_V1,"))
         : [];
+      const controlRows = typeof historyText === "string"
+        ? historyText.split(/\r?\n/).filter((row) => row.startsWith("CONTROL_V2,"))
+        : [];
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
         const uniqueTargetDates = new Set(
@@ -379,6 +412,36 @@
       } else {
         text("outcome-value", "結果待ち");
         text("outcome-detail", "次の1321取引日データが入った後に自動評価します。");
+      }
+
+      if (controlRows.length) {
+        try {
+          const fields = controlRows[controlRows.length - 1].split(",");
+          const encoded = fields[4].replace(/-/g, "+").replace(/_/g, "/");
+          const binary = atob(encoded);
+          const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+          const control = JSON.parse(new TextDecoder().decode(bytes));
+          const paper = control.paper_account || {};
+          const risk = control.risk || {};
+          const quality = control.data_quality || {};
+          const reconciliation = control.reconciliation || {};
+          const benchmark = control.benchmark || {};
+          const governance = control.strategy_governance || {};
+          text("control-status", "10機能稼働");
+          text("control-regime", (control.regime || {}).state || "蓄積中");
+          text("control-equity", yen(paper.equity));
+          text("control-benchmark", Number.isFinite(Number(benchmark.excess_vs_buy_hold_pct))
+            ? `${Number(benchmark.excess_vs_buy_hold_pct) >= 0 ? "+" : ""}${Number(benchmark.excess_vs_buy_hold_pct).toFixed(3)}%`
+            : "蓄積中");
+          text("control-detail", `仮想決済 ${paper.closed_trades || 0}件 / 保有 ${paper.position || 0}口 / 隔離候補 ${(governance.quarantined || []).length}件 / 実資金未使用`);
+          text("control-time", `対象取引日: ${control.target_date} / 更新: ${control.generated_at}`);
+          const healthy = risk.status === "READY" && quality.status !== "FAIL" && reconciliation.status === "PASS";
+          text("control-risk", healthy ? "正常・待機中" : "安全保護中");
+          text("control-risk-detail", `ドローダウン ${Number(risk.current_drawdown_pct || 0).toFixed(3)}% / データ ${quality.status || "蓄積中"} / 照合 ${reconciliation.status || "蓄積中"} / 通知 ${(control.alerts || []).length}件`);
+        } catch (error) {
+          text("control-status", "取得エラー");
+          text("control-detail", "次世代仮想運用の記録を読み取れませんでした。");
+        }
       }
 
       if (walkForward && walkForward.scope === "RESEARCH_WALK_FORWARD_ONLY") {
