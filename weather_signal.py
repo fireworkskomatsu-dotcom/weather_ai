@@ -290,13 +290,18 @@ if target_rows.empty:
 target_latest = target_rows.iloc[-1]
 target_data_as_of = str(target_latest["Date"])
 target_market_date = pd.to_datetime(target_data_as_of).date()
+isolated_test = os.environ.get("WEATHER_AI_ISOLATED_TEST") == "1"
+force_intraday_test = isolated_test and os.environ.get("WEATHER_AI_FORCE_INTRADAY_TEST") == "1"
 target_bar_final = (
-    target_market_date < now_jst.date()
-    or (
-        target_market_date == now_jst.date()
-        and now_jst.hour >= 16
+    not force_intraday_test
+    and (
+        target_market_date < now_jst.date()
+        or (
+            target_market_date == now_jst.date()
+            and now_jst.hour >= 16
+        )
+        or isolated_test
     )
-    or os.environ.get("WEATHER_AI_ISOLATED_TEST") == "1"
 )
 data_status = (
     "STALE_DATA"
@@ -437,6 +442,10 @@ for row in history_rows:
 
 outcomes = []
 for row in latest_forward_by_target_date.values():
+
+    # 当日足が未確定・期限切れの場合は、翌日結果も確定させない。
+    if data_status != "FRESH":
+        continue
 
     previous_run_id = row[1]
     previous_data_status = row[13]

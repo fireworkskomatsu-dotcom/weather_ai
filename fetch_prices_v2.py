@@ -97,18 +97,23 @@ def rows_for_symbol(
 
     rows: list[list[object]] = []
     for _, record in frame.iterrows():
-        market_date = pd.to_datetime(record["Date"])
-        opened = valid_number(record["Open"])
-        high = valid_number(record["High"])
-        low = valid_number(record["Low"])
-        close = valid_number(record["Close"])
-        volume = (
-            valid_number(record["Volume"])
-            if pd.notna(record["Volume"])
-            else 0.0
-        )
+        try:
+            market_date = pd.to_datetime(record["Date"])
+            opened = valid_number(record["Open"])
+            high = valid_number(record["High"])
+            low = valid_number(record["Low"])
+            close = valid_number(record["Close"])
+            volume = (
+                valid_number(record["Volume"])
+                if pd.notna(record["Volume"])
+                else 0.0
+            )
+        except (TypeError, ValueError):
+            continue
         if min(opened, high, low, close) <= 0:
-            raise RuntimeError(f"0以下の価格です: {symbol}: {market_date}")
+            continue
+        if high < max(opened, close) or low > min(opened, close):
+            continue
 
         rows.append([
             market_date.strftime("%Y-%m-%d"),
@@ -128,6 +133,10 @@ def rows_for_symbol(
             close,
             volume,
         ])
+    if len(rows) < 30:
+        raise RuntimeError(
+            f"有効な価格データが不足しています: {symbol}: {len(rows)}件"
+        )
     return rows
 
 

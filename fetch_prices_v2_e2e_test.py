@@ -72,6 +72,15 @@ retry_rows = target.rows_for_symbol(
 fresh = target.build_prices(fake_download, today=today)
 
 
+def one_nan_download(symbol: str, **kwargs: object) -> pd.DataFrame:
+    frame = fake_download(symbol, **kwargs)
+    frame.iloc[-2, frame.columns.get_loc("Close")] = float("nan")
+    return frame
+
+
+nan_tolerant = target.build_prices(one_nan_download, today=today)
+
+
 def stale_download(symbol: str, **kwargs: object) -> pd.DataFrame:
     frame = fake_download(symbol, **kwargs)
     frame.index = frame.index - pd.Timedelta(days=30)
@@ -90,6 +99,7 @@ checks = {
     "expected_schema": tuple(fresh.columns) == target.COLUMNS,
     "fresh_latest_date": fresh["Date"].max() == today.isoformat(),
     "positive_prices_only": bool((fresh[["O", "H", "L", "C"]] > 0).all().all()),
+    "single_invalid_row_skipped": len(nan_tolerant) == len(fresh) - len(target.SYMBOLS),
     "transient_failure_retried": retry_calls["count"] == 3 and bool(retry_rows),
     "stale_download_blocked": stale_blocked,
     "production_files_unchanged": production_before == {

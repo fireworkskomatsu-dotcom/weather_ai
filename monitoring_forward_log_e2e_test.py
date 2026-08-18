@@ -54,11 +54,14 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
         encoding="utf-8",
     )
 
-    def run_once() -> None:
+    def run_once(force_intraday: bool = False) -> None:
+        environment = {**os.environ, "WEATHER_AI_ISOLATED_TEST": "1"}
+        if force_intraday:
+            environment["WEATHER_AI_FORCE_INTRADAY_TEST"] = "1"
         result = subprocess.run(
             [sys.executable, "weather_signal.py"],
             cwd=work,
-            env={**os.environ, "WEATHER_AI_ISOLATED_TEST": "1"},
+            env=environment,
             text=True,
             capture_output=True,
             timeout=120,
@@ -100,6 +103,10 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
     next_target["AdjC"] = next_target["C"]
     prices = pd.concat([prices, pd.DataFrame([next_target])], ignore_index=True)
     prices.to_csv(work / "prices.csv", index=False)
+    run_once(force_intraday=True)
+    with (work / "history.csv").open("r", encoding="utf-8", newline="") as handle:
+        intraday_rows = list(csv.reader(handle))
+    intraday_outcomes = [row for row in intraday_rows if row and row[0] == "OUTCOME_V1"]
     run_once()
 
     with (work / "history.csv").open(
@@ -124,6 +131,7 @@ with tempfile.TemporaryDirectory(prefix="weather_ai_monitoring_log_") as tempora
         "target_symbol_recorded": len(row) >= 16 and row[15] == "1321.T",
         "target_price_recorded": len(row) >= 18 and float(row[17]) > 0,
         "direction_recorded": len(row) >= 19 and row[18] in {"LONG", "SHORT", "SKIP"},
+        "intraday_unfinalized_outcome_blocked": len(intraday_outcomes) == 0,
         "one_next_day_outcome": len(outcome_rows) == 1,
         "duplicate_target_date_one_outcome": len(outcome_rows) == 1,
         "latest_duplicate_selected": len(outcome) >= 2 and outcome[1] == duplicate_run_id,
