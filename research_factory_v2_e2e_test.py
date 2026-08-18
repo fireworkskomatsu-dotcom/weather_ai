@@ -23,7 +23,7 @@ before = {name: digest(BASE / name) for name in protected}
 data = pd.read_csv(BASE / "prices.csv", dtype={"Code": str})
 report = target.build_report(data)
 records = walk.evaluate(data)
-split = int(len(records) * 0.6)
+split = sum(row["decision_date"] <= target.FROZEN_DEVELOPMENT_END for row in records)
 
 future = data.iloc[-1].copy()
 future["Code"] = "88880"
@@ -46,7 +46,8 @@ mutated_dev_scores = {
 checks = {
     "ten_fixed_candidates": report["candidate_count"] == 10 and len(target.CANDIDATES) == 10,
     "research_only": report["scope"] == "RESEARCH_FACTORY_ONLY" and report["official_eligible"] is False,
-    "selection_uses_development_only": report["selection_policy"] == "FIRST_60_PERCENT_ONLY",
+    "selection_uses_frozen_development_only": report["selection_policy"] == "FROZEN_DEVELOPMENT_THROUGH_2026_05_29",
+    "development_cutoff_is_immutable": report["frozen_development_end"] == "2026-05-29",
     "holdout_never_used_for_selection": original_dev_scores == mutated_dev_scores,
     "future_row_does_not_change_historical_digest": report["records_sha256"] == future_report["records_sha256"],
     "costs_on_turnover": any(item["net_pct"] < item["gross_pct"] for item in target.candidate_rows(records, "BASE")),

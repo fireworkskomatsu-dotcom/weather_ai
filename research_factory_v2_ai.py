@@ -24,11 +24,20 @@ REPORT = BASE / "research_factory_v2_report.json"
 MIN_DIRECTIONAL = 30
 MIN_ACCURACY = 52.0
 MIN_POSITIVE_BLOCKS = 3
+FROZEN_DEVELOPMENT_END = "2026-05-29"
 
 
 def encode(value: dict[str, Any]) -> str:
     raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return base64.urlsafe_b64encode(raw.encode("utf-8")).decode("ascii")
+
+
+def decode(value: str) -> dict[str, Any] | None:
+    try:
+        result = json.loads(base64.urlsafe_b64decode(value.encode("ascii")).decode("utf-8"))
+        return result if isinstance(result, dict) else None
+    except Exception:
+        return None
 
 
 def direction(rows: list[dict[str, Any]], index: int, candidate: str) -> str:
@@ -121,14 +130,14 @@ def stability(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def build_report(data: pd.DataFrame) -> dict[str, Any]:
     records = walk.evaluate(data)
-    split = int(len(records) * 0.6)
-    development_base = records[:split]
-    holdout_base = records[split:]
+    development_count = sum(row["decision_date"] <= FROZEN_DEVELOPMENT_END for row in records)
+    development_base = records[:development_count]
+    holdout_base = records[development_count:]
     candidates = []
     for candidate in CANDIDATES:
         all_rows = candidate_rows(records, candidate)
-        development = all_rows[:split]
-        holdout = all_rows[split:]
+        development = all_rows[:development_count]
+        holdout = all_rows[development_count:]
         candidates.append({
             "id": candidate,
             "development": summary(development),
@@ -152,13 +161,16 @@ def build_report(data: pd.DataFrame) -> dict[str, Any]:
     promoted = all(checks.values())
     buy_hold = (holdout_base[-1]["exit_price"] / holdout_base[0]["entry_price"] - 1) * 100 if holdout_base else None
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "scope": "RESEARCH_FACTORY_ONLY",
         "official_eligible": False,
         "status": "RESEARCH_PASS" if promoted else "RESEARCH_BLOCKED",
-        "selection_policy": "FIRST_60_PERCENT_ONLY",
-        "holdout_policy": "LAST_40_PERCENT_NEVER_USED_FOR_SELECTION",
+        "selection_policy": "FROZEN_DEVELOPMENT_THROUGH_2026_05_29",
+        "holdout_policy": "ALL_DATES_AFTER_FROZEN_CUTOFF_NEVER_USED_FOR_SELECTION",
+        "frozen_development_end": FROZEN_DEVELOPMENT_END,
+        "development_samples": len(development_base),
+        "expanding_holdout_samples": len(holdout_base),
         "multiple_testing_control": "FIXED_CANDIDATE_REGISTRY_AND_95PCT_LOWER_BOUND",
         "candidate_count": len(CANDIDATES),
         "selected_candidate": selected["id"] if selected else None,
@@ -177,7 +189,12 @@ def append_public(report: dict[str, Any], history_path: Path) -> bool:
         with history_path.open("r", encoding="utf-8", newline="") as handle:
             rows = list(csv.reader(handle))
     target_date = max((row[16] for row in rows if len(row) >= 19 and row[0] == "FORWARD_V1"), default="")
-    if not target_date or any(len(row) >= 2 and row[0] == "RESEARCH_V2" and row[1] == target_date for row in rows):
+    current_versions = [
+        int((decode(row[3]) or {}).get("schema_version", 0))
+        for row in rows
+        if len(row) >= 4 and row[0] == "RESEARCH_V2" and row[1] == target_date
+    ]
+    if not target_date or (current_versions and max(current_versions) >= report["schema_version"]):
         return False
     with history_path.open("a", encoding="utf-8", newline="") as handle:
         csv.writer(handle, lineterminator="\n").writerow([
