@@ -520,4 +520,10 @@ try:
 except Exception as error:
     print(f"PROSPECTIVE_LEAGUE_PROTECTED: {type(error).__name__}: {error}")
 
+try:
+    from institutional_guard_ai import run as run_institutional_guard
+    run_institutional_guard(report_path=None)
+except Exception as error:
+    print(f"INSTITUTIONAL_GUARD_PROTECTED: {type(error).__name__}: {error}")
+
 print(text)
