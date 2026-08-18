@@ -406,8 +406,12 @@
       const researchRows = typeof historyText === "string"
         ? historyText.split(/\r?\n/).filter((row) => row.startsWith("RESEARCH_V2,"))
         : [];
+      const prospectiveRows = typeof historyText === "string"
+        ? historyText.split(/\r?\n/).filter((row) => row.startsWith("PROSPECTIVE_V3,"))
+        : [];
       let latestControl = null;
       let latestResearch = null;
+      let latestProspective = null;
       if (forwardRows.length) {
         const latestForward = forwardRows[forwardRows.length - 1].split(",");
         const uniqueTargetDates = new Set(
@@ -490,6 +494,18 @@
           latestResearch = JSON.parse(new TextDecoder().decode(bytes));
         } catch (error) {
           latestResearch = null;
+        }
+      }
+
+      if (prospectiveRows.length) {
+        try {
+          const fields = prospectiveRows[prospectiveRows.length - 1].split(",");
+          const encoded = fields[3].replace(/-/g, "+").replace(/_/g, "/");
+          const binary = atob(encoded);
+          const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+          latestProspective = JSON.parse(new TextDecoder().decode(bytes));
+        } catch (error) {
+          latestProspective = null;
         }
       }
 
@@ -598,21 +614,24 @@
       const directionalOutcomes = parsedOutcomes.filter((row) => row[9] === "LONG" || row[9] === "SHORT");
       const providerReady = provider && provider.status === "OK" && provider.provider !== "DISABLED";
       const strategyReady = challenger && challenger.status === "PROMOTED" && directionalOutcomes.length >= 30;
+      const prospectiveReady = latestProspective && latestProspective.status === "FORWARD_PASS";
       const paper = latestControl && latestControl.paper_account;
       const paperHealthy = latestControl
         && latestControl.risk && latestControl.risk.status === "READY"
         && latestControl.data_quality && latestControl.data_quality.status !== "FAIL"
         && latestControl.reconciliation && latestControl.reconciliation.status === "PASS";
-      const automaticLiveReady = providerReady && strategyReady && allProofsPass && paperHealthy;
+      const automaticLiveReady = providerReady && strategyReady && prospectiveReady && allProofsPass && paperHealthy;
 
       text("operator-money", "未使用");
       text("operator-paper", paper
         ? `${yen(paper.equity)}・${Number(paper.position || 0)}口`
         : "AIが蓄積中");
       const candidateCount = Number(latestResearch && latestResearch.candidate_count || 0);
-      text("operator-progress", candidateCount
-        ? `${directionalOutcomes.length}/30件・候補${candidateCount}`
-        : `${directionalOutcomes.length}/30件`);
+      const prospectiveDays = Number(latestProspective && latestProspective.forward_calendar_samples || 0);
+      const prospectiveMinimum = Number(latestProspective && latestProspective.minimum_forward_days || 90);
+      text("operator-progress", latestProspective
+        ? `未知データ ${prospectiveDays}/${prospectiveMinimum}日・候補${latestProspective.candidate_count}`
+        : (candidateCount ? `${directionalOutcomes.length}/30件・候補${candidateCount}` : `${directionalOutcomes.length}/30件`));
 
       if (automaticLiveReady) {
         text("operator-state", "AIは正常です");
@@ -623,6 +642,7 @@
         const reasons = [];
         if (!providerReady) reasons.push("実売買用の公式価格が未接続");
         if (!strategyReady) reasons.push(`実運用検証は${directionalOutcomes.length}/30件`);
+        if (!prospectiveReady) reasons.push(`後知恵なし検証は${prospectiveDays}/${prospectiveMinimum}日`);
         if (!allProofsPass) reasons.push("安全検証データを確認できない");
         if (!paperHealthy) reasons.push("仮想運用の安全状態を確認中");
         text("operator-state", freeMonitoringHealthy ? "AIは仮想運用を継続中" : "AIは安全停止中");

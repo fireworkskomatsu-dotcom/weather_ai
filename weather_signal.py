@@ -514,4 +514,10 @@ try:
 except Exception as error:
     print(f"RESEARCH_FACTORY_PROTECTED: {type(error).__name__}: {error}")
 
+try:
+    from prospective_strategy_league_ai import run as run_prospective_league
+    run_prospective_league(report_path=None)
+except Exception as error:
+    print(f"PROSPECTIVE_LEAGUE_PROTECTED: {type(error).__name__}: {error}")
+
 print(text)
